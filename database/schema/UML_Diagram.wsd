@@ -1,0 +1,58 @@
+@startuml
+
+class Membre {
+  + id : INT AUTO-INCREMENT <<PK>>
+  + nom : VARCHAR(100)
+  + prenom : VARCHAR(100)
+  + telephone : VARCHAR(15)
+  + ville : VARCHAR(100)
+  + barcode : VARCHAR(10)
+  + dateNaissance : DATE
+  + email : VARCHAR(255)
+  + password : VARCHAR(255)
+  + statut : ENUM('Uye', 'Dondurdu', 'Cikti')
+}
+
+class HistoriqueStatut {
+  + id : INT AUTO-INCREMENT <<PK>>
+  + membre_id : INT <<FK>>
+  + statutPrecedent : ENUM('Uye', 'Dondurdu', 'Cikti')
+  + statutActuel : ENUM('Uye', 'Dondurdu', 'Cikti')
+  + dateChangement : DATE
+}
+
+class Aidat {
+  + id : INT AUTO-INCREMENT <<PK>>
+  + membre_id : INT <<FK>>
+  + montant : DECIMAL(10,2)
+  + annee : INT
+  + datePaiement : DATE
+  + moyenPaiement : ENUM('Carte', 'Virement', 'Chèque', 'Espèces')
+}
+
+class Administration {
+  + id : INT AUTO-INCREMENT <<PK>>
+  + login : VARCHAR(50) <<UNIQUE>>
+  + password : VARCHAR(255)
+  + dateCreation : DATE
+  + niveauPrivilege : INT <<PK>>  ' Niveaux 0, 1, 2, etc.
+}
+
+class Role {
+  + id : INT AUTO-INCREMENT <<PK>>
+  + nomRole : VARCHAR(100) <<UNIQUE>>
+  + niveauPrivilege : INT  ' Niveau du rôle, 0 étant le plus élevé
+  + description : TEXT
+}
+
+class AdministrationRole {
+  + id : INT AUTO-INCREMENT <<PK>>
+  + admin_id : INT <<FK>>
+  + role_id : INT <<FK>>
+}
+
+Membre "1" --> "0..*" HistoriqueStatut : a changé de statut
+Membre "1" --> "0..*" Aidat : a payé
+Administration "1" --> "0..*" AdministrationRole : a un rôle
+AdministrationRole "0..*" --> "1" Role : possède
+@enduml

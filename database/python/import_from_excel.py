@@ -1,0 +1,41 @@
+import pymysql
+import pandas as pd
+import random
+
+# Connexion à MySQL
+connection = pymysql.connect(
+    host="omergs.com",
+    user="omer",
+    password="1(Wjjr3RHi24ihefNHg4f/?3#C7cf{7$",
+    database="actq"
+)
+
+# Charger le fichier Excel
+file_path = "database/python/liste.xlsx"  
+df = pd.read_excel(file_path, engine="openpyxl") 
+
+# Recuperer les données
+df["Statut"] = df["DURUMU"].map(lambda x: "Actif" if x == "U" else "Suspendu")
+df["Telephone"] = df.apply(lambda row: row["TEL N° FR"] if pd.notna(row["TEL N° FR"]) else row["TEL N° TR"], axis=1)
+df["CodeBarre"] = df.apply(lambda _: f"{random.randint(100000000, 999999999)}", axis=1)
+df = df[["SOYADI", "ADI", "Telephone", "Statut", "CodeBarre"]]
+df = df.where(pd.notna(df), None)
+
+print(df.head())
+
+# Insertion des données
+with connection.cursor() as cursor:
+    for _, row in df.iterrows():
+        sql = """
+        INSERT INTO Membre (nom, prenom, telephone, statut, barcode)
+        VALUES (%s, %s, %s, %s, %s)
+        """
+        try:
+            cursor.execute(sql, (row["SOYADI"], row["ADI"], row["Telephone"], row["Statut"], row["CodeBarre"]))
+        except Exception as e:
+            print(f"⚠️ Erreur lors de l'insertion de {row}: {e}")
+
+    connection.commit()
+
+connection.close()
+print("✅ Insertion terminée !")
