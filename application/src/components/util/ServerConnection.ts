@@ -33,6 +33,20 @@ class ServerConnection {
             throw error; 
         }
     }
+
+    public static async checkVerificationCode(phoneNumber: string, code: string): Promise<any> {
+        try {
+            const response = await axios.post (`${BACKEND_API.baseURL}/verificationcode/check`, {
+                telephone: phoneNumber,
+                code: code,
+            });
+
+            return response.data.success;
+        } catch (error) {
+            console.error("Erreur lors de l'envoi du code de vérification :", error);
+            throw error; 
+        }
+    }
 }
 
 export default ServerConnection;
