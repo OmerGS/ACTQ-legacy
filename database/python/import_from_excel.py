@@ -1,13 +1,16 @@
 import pymysql
 import pandas as pd
 import random
+from dotenv import load_dotenv
 
-# Connexion à MySQL
+load_dotenv()
+
+# Connexion à MySQL avec les variables d'environnement
 connection = pymysql.connect(
-    host="omergs.com",
-    user="omer",
-    password="1(Wjjr3RHi24ihefNHg4f/?3#C7cf{7$",
-    database="actq"
+    host=os.getenv("DB_HOST"),
+    user=os.getenv("DB_USER"),
+    password=os.getenv("DB_PASSWORD"),
+    database=os.getenv("DB_NAME")
 )
 
 # Charger le fichier Excel
