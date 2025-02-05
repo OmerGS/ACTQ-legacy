@@ -1,13 +1,12 @@
-"use client"; 
+"use client";
 
 import { useEffect, useState } from "react";
-import { FaRegSun, FaRegMoon } from "react-icons/fa"; 
+import { useRouter } from "next/navigation";
+import { FaRegSun, FaRegMoon } from "react-icons/fa";
 import { motion } from "framer-motion";
 
-import { login } from "@/components/controller/login";
-import { signup } from '@/components/controller/signup';
-
 export default function Home() {
+  const router = useRouter();
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isTurkish, setIsTurkish] = useState(true);
 
@@ -44,16 +43,16 @@ export default function Home() {
     >
       <div style={{ position: "absolute", top: "20px", right: "20px", display: "flex", gap: "20px" }}>
         <button onClick={toggleDarkMode} style={{ background: "none", border: "none", cursor: "pointer", fontSize: "24px", color: isDarkMode ? "#fff" : "#000", transition: "color 0.3s" }}>
-          {isDarkMode ? <FaRegMoon /> : <FaRegSun />} 
+          {isDarkMode ? <FaRegMoon /> : <FaRegSun />}
         </button>
         <button onClick={toggleLanguage} style={{ background: "none", border: "none", cursor: "pointer", fontSize: "24px", color: isDarkMode ? "#fff" : "#000", transition: "color 0.3s" }}>
-          {isTurkish ? "🇫🇷" : "🇹🇷"} 
+          {isTurkish ? "🇫🇷" : "🇹🇷"}
         </button>
       </div>
 
-      <motion.img 
-        src="/assets/logo/actq.png" 
-        alt="Logo" 
+      <motion.img
+        src="/assets/logo/actq.png"
+        alt="Logo"
         style={{ width: "200px", marginBottom: "50px" }}
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -61,7 +60,7 @@ export default function Home() {
       />
 
       <motion.button
-        onClick={signup}
+        onClick={() => router.push("/auth/signup")}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         style={{ padding: "15px 30px", margin: "10px", backgroundColor: "#4CAF50", color: "#fff", border: "none", borderRadius: "30px", cursor: "pointer", fontSize: "16px", boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)", transition: "all 0.3s ease-in-out" }}
@@ -70,7 +69,7 @@ export default function Home() {
       </motion.button>
 
       <motion.button
-        onClick={login}
+        onClick={() => router.push("/auth/login")}
         whileHover={{ scale: 1.10 }}
         whileTap={{ scale: 0.95 }}
         style={{ padding: "15px 30px", margin: "10px", backgroundColor: "#008CBA", color: "#fff", border: "none", borderRadius: "30px", cursor: "pointer", fontSize: "16px", boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)", transition: "all 0.3s ease-in-out" }}

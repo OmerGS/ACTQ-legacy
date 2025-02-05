@@ -1,3 +1,4 @@
+use actq;
 SELECT * FROM Membre;
 SELECT id FROM Role WHERE nomRole = 'Membre';
 

@@ -16,7 +16,11 @@ df = pd.read_excel(file_path, engine="openpyxl")
 
 # Recuperer les données
 df["Statut"] = df["DURUMU"].map(lambda x: "Actif" if x == "U" else "Suspendu")
-df["Telephone"] = df.apply(lambda row: row["TEL N° FR"] if pd.notna(row["TEL N° FR"]) else row["TEL N° TR"], axis=1)
+df["Telephone"] = df.apply(
+    lambda row: f"+33{str(row['TEL N° FR']).replace(' ', '')[1:]}" if pd.notna(row["TEL N° FR"]) 
+    else f"+90{str(row['TEL N° TR']).replace(' ', '')[1:]}" if pd.notna(row["TEL N° TR"]) else None, 
+    axis=1
+)
 df["CodeBarre"] = df.apply(lambda _: f"{random.randint(100000000, 999999999)}", axis=1)
 df = df[["SOYADI", "ADI", "Telephone", "Statut", "CodeBarre"]]
 df = df.where(pd.notna(df), None)

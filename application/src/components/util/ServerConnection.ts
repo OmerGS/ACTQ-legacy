@@ -16,13 +16,23 @@ class ServerConnection {
                 telephone: phoneNumber,
             });
     
-            console.log('Requête réussie', response.data);
             return response.data; 
         } catch (error) {
             console.error("Erreur lors de la recherche de l'utilisateur :", error);
             throw error; 
         }
-    }   
+    }
+    
+    public static async sendVerificationCode(phoneNumber: string): Promise<any> {
+        try {
+            const response = await axios.post (`${BACKEND_API.baseURL}/verificationcode/ask`, {
+                telephone: phoneNumber,
+            });
+        } catch (error) {
+            console.error("Erreur lors de l'envoi du code de vérification :", error);
+            throw error; 
+        }
+    }
 }
 
 export default ServerConnection;
