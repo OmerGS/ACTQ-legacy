@@ -33,7 +33,11 @@ export async function handleSendCode(phoneNumber: string): Promise<boolean>{
         return false;
     }
 
-    // Nettoyage du numéro pour l'envoi
+    if(!await ServerConnection.checkIfMemberExistsByPhone(phoneNumber)){
+        alert("Bu numara ait hiçbir kayıtlı üye yoktur. Lütfen başka bir numara deneyin.");
+        return false;
+    }
+
     const cleanedPhoneNumber = phoneNumber.replace('+', '');
 
     console.log(cleanedPhoneNumber);
@@ -51,7 +55,10 @@ export async function handleCheckCode(phoneNumber: string, code: string, router:
         return false;
     }
 
-    router.push("/first/")
+    localStorage.setItem("userPhoneNumber", cleanedPhoneNumber);
+
+    
+    router.push("/first/");
 
     return true;
 }

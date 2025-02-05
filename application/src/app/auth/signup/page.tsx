@@ -47,7 +47,7 @@ export default function Signup() {
     setIsSubmitting(false);
 
     if (success) {
-      setShowCodeInput(true); // Afficher le champ de code si l'envoi réussit
+      setShowCodeInput(true);
     }
   };
 
@@ -68,8 +68,8 @@ export default function Signup() {
       style={{
         display: "flex",
         flexDirection: "column",
-        justifyContent: "center",  // Center vertically
-        alignItems: "center",      // Center horizontally
+        justifyContent: "center",
+        alignItems: "center",    
         height: "100vh",
         backgroundColor: "#F5F5F5",
         padding: "30px 20px 20px", 

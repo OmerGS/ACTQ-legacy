@@ -47,6 +47,19 @@ class ServerConnection {
             throw error; 
         }
     }
+
+    public static async checkIfMemberExistsByPhone(phoneNumber: string): Promise<any> {
+        try {
+            const response = await axios.post (`${BACKEND_API.baseURL}/membre/checkIfMemberExistsByPhone`, {
+                telephone: phoneNumber,
+            });
+
+            return response.data.exists;
+        } catch (error) {
+            console.error("Erreur lors de l'envoi du code de vérification :", error);
+            throw error; 
+        }
+    }
 }
 
 export default ServerConnection;
