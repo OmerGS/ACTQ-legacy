@@ -14,7 +14,14 @@ class ServerConnection {
         try {
             const response = await axios.post(`${BACKEND_API.baseURL}/membre/foundMembreByPhoneNumber`, {
                 telephone: phoneNumber,
-            });
+            },
+            {
+                headers: {
+                  'x-api-key': `${API_KEY.API_KEY}`,
+                  'Content-Type': 'application/json',
+                },
+            }
+            );
     
             return response.data; 
         } catch (error) {
@@ -27,6 +34,12 @@ class ServerConnection {
         try {
             const response = await axios.post (`${BACKEND_API.baseURL}/verificationcode/ask`, {
                 telephone: phoneNumber,
+            },
+            {
+                headers: {
+                  'x-api-key': `${API_KEY.API_KEY}`,
+                  'Content-Type': 'application/json',
+                },
             });
         } catch (error) {
             console.error("Erreur lors de l'envoi du code de vérification :", error);
@@ -39,6 +52,12 @@ class ServerConnection {
             const response = await axios.post (`${BACKEND_API.baseURL}/verificationcode/check`, {
                 telephone: phoneNumber,
                 code: code,
+            },
+            {
+                headers: {
+                  'x-api-key': `${API_KEY.API_KEY}`,
+                  'Content-Type': 'application/json',
+                },
             });
 
             return response.data.success;
@@ -52,6 +71,12 @@ class ServerConnection {
         try {
             const response = await axios.post (`${BACKEND_API.baseURL}/membre/checkIfMemberExistsByPhone`, {
                 telephone: phoneNumber,
+            },
+            {
+                headers: {
+                  'x-api-key': `${API_KEY.API_KEY}`,
+                  'Content-Type': 'application/json',
+                },
             });
 
             return response.data.exists;
