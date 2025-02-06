@@ -32,7 +32,7 @@ class ServerConnection {
     
     public static async sendVerificationCode(phoneNumber: string): Promise<any> {
         try {
-            const response = await axios.post (`${BACKEND_API.baseURL}/verificationcode/ask`, {
+            const response = await axios.post (`${BACKEND_API.baseURL}/verificationcode/ask-phone`, {
                 telephone: phoneNumber,
             },
             {
@@ -49,7 +49,7 @@ class ServerConnection {
 
     public static async checkVerificationCode(phoneNumber: string, code: string): Promise<any> {
         try {
-            const response = await axios.post (`${BACKEND_API.baseURL}/verificationcode/check`, {
+            const response = await axios.post (`${BACKEND_API.baseURL}/verificationcode/check-phone`, {
                 telephone: phoneNumber,
                 code: code,
             },
