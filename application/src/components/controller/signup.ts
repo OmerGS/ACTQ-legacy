@@ -34,7 +34,6 @@ export async function handleSendCode(phoneNumber: string): Promise<boolean>{
     }
 
     if(!await ServerConnection.checkIfMemberExistsByPhone(phoneNumber)){
-        alert("Bu numara ait hiçbir kayıtlı üye yoktur. Lütfen başka bir numara deneyin.");
         return false;
     }
 

@@ -67,24 +67,41 @@ class ServerConnection {
         }
     }
 
-    public static async checkIfMemberExistsByPhone(phoneNumber: string): Promise<any> {
+    public static async checkIfMemberExistsByPhone(phoneNumber: string): Promise<boolean> {
         try {
-            const response = await axios.post (`${BACKEND_API.baseURL}/membre/checkIfMemberExistsByPhone`, {
-                telephone: phoneNumber,
-            },
-            {
-                headers: {
-                  'x-api-key': `${API_KEY.API_KEY}`,
-                  'Content-Type': 'application/json',
-                },
-            });
-
-            return response.data.exists;
-        } catch (error) {
-            console.error("Erreur lors de l'envoi du code de vérification :", error);
-            throw error; 
+            const response = await axios.post(`${BACKEND_API.baseURL}/membre/checkIfMemberExistsByPhone`,
+                { telephone: phoneNumber },
+                {
+                    headers: {
+                        'x-api-key': API_KEY.API_KEY,
+                        'Content-Type': 'application/json',
+                    },
+                }
+            );
+    
+            return response.data.exists; 
+    
+        } catch (error: any) {
+            if (axios.isAxiosError(error) && error.response) {
+                const status = error.response.status;
+    
+                if (status === 404) {
+                    alert("Numaraya kayıtlı bir kullanıcı bulunamadı.");
+                } else if (status === 409) {
+                    alert("Bu numaraya kayıtlı bir kullanıcı zaten var.");
+                } else if (status === 400) {
+                    alert("Telefon numarası giriniz.");
+                } else {
+                    alert("Kullanaci ararken bir hata oluştu.");
+                }
+            } else {
+                alert("Ag bağlantısı hatası.");
+            }
+    
+            return false;
         }
     }
+
 }
 
 export default ServerConnection;
