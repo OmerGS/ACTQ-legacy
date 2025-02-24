@@ -102,6 +102,84 @@ class ServerConnection {
         }
     }
 
+    public static async sendMailVerificationCode(email: string): Promise<any> {
+        try {
+            const response = await axios.post (`${BACKEND_API.baseURL}/verificationcode/ask-email`, {
+                email: email,
+            },
+            {
+                headers: {
+                  'x-api-key': `${API_KEY.API_KEY}`,
+                  'Content-Type': 'application/json',
+                },
+            });
+        } catch (error) {
+            console.error("Erreur lors de l'envoi du code de vérification :", error);
+            throw error; 
+        }  
+    }
+
+    public static async checkVerificationCodeEmail(email: string, code: string): Promise<any> {
+        try {
+            const response = await axios.post (`${BACKEND_API.baseURL}/verificationcode/check-email`, {
+                email: email,
+                code: code,
+            },
+            {
+                headers: {
+                  'x-api-key': `${API_KEY.API_KEY}`,
+                  'Content-Type': 'application/json',
+                },
+            });
+
+            return response.data.success;
+        } catch (error) {
+            console.error("Erreur lors de l'envoi du code de vérification :", error);
+            throw error; 
+        }
+    }
+
+    public static async registerPassword(email: string, password: string, salt: string): Promise<any> {
+        try {
+            const response = await axios.post (`${BACKEND_API.baseURL}/membre/registerPassword`, {
+                email: email,
+                password: password,
+                salt: salt,
+            },
+            {
+                headers: {
+                  'x-api-key': `${API_KEY.API_KEY}`,
+                  'Content-Type': 'application/json',
+                },
+            });
+
+            return response.data.success;
+        } catch (error) {
+            console.error("Erreur lors de l'envoi du code de vérification :", error);
+            throw error; 
+        }
+    }
+
+    public static async checkMail(email: string): Promise<any> {
+        try {
+            const response = await axios.post (`${BACKEND_API.baseURL}/membre/checkMail`, {
+                email: email,
+            },
+            {
+                headers: {
+                  'x-api-key': `${API_KEY.API_KEY}`,
+                  'Content-Type': 'application/json',
+                },
+            });
+
+            return response.data.exists;
+        } catch (error) {
+            console.error("Erreur lors de la recuperation de l'utilisateur :", error);
+            throw error; 
+        }  
+    }
+
+
 }
 
 export default ServerConnection;

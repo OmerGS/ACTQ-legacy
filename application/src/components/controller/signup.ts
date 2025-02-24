@@ -25,7 +25,7 @@ export async function handleSendCode(phoneNumber: string): Promise<boolean>{
 
     if (countryCode === '+33' || countryCode === '+90') {
         if (phoneNumber.length !== expectedLength) {
-            alert(`Geçersiz telefon numarası. ${countryCode} için numara tam olarak ${expectedLength} karakter olmalıdır.`);
+            alert(`Geçersiz telefon numarası. ${countryCode} bir numara için, tam olarak ${expectedLength} karakter olmalıdır.`);
             return false;
         }
     } else {

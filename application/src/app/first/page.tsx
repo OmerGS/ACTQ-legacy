@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { sendVerificationCode, checkMail, checkVerificationCodeEmail, registerPassword } from "@/components/controller/firstTimeConnection";
 
 export default function Login() {
   const router = useRouter();
@@ -12,7 +13,6 @@ export default function Login() {
   const [codeValid, setCodeValid] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [birthDate, setBirthDate] = useState("");
   const [showLogoutButton, setShowLogoutButton] = useState(true);
 
   useEffect(() => {
@@ -23,16 +23,17 @@ export default function Login() {
     setLoading(false);
   }, []);
 
-  const handleVerification = () => {
-    if (verificationCode === "123456") {
+  const handleVerification = async () => {
+    if (await checkVerificationCodeEmail(email, verificationCode)) {
       setCodeValid(true);
       setStep(4);
     } else {
       alert("Geçersiz kod. Lütfen tekrar deneyin.");
+      return;
     }
   };
 
-  const handleNextStep = () => {
+  const handleNextStep = async () => {
     if (step === 2) {
       const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     
@@ -40,10 +41,24 @@ export default function Login() {
         alert("Lütfen geçerli bir e-posta adresi girin.");
         return;
       } else {
-        alert("E-Posta doğrulama kodu gönderildi.");
+        if(!await checkMail(email)){
+          return;
+        }
+        sendVerificationCode(email);
         setStep(step + 1);
       }
     }
+
+    if (step === 4) {
+      const success = await registerPassword(email, password);
+      if (!success) {
+          alert("Bir hata oluştu. Lütfen tekrar deneyin.");
+          return;
+      }
+
+      setStep(step + 1);
+  }  
+
     setStep(step + 1);
   };
 
@@ -54,8 +69,8 @@ export default function Login() {
       {!membre ? (
         <div style={styles.card}>
           <h2>Hesabınızı oluşturmanız gerekiyor</h2>
-          <p>Bu sayfaya erişmek için önce bir hesap oluşturmalısınız.</p>
-          <p>Lütfen kaydolun veya giriş yapın.</p>
+          <p>Bu sayfaya erişmek için önce telefon numaranızı doğrulamanız gerekmektedir.</p>
+          <p>Lütfen telefon numaranızı doğrulayın ve ardından hesap oluşturma sayfasına geçiş yapın.</p>
         </div>
       ) : loading ? (
         <p style={styles.loading}>Üye bilgileri indiriliyor...</p>
@@ -65,11 +80,11 @@ export default function Login() {
             Merhaba,{" "}
             <span style={styles.name}>{membre[0].prenom + " " + membre[0].nom}</span>
           </h2>
-          <p style={styles.message}>Hoş geldiniz, lütfen devam edin.</p>
           
           <div style={styles.buttons}>
             {step === 1 && (
               <div>
+                <p style={styles.message}>Hoş geldiniz, lütfen devam edin.</p>
                 <button
                   style={styles.buttonContinue}
                   onClick={() => {
@@ -84,6 +99,7 @@ export default function Login() {
 
             {step === 2 && (
               <div>
+                <p style={styles.message}>E-Posta adresinizi giriniz.</p>
                 <input
                   type="email"
                   placeholder="Email"
@@ -102,9 +118,10 @@ export default function Login() {
 
             {step === 3 && (
               <div>
+                <p style={styles.message}>E-Posta adresinize gelen kodu buraya giriniz.</p>
                 <input
                   type="text"
-                  placeholder="Code de validation"
+                  placeholder="Onaylama kodu"
                   value={verificationCode}
                   onChange={(e) => setVerificationCode(e.target.value)}
                   style={styles.input}
@@ -121,9 +138,10 @@ export default function Login() {
 
             {step === 4 && (
               <div>
+                <p style={styles.message}>Lütfen bir sifre giriniz, bu sifreyi kimseye paylasmayin.</p>
                 <input
                   type="password"
-                  placeholder="Mot de passe"
+                  placeholder="Sifre"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   style={styles.input}
@@ -139,27 +157,9 @@ export default function Login() {
 
             {step === 5 && (
               <div>
-                <input
-                  type="date"
-                  value={birthDate}
-                  onChange={(e) => setBirthDate(e.target.value)}
-                  style={styles.input}
-                />
-                <button
-                  style={styles.buttonContinue}
-                  onClick={handleNextStep}
-                >
-                  Suivant
-                </button>
-              </div>
-            )}
-
-            {step === 6 && (
-              <div>
                 <h3>Récapitulatif :</h3>
                 <p>Email : {email}</p>
                 <p>Mot de passe : {password}</p>
-                <p>Date de naissance : {birthDate}</p>
                 <button
                   style={styles.buttonContinue}
                   onClick={() => alert("Inscription terminée")}
@@ -202,9 +202,9 @@ const styles = {
     position: "absolute" as "absolute",
     width: "100%",
     height: "100%",
-    background: "linear-gradient(-45deg, #00BFAE, #1C1C1C, #8A2BE2, #DC143C)",
+    background: "linear-gradient(-45deg, #c8d7de, #b5e2d7, #f5c6cb, #e8d6f3)",
     backgroundSize: "400% 400%",
-    animation: "gradientBG 12s ease infinite",
+    animation: "nobleGradient 12s ease infinite",
   },
   card: {
     background: "rgba(255, 255, 255, 0.9)",
@@ -240,7 +240,8 @@ const styles = {
   message: {
     color: "#333",
     fontSize: "16px",
-    marginTop: "10px",
+    marginTop: "-16px",
+    marginBottom: "20px",
   },
   loading: {
     color: "#fff",

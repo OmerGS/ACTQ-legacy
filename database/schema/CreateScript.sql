@@ -19,6 +19,7 @@ CREATE TABLE Membre (
   dateNaissance DATE,
   email VARCHAR(255) UNIQUE,
   password VARCHAR(255),
+  salt VARCHAR(512),
   statusSpecial ENUM('Retraite', 'Etudiant'),
   statut ENUM('Actif','Suspendu', 'Parti') NOT NULL DEFAULT 'Actif'
 );

@@ -71,7 +71,7 @@ export default function Signup() {
         justifyContent: "center",
         alignItems: "center",    
         height: "100vh",
-        backgroundColor: "#F5F5F5",
+        backgroundColor: "#c8d7de",
         padding: "30px 20px 20px", 
         fontFamily: "Arial, sans-serif",
         overflow: "hidden",
@@ -100,7 +100,21 @@ export default function Signup() {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
       >
-        Hesap Kurma
+        Numaranızı doğrulayın
+      </motion.h2>
+
+      <motion.h2
+        style={{
+          fontSize: "16px",
+          marginBottom: "25px",
+          color: "#333",
+          textAlign: "center",
+        }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+      >
+        Telefon numaranıza bir mesaj gönderilecektir. Lütfen mesajda gelen kodu belirtiniz.
       </motion.h2>
 
       {!showCodeInput ? (
@@ -148,7 +162,7 @@ export default function Signup() {
             }}
             disabled={isSubmitting}
           >
-            {isSubmitting ? "..." : "Uyeligimi Sorgula"}
+            {isSubmitting ? "..." : "Üyeliğimi Sorgula"}
           </motion.button>
         </>
       ) : (

@@ -19,8 +19,8 @@ export default function Home() {
   const toggleLanguage = () => setIsTurkish(!isTurkish);
 
   const buttonLabels = isTurkish
-    ? { firstTime: "Hesap Kur", login: "Giriş Yap" }
-    : { firstTime: "Première fois", login: "Connexion" };
+    ? { firstTime: "Kaydol", login: "Giriş Yap" }
+    : { firstTime: "Inscription", login: "Connexion" };
 
   return (
     <motion.div
