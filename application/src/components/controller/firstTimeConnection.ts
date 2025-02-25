@@ -28,13 +28,14 @@ export async function checkVerificationCodeEmail(email: string, code: string): P
     return(codeSucess);
 }
 
-export async function registerPassword(email: string, password: string): Promise<boolean> {
+export async function registerPassword(telephone: string, email: string, password: string): Promise<boolean> {
     try {
         const salt = await PasswordUtil.getSalt();
         const hashedPassword = PasswordUtil.hashPassword(password, salt);
 
-        const passwordRegistered = await ServerConnection.registerPassword(email, hashedPassword, salt);
-        console.log(passwordRegistered);
+        const passwordRegistered = await ServerConnection.registerPassword(telephone, email, hashedPassword, salt);
+
+        console.log("Mot de passe enregistré : " + passwordRegistered);
         return passwordRegistered;
     } catch (error) {
         console.error("Erreur lors de l'enregistrement du mot de passe :", error);

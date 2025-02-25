@@ -50,7 +50,11 @@ export default function Login() {
     }
 
     if (step === 4) {
-      const success = await registerPassword(email, password);
+      if(password.length < 8){
+        alert("Sifreniz en az 8 karakter olmalidir.");
+        return;
+      }
+      const success = await registerPassword(membre[0].telephone, email, password);
       if (!success) {
           alert("Bir hata oluştu. Lütfen tekrar deneyin.");
           return;
@@ -157,17 +161,19 @@ export default function Login() {
 
             {step === 5 && (
               <div>
-                <h3>Récapitulatif :</h3>
-                <p>Email : {email}</p>
-                <p>Mot de passe : {password}</p>
+                <h3>Hesap başarıyla oluşturuldu!</h3>
+                <br></br>
+                <p>Hesabınız başarıyla oluşturuldu. Şimdi giriş yapabilirsiniz.</p>
+                <br></br>
                 <button
                   style={styles.buttonContinue}
-                  onClick={() => alert("Inscription terminée")}
+                  onClick={() => window.location.href = '/auth/login'} 
                 >
-                  Terminer
+                  Giriş Yap
                 </button>
               </div>
             )}
+
 
             {showLogoutButton && (
               <button

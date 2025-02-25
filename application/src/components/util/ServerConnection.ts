@@ -139,9 +139,10 @@ class ServerConnection {
         }
     }
 
-    public static async registerPassword(email: string, password: string, salt: string): Promise<any> {
+    public static async registerPassword(telephone: string, email: string, password: string, salt: string): Promise<any> {
         try {
             const response = await axios.post (`${BACKEND_API.baseURL}/membre/registerPassword`, {
+                telephone: telephone,
                 email: email,
                 password: password,
                 salt: salt,
