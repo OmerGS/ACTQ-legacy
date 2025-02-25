@@ -2,6 +2,10 @@ use actq;
 SELECT * FROM Membre;
 SELECT id FROM Role WHERE nomRole = 'Membre';
 
+INSERT INTO Membre (nom, prenom, telephone, barcode, dateNaissance, email, password, salt, statusSpecial, statut)
+VALUES ('GUNES', 'Omer Faruk', '+33695474646', '27000000', NULL, NULL, NULL, NULL, NULL, 'Actif');
+
+
 INSERT INTO MembreRole (membre_id, role_id)
 SELECT id, (SELECT id FROM Role WHERE nomRole = 'Membre') FROM Membre
 ON DUPLICATE KEY UPDATE membre_id = membre_id;

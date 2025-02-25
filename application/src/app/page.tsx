@@ -9,11 +9,22 @@ export default function Home() {
   const router = useRouter();
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isTurkish, setIsTurkish] = useState(true);
+  const [isUserConnected, setIsUserConnected] = useState(false);
 
   useEffect(() => {
+    // Vérification si l'utilisateur est déjà connecté via localStorage
+    const storedUser = localStorage.getItem("user");
+
+    if (storedUser) {
+      setIsUserConnected(true);  // L'utilisateur est connecté
+      router.push("/card"); // Redirige vers /card si connecté
+    } else {
+      setIsUserConnected(false);  // L'utilisateur n'est pas connecté
+    }
+
     const userPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
     setIsDarkMode(userPrefersDark);
-  }, []);
+  }, [router]);
 
   const toggleDarkMode = () => setIsDarkMode(!isDarkMode);
   const toggleLanguage = () => setIsTurkish(!isTurkish);
@@ -21,6 +32,10 @@ export default function Home() {
   const buttonLabels = isTurkish
     ? { firstTime: "Kaydol", login: "Giriş Yap" }
     : { firstTime: "Inscription", login: "Connexion" };
+
+  if (isUserConnected) {
+    return null;  // Ne rien afficher si l'utilisateur est déjà connecté (redirection déjà effectuée)
+  }
 
   return (
     <motion.div

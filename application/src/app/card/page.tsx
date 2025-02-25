@@ -1,50 +1,76 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import JsBarcode from "jsbarcode";
 
 export default function Card() {
   const [membre, setMembre] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [cardBackground, setCardBackground] = useState<string>("");
+  const barcodeRef = useRef<SVGSVGElement>(null);
 
   useEffect(() => {
     const fetchedMembre = localStorage.getItem("user");
     if (fetchedMembre) {
       const membreObj = JSON.parse(fetchedMembre);
-      console.log(membreObj);
       setMembre(membreObj.member);
     }
     setLoading(false);
   }, []);
 
+  useEffect(() => {
+    const backgrounds = [
+      "/assets/images/card-background/background1.jpg",
+      "/assets/images/card-background/background2.jpg",
+      "/assets/images/card-background/background3.jpg",
+      "/assets/images/card-background/background4.jpg",
+      "/assets/images/card-background/background5.jpg",
+      "/assets/images/card-background/background6.jpg",
+    ];
+
+    const randomBackground = backgrounds[Math.floor(Math.random() * backgrounds.length)];
+    setCardBackground(randomBackground);
+  }, []);
+
+  useEffect(() => {
+    if (membre && membre.barcode && barcodeRef.current) {
+      JsBarcode(barcodeRef.current, membre.barcode, {
+        format: "CODE128",
+        displayValue: true, 
+        lineColor: "#fff",
+        width: 3,
+        height: 80,
+        background: "transparent",
+      });
+    }
+  }, [membre]);
+
   return (
-    <div style={styles.container}>
+    <div style={{ ...styles.container, backgroundImage: `url(${cardBackground})` }}>
       {loading ? (
         <p style={styles.loading}>Üye bilgileri indiriliyor...</p>
       ) : membre ? (
         <div style={styles.card}>
-          {/* Association Logo */}
+          {/* Logo */}
           <img src="/assets/logo/actq.png" alt="Association Logo" style={styles.logo} />
 
-          {/* Member's Name */}
+          {/* Nom du membre */}
           <h2 style={styles.name}>
             {membre.prenom + " " + membre.nom}
           </h2>
 
-          {/* Barcode (Placeholder) */}
+          {/* Code-barres */}
           <div style={styles.barcode}>
-            <p style={styles.barcodeText}>| || | | | | || || | | | ||</p> {/* Example Barcode */}
+            <svg ref={barcodeRef}></svg>
           </div>
 
-          {/* Lale Flower (Turkish Tulip) Symbol with opacity */}
-          <div style={styles.lale}>
-            <img src="/path-to-lale-flower.png" alt="Lale Flower" style={styles.laleFlower} />
-          </div>
+          {/* Motif décoratif */}
+          <div style={styles.overlay}></div>
         </div>
       ) : (
         <div style={styles.card}>
           <h2>Hesabınızı oluşturmanız gerekiyor</h2>
           <p>Bu sayfaya erişmek için önce telefon numaranızı doğrulamanız gerekmektedir.</p>
-          <p>Lütfen telefon numaranızı doğrulayın ve ardından hesap oluşturma sayfasına geçiş yapın.</p>
         </div>
       )}
     </div>
@@ -53,83 +79,72 @@ export default function Card() {
 
 const styles = {
   container: {
-    backgroundImage: "url('/assets/images/paysage.jpg')", // Background image
     backgroundSize: "cover",
     backgroundPosition: "center",
     position: "absolute" as "absolute",
-    width: "100vw", // Full width
-    height: "100vh", // Full height
+    width: "100vw",
+    height: "100vh",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     overflow: "hidden",
-    filter: "brightness(0.4)", // Optional: darkens the background for better contrast
+    fontFamily: "'Nunito', sans-serif",
   },
   card: {
-    background: "linear-gradient(135deg, #e63946, #ffbc42)", // Red gradient with warm gold
-    borderRadius: "20px", // Rounded corners
+    background: "linear-gradient(135deg, rgba(255, 45, 63, 0.33), rgba(71, 61, 255, 0.4))",
+    borderRadius: "20px",
     padding: "30px",
-    boxShadow: "0 4px 30px rgba(0, 0, 0, 0.4)", // Soft shadow
+    boxShadow: "0 8px 32px rgba(0, 0, 0, 0.6)",
     position: "relative" as "relative",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "column" as "column",
     zIndex: 10,
-    transformOrigin: "center", // Keep the rotation centered
     overflow: "hidden",
-    color: "#fff", // White text for the card
+    color: "#fff",
     textAlign: "center" as "center",
-    width: "80vw", // Set to 80% of the screen width
-    height: "80vh", // Set to 80% of the screen height
-    margin: "10vh auto", // Center the card and add vertical margin for spacing
-    transform: "rotate(0deg)", // Default rotation
+    width: "80vw",
+    height: "80vh",
+    margin: "10vh auto",
+    backdropFilter: "blur(7px)",
+  },
+  overlay: {
+    position: "absolute" as "absolute",
+    width: "100%",
+    height: "100%",
+    opacity: 0.2,
+    zIndex: 1,
+    top: 0,
+    left: 0,
   },
   logo: {
-    width: "80px",
+    width: "120px", 
     height: "auto",
-    marginBottom: "20px",
+    marginBottom: "30px",
+    zIndex: 2,
   },
   name: {
-    fontSize: "24px",
+    fontSize: "28px", 
     fontWeight: "bold",
     color: "#fff",
-    marginBottom: "15px",
+    marginBottom: "20px",
     letterSpacing: "2px",
     textTransform: "uppercase",
-    animation: "fadeIn 1s ease-in-out",
+    zIndex: 2,
   },
   barcode: {
     width: "100%",
-    height: "40px",
-    border: "1px solid #fff", // White border for the barcode
+    height: "80px", 
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    marginTop: "20px",
-    background: "transparent",
-    boxShadow: "0 0 10px rgba(255, 255, 255, 0.6)", // Light white shadow for the barcode
-  },
-  barcodeText: {
-    fontFamily: "monospace",
-    fontSize: "18px",
-    color: "#fff",
+    marginTop: "30px", 
+    zIndex: 2,
   },
   loading: {
     color: "#fff",
-    fontSize: "18px",
+    fontSize: "20px", 
     fontWeight: "bold",
-  },
-  lale: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: "20px",
-  },
-  laleFlower: {
-    width: "120px", // Adjust flower size
-    height: "auto",
-    opacity: 0.3, // Slight opacity
-    transform: "scale(1.1)", // Slight scaling effect
   },
 };

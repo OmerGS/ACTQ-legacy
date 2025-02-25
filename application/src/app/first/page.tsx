@@ -18,7 +18,9 @@ export default function Login() {
   useEffect(() => {
     const fetchedMembre = localStorage.getItem("user");
     if (fetchedMembre) {
-      setMembre(JSON.parse(fetchedMembre));
+      const membreObj = JSON.parse(fetchedMembre);
+      console.log(membreObj);
+      setMembre(membreObj.member);
     }
     setLoading(false);
   }, []);
@@ -54,7 +56,7 @@ export default function Login() {
         alert("Sifreniz en az 8 karakter olmalidir.");
         return;
       }
-      const success = await registerPassword(membre[0].telephone, email, password);
+      const success = await registerPassword(membre.telephone, email, password);
       if (!success) {
           alert("Bir hata oluştu. Lütfen tekrar deneyin.");
           return;
@@ -82,7 +84,7 @@ export default function Login() {
         <div style={styles.card}>
           <h2 style={styles.greeting}>
             Merhaba,{" "}
-            <span style={styles.name}>{membre[0].prenom + " " + membre[0].nom}</span>
+            <span style={styles.name}>{membre.prenom + " " + membre.nom}</span>
           </h2>
           
           <div style={styles.buttons}>
