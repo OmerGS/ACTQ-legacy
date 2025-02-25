@@ -10,10 +10,10 @@ import API_KEY from '@/properties/API_KEY';
  * which verifies API keys before interacting with the database.
  */
 class ServerConnection {
-    public static async foundMembreByPhoneNumber(phoneNumber: string): Promise<any> {
+    public static async getMemberByIdentifier(identifier: string): Promise<any> {
         try {
-            const response = await axios.post(`${BACKEND_API.baseURL}/membre/foundMembreByPhoneNumber`, {
-                telephone: phoneNumber,
+            const response = await axios.post(`${BACKEND_API.baseURL}/membre/getMemberByIdentifier`, {
+                identifier: identifier,
             },
             {
                 headers: {
@@ -180,6 +180,44 @@ class ServerConnection {
         }  
     }
 
+    public static async login(identifier: string, password: string) : Promise<string> {
+        try {
+            const response = await axios.post(`${BACKEND_API.baseURL}/membre/login`, {
+                identifier: identifier,
+                password: password,
+            },
+            {
+                headers: {
+                    'x-api-key': `${API_KEY.API_KEY}`,
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            return response.data;
+        } catch (error) {
+            console.error("Erreur lors de la connexion :", error);
+            throw error;
+        }
+    }
+
+    public static async getSaltByIdentifier(identifier:string) : Promise<string> {
+        try {
+            const response = await axios.post(`${BACKEND_API.baseURL}/membre/getSaltByIdentifier`, {
+                identifier: identifier,
+            },
+            {
+                headers: {
+                    'x-api-key': `${API_KEY.API_KEY}`,
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            return response.data;
+        } catch (error) {
+            console.error("Erreur lors de la recuperation du sel :", error);
+            throw error;
+        }
+    }
 
 }
 

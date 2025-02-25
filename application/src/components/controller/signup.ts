@@ -54,7 +54,7 @@ export async function handleCheckCode(phoneNumber: string, code: string, router:
         return false;
     }
 
-    const membre = await ServerConnection.foundMembreByPhoneNumber(phoneNumber);
+    const membre = await ServerConnection.getMemberByIdentifier(phoneNumber);
 
     localStorage.setItem("user", JSON.stringify(membre));
 

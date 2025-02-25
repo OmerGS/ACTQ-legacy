@@ -1,4 +1,30 @@
-export function login() {
-    alert("Bouton cliqué !");
+import { PasswordUtil } from "../util/password-util";
+import ServerConnection from "../util/ServerConnection"
+
+export async function login(identifier: string, password: string): Promise<boolean> {   
+    if(!identifier || !password) {
+        alert("Bütün alanları doldurunuz.");
+        return false;
+    }
+
+    let response = await ServerConnection.getSaltByIdentifier(identifier);
+
+    if(!response.success) {
+        alert(response.message);
+    } else {
+        let hashedPassword = PasswordUtil.hashPassword(password, response.salt);
+        let loginResponse = await ServerConnection.login(identifier, hashedPassword);
+
+        if(!loginResponse.success){
+            alert(loginResponse.message);
+        } else {
+            const membre = await ServerConnection.getMemberByIdentifier(identifier);
+            localStorage.setItem("user", JSON.stringify(membre));
+
+            return true;
+        }
+    }
+
+    return false;
 }
   
