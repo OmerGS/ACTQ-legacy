@@ -1,14 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Navbar from "@/components/reusable/Navbar";
-import { FaIdCard, FaUsersCog } from "react-icons/fa";
 import { useRouter } from "next/navigation";
-import useAuth from "../hooks/useAuth";
-import Spinner from "@/components/reusable/Spinner";
+import useAuth from "@/app/hooks/useAuth";
 
 export default function Home() {
-  const router = useRouter();
   const isAuthenticated = useAuth();
   const [membre, setMembre] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -25,31 +21,12 @@ export default function Home() {
   }, [isAuthenticated]);
 
   if (loading) {
-    return <Spinner />;
-  }
-
-  return (
-    <div style={styles.pageContainer}>
-      <div style={styles.appContainer}>
-        <p style={styles.welcomeText}>
-          Merhaba <span style={styles.highlight}>{membre.prenom} {membre.nom}</span>
-        </p>
-
-        <div style={styles.cardsContainer}>
-          <div style={styles.card} onClick={() => router.push("/card")}>
-            <FaIdCard size={38} color="#E30A17" style={styles.icon} />
-            <span style={styles.cardText}>Üye Kartı</span>
-          </div>
-          <div style={styles.card}>
-            <FaUsersCog size={38} color="#1E90FF" style={styles.icon} />
-            <span style={styles.cardText}>Yönetim Kurulu</span>
-          </div>
-        </div>
+    return (
+      <div style={styles.loaderContainer}>
+        <div style={styles.spinner}></div>
       </div>
-
-      <Navbar />
-    </div>
-  );
+    );
+  }
 }
 
 const styles = {
@@ -77,6 +54,21 @@ const styles = {
   },
   highlight: {
     color: "#ff4757",
+  },
+  loaderContainer: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    minHeight: "100vh", // Centrer l'élément
+    backgroundColor: "#ffffff",
+  },
+  spinner: {
+    border: "8px solid #f3f3f3", /* Gris clair */
+    borderTop: "8px solid #3498db", /* Couleur bleue */
+    borderRadius: "50%",
+    width: "50px",
+    height: "50px",
+    animation: "spin 2s linear infinite", /* Animation ici */
   },
   cardsContainer: {
     display: "flex",

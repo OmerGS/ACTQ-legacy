@@ -1,15 +1,30 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/reusable/Navbar";
+import Spinner from "@/components/reusable/Spinner";
 
 export default function Settings() {
   const router = useRouter();
+  const [membre, setMembre] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchedMembre = localStorage.getItem("user");
+    if (fetchedMembre) {
+      const membreObj = JSON.parse(fetchedMembre);
+      setMembre(membreObj.member);
+    }
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("user");
     router.push("/");
   };
+
+  if (!membre) {
+    return <Spinner />;
+  }
 
   return (
     <div style={styles.pageContainer}>

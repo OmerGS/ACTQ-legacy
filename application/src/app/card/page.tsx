@@ -2,10 +2,10 @@
 
 import { useEffect, useState, useRef } from "react";
 import JsBarcode from "jsbarcode";
+import Spinner from "@/components/reusable/Spinner";
 
 export default function Card() {
   const [membre, setMembre] = useState<any>(null);
-  const [loading, setLoading] = useState<boolean>(true);
   const [cardBackground, setCardBackground] = useState<string>("");
   const barcodeRef = useRef<SVGSVGElement>(null);
 
@@ -15,7 +15,6 @@ export default function Card() {
       const membreObj = JSON.parse(fetchedMembre);
       setMembre(membreObj.member);
     }
-    setLoading(false);
   }, []);
 
   useEffect(() => {
@@ -45,34 +44,29 @@ export default function Card() {
     }
   }, [membre]);
 
+  if (!membre) {
+    return <Spinner />;
+  }
+
   return (
     <div style={{ ...styles.container, backgroundImage: `url(${cardBackground})` }}>
-      {loading ? (
-        <p style={styles.loading}>Üye bilgileri indiriliyor...</p>
-      ) : membre ? (
-        <div style={styles.card}>
-          {/* Logo */}
-          <img src="/assets/logo/actq.png" alt="Association Logo" style={styles.logo} />
+      <div style={styles.card}>
+        {/* Logo */}
+        <img src="/assets/logo/actq.png" alt="Association Logo" style={styles.logo} />
 
-          {/* Nom du membre */}
-          <h2 style={styles.name}>
-            {membre.prenom + " " + membre.nom}
-          </h2>
+        {/* Nom du membre */}
+        <h2 style={styles.name}>
+          {membre.prenom + " " + membre.nom}
+        </h2>
 
-          {/* Code-barres */}
-          <div style={styles.barcode}>
-            <svg ref={barcodeRef}></svg>
-          </div>
-
-          {/* Motif décoratif */}
-          <div style={styles.overlay}></div>
+        {/* Code-barres */}
+        <div style={styles.barcode}>
+          <svg ref={barcodeRef}></svg>
         </div>
-      ) : (
-        <div style={styles.card}>
-          <h2>Hesabınızı oluşturmanız gerekiyor</h2>
-          <p>Bu sayfaya erişmek için önce telefon numaranızı doğrulamanız gerekmektedir.</p>
-        </div>
-      )}
+
+        {/* Motif décoratif */}
+        <div style={styles.overlay}></div>
+      </div>
     </div>
   );
 }
@@ -141,10 +135,5 @@ const styles = {
     justifyContent: "center",
     marginTop: "30px", 
     zIndex: 2,
-  },
-  loading: {
-    color: "#fff",
-    fontSize: "20px", 
-    fontWeight: "bold",
   },
 };
