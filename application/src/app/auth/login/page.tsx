@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { login } from "@/components/controller/login";
+import { motion } from "framer-motion";
 
 export default function Login() {
   const router = useRouter();
@@ -10,100 +11,178 @@ export default function Login() {
   const [password, setPassword] = useState("");
 
   const handleSubmit = async () => {
-    if(await login(identifier, password)){
+    if (await login(identifier, password)) {
       router.push("/home");
     }
   };
 
   return (
     <div style={styles.container}>
-      <div style={styles.card}>
-        <h2 style={styles.title}>Giriş Yapın</h2>
+      <motion.div
+        style={styles.card}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{
+          duration: 0.8, 
+          ease: "easeOut",
+        }}
+      >
+        <motion.h2
+          style={styles.title}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            duration: 0.8,
+            ease: "easeOut",
+          }}
+        >
+          Giriş Yap
+        </motion.h2>
 
-        {/* Single identifier input for both email and phone */}
-        <input
+        <motion.input
           type="text"
           placeholder="E-posta, Telefon veya Üye Numarası"
           value={identifier}
           onChange={(e) => setIdentifier(e.target.value)}
           style={styles.input}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            duration: 0.8,
+            ease: "easeOut", 
+          }}
         />
 
-        {/* Password input */}
-        <input
+        <motion.input
           type="password"
           placeholder="Şifre"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           style={styles.input}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            duration: 0.8,
+            ease: "easeOut", 
+          }}
         />
 
-        {/* Forgot password link */}
-        <p style={styles.forgotPassword}>Şifremi unuttum?</p>
+        <motion.p
+          style={styles.forgotPassword}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{
+            duration: 0.8,
+            ease: "easeOut", 
+          }}
+        >
+          Şifrenizi mi unuttunuz?
+        </motion.p>
 
-        {/* Submit button */}
-        <button onClick={handleSubmit} style={styles.button}>
-          Onayla
-        </button>
-      </div>
+        <motion.button
+          onClick={handleSubmit}
+          style={styles.button}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            duration: 0.8,
+            ease: "easeOut", 
+          }}
+        >
+          Devam Et
+        </motion.button>
+
+        <p style={styles.register}>
+          Hesabınız yok mu?{" "}
+          <span
+            style={styles.registerLink}
+            onClick={() => router.push("/auth/signup")} 
+          >
+            Kayıt Ol
+          </span>
+        </p>
+      </motion.div>
     </div>
   );
 }
 
 const styles = {
   container: {
+    width: "100vw",
+    height: "100vh",
+    background: "linear-gradient(135deg, #f8f8f8, #ffffff)",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    height: "100vh",
-    background: "linear-gradient(-45deg, #c8d7de, #b5e2d7, #f5c6cb, #e8d6f3)",
-    backgroundSize: "400% 400%",
-    animation: "nobleGradient 12s ease infinite",
+    fontFamily: "'SF Pro Display', sans-serif",
   },
   card: {
-    background: "rgba(255, 255, 255, 0.9)",
+    width: "90%",
+    maxWidth: "380px",
+    background: "rgba(255, 255, 255, 0.1)",
     backdropFilter: "blur(10px)",
-    padding: "30px",
-    borderRadius: "15px",
-    boxShadow: "0 8px 20px rgba(0, 0, 0, 0.2)",
+    padding: "40px",
+    borderRadius: "20px",
+    boxShadow: "0 10px 30px rgba(0, 0, 0, 0.1)",
     textAlign: "center",
-    width: "80%",
-    maxWidth: "350px",
-    animation: "fadeIn 0.5s ease-in-out",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
+    border: "1px solid rgba(0, 0, 0, 0.1)",
+    margin: "20px", 
+    willChange: "transform, opacity",
   },
   title: {
     fontSize: "24px",
-    fontWeight: "bold",
-    color: "#00BFAE",
-    marginBottom: "20px",
+    fontWeight: "600",
+    color: "#333",
+    marginBottom: "25px",
+    letterSpacing: "0.5px",
   },
   input: {
-    padding: "10px",
-    borderRadius: "8px",
-    fontSize: "16px",
-    border: "1px solid #ccc",
-    marginBottom: "15px",
     width: "100%",
+    padding: "14px",
+    marginBottom: "15px",
+    borderRadius: "12px",
+    border: "1px solid rgba(0, 0, 0, 0.1)",
+    background: "rgba(255, 255, 255, 0.7)",
+    fontSize: "16px",
+    color: "#333",
+    outline: "none",
+    transition: "all 0.3s",
+    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+    willChange: "transform, opacity",
   },
   forgotPassword: {
     fontSize: "14px",
-    color: "#00BFAE",
+    color: "rgba(0, 0, 0, 0.6)",
     cursor: "pointer",
     marginBottom: "20px",
+    transition: "color 0.3s",
   },
   button: {
-    padding: "12px 20px",
-    fontSize: "16px",
-    fontWeight: "bold",
-    backgroundColor: "#00BFAE",
-    color: "#fff",
-    borderRadius: "8px",
+    width: "100%",
+    padding: "14px",
+    fontSize: "18px",
+    fontWeight: "600",
+    background: "linear-gradient(135deg, #ececec, #dcdcdc)",
+    color: "#333",
     border: "none",
+    borderRadius: "12px",
     cursor: "pointer",
-    transition: "background-color 0.3s, box-shadow 0.3s",
-    boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)",
+    transition: "background 0.3s, transform 0.2s",
+    boxShadow: "0px 5px 15px rgba(0, 0, 0, 0.08)",
+    willChange: "transform, opacity",
+  },
+  register: {
+    marginTop: "20px",
+    fontSize: "14px",
+    color: "rgba(0, 0, 0, 0.6)",
+  },
+  registerLink: {
+    color: "#333",
+    cursor: "pointer",
+    fontWeight: "bold",
+    transition: "color 0.3s",
   },
 };
