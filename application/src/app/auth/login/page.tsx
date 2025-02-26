@@ -11,7 +11,7 @@ export default function Login() {
 
   const handleSubmit = async () => {
     if(await login(identifier, password)){
-      router.push("/card");
+      router.push("/home");
     }
   };
 

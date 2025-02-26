@@ -12,14 +12,13 @@ export default function Home() {
   const [isUserConnected, setIsUserConnected] = useState(false);
 
   useEffect(() => {
-    // Vérification si l'utilisateur est déjà connecté via localStorage
     const storedUser = localStorage.getItem("user");
 
     if (storedUser) {
-      setIsUserConnected(true);  // L'utilisateur est connecté
-      router.push("/card"); // Redirige vers /card si connecté
+      setIsUserConnected(true);
+      router.push("/home"); 
     } else {
-      setIsUserConnected(false);  // L'utilisateur n'est pas connecté
+      setIsUserConnected(false);
     }
 
     const userPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
@@ -34,7 +33,7 @@ export default function Home() {
     : { firstTime: "Inscription", login: "Connexion" };
 
   if (isUserConnected) {
-    return null;  // Ne rien afficher si l'utilisateur est déjà connecté (redirection déjà effectuée)
+    return null; 
   }
 
   return (

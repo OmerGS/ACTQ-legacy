@@ -2,8 +2,9 @@ use actq;
 SELECT * FROM Membre;
 SELECT id FROM Role WHERE nomRole = 'Membre';
 
-INSERT INTO Membre (nom, prenom, telephone, barcode, dateNaissance, email, password, salt, statusSpecial, statut)
-VALUES ('GUNES', 'Omer Faruk', '+33695474646', '27000000', NULL, NULL, NULL, NULL, NULL, 'Actif');
+UPDATE Membre
+SET nom = 'GÜNEŞ', prenom= 'Ömer Faruk'
+WHERE id = 1;
 
 
 INSERT INTO MembreRole (membre_id, role_id)

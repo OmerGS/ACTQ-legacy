@@ -218,7 +218,6 @@ class ServerConnection {
             throw error;
         }
     }
-
 }
 
 export default ServerConnection;
