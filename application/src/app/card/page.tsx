@@ -147,16 +147,16 @@ const styles = {
     position: "absolute" as "absolute",
     top: "20px",
     left: "20px",
-    background: "rgba(0, 0, 0, 0.4)", // Fond plus doux
+    background: "rgba(0, 0, 0, 0.4)", 
     color: "#fff",
     border: "none",
-    borderRadius: "25px", // Coins arrondis
-    fontSize: "16px", // Taille de texte plus petite
-    padding: "8px 16px", // Moins d'espace autour du texte
+    borderRadius: "25px", 
+    fontSize: "16px",
+    padding: "8px 16px", 
     cursor: "pointer",
-    transition: "all 0.3s ease-in-out", // Effet fluide au survol
+    transition: "all 0.3s ease-in-out", 
     zIndex: 2,
-    fontWeight: "500", // Moins de poids pour un effet plus subtil
-    textTransform: "uppercase", // Texte en majuscules
+    fontWeight: "500", 
+    textTransform: "uppercase",
   },
 };

@@ -40,7 +40,7 @@ export default function Home() {
             <FaIdCard size={38} color="#E30A17" style={styles.icon} />
             <span style={styles.cardText}>Üye Kartı</span>
           </div>
-          <div style={styles.card}>
+          <div style={styles.card} onClick={() => router.push("/conseil-administration")}>
             <FaUsersCog size={38} color="#1E90FF" style={styles.icon} />
             <span style={styles.cardText}>Yönetim Kurulu</span>
           </div>
