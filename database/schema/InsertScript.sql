@@ -2,10 +2,7 @@ use actq;
 SELECT * FROM Membre;
 SELECT id FROM Role WHERE nomRole = 'Membre';
 
-UPDATE Membre
-SET nom = 'GÜNEŞ', prenom= 'Ömer Faruk'
-WHERE id = 1;
-
+DELETE From Membre WHERE id = 263;
 
 INSERT INTO MembreRole (membre_id, role_id)
 SELECT id, (SELECT id FROM Role WHERE nomRole = 'Membre') FROM Membre

@@ -71,9 +71,9 @@ export default function Signup() {
         justifyContent: "center",
         alignItems: "center",    
         height: "100vh",
-        backgroundColor: "#c8d7de",
+        background: "linear-gradient(135deg, #f8f8f8, #ffffff)",  // Légère couleur de fond
         padding: "30px 20px 20px", 
-        fontFamily: "Arial, sans-serif",
+        fontFamily: "'SF Pro Display', sans-serif",
         overflow: "hidden",
       }}
     >
@@ -92,9 +92,10 @@ export default function Signup() {
       <motion.h2
         style={{
           fontSize: "24px",
-          fontWeight: "bold",
-          marginBottom: "20px",
+          fontWeight: "600",
           color: "#333",
+          marginBottom: "25px",
+          letterSpacing: "0.5px",
         }}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -127,9 +128,9 @@ export default function Signup() {
               padding: "15px",
               width: "100%",
               maxWidth: "320px",
-              borderRadius: "8px",
-              border: "1px solid #E0E0E0",
-              backgroundColor: "#FFF",
+              borderRadius: "20px",
+              border: "1px solid rgba(0, 0, 0, 0.1)",  // Légère bordure
+              background: "rgba(255, 255, 255, 0.7)",  // Fond semi-transparent
               marginBottom: "30px",
               boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
             }}
@@ -150,10 +151,10 @@ export default function Signup() {
             whileTap={{ scale: 0.95 }}
             style={{
               padding: "15px 40px",
-              backgroundColor: "#276678",
-              color: "#FFF",
+              background: "linear-gradient(135deg, #ececec, #dcdcdc)", // Dégradé moderne
+              color: "#333",
               border: "none",
-              borderRadius: "30px",
+              borderRadius: "12px",
               cursor: "pointer",
               fontSize: "16px",
               boxShadow: "0 6px 12px rgba(0, 0, 0, 0.1)",
@@ -174,9 +175,9 @@ export default function Signup() {
               padding: "15px",
               width: "100%",
               maxWidth: "320px",
-              borderRadius: "8px",
-              border: "1px solid #E0E0E0",
-              backgroundColor: "#FFF",
+              borderRadius: "20px",
+              border: "1px solid rgba(0, 0, 0, 0.1)",
+              background: "rgba(255, 255, 255, 0.7)",
               marginBottom: "30px",
               boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
             }}
@@ -190,9 +191,9 @@ export default function Signup() {
               padding: "15px",
               width: "100%",
               maxWidth: "320px",
-              borderRadius: "8px",
-              border: "1px solid #E0E0E0",
-              backgroundColor: "#FFF",
+              borderRadius: "12px",
+              border: "1px solid rgba(0, 0, 0, 0.1)",
+              background: "rgba(255, 255, 255, 0.7)",
               marginTop: "20px",
               fontSize: "16px",
               textAlign: "center",
@@ -209,8 +210,8 @@ export default function Signup() {
                 maxWidth: "320px",
                 borderRadius: "50px", 
                 border: "none", 
-                backgroundColor: "#276678", 
-                color: "#FFF", 
+                background: "linear-gradient(135deg, #ececec, #dcdcdc)", 
+                color: "#333", 
                 fontSize: "18px", 
                 fontWeight: "bold", 
                 boxShadow: "0 4px 10px rgba(0, 0, 0, 0.2)",
@@ -227,7 +228,6 @@ export default function Signup() {
           </motion.button>
 
         </motion.div>
-        
       )}
     </motion.div>
   );

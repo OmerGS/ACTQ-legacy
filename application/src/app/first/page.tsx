@@ -3,9 +3,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { sendVerificationCode, checkMail, checkVerificationCodeEmail, registerPassword } from "@/components/controller/firstTimeConnection";
-import Spinner from "@/components/reusable/Spinner";
 
-export default function First() {
+export default function Login() {
   const router = useRouter();
   const [membre, setMembre] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -20,17 +19,11 @@ export default function First() {
     const fetchedMembre = localStorage.getItem("user");
     if (fetchedMembre) {
       const membreObj = JSON.parse(fetchedMembre);
+      console.log(membreObj);
       setMembre(membreObj.member);
-      if (membreObj.member.email) {
-        setLoading(true);
-        router.push("/home"); 
-        return;
-      }
-    } else {
-      router.push("/");
     }
     setLoading(false);
-  }, [router]);
+  }, []);
 
   const handleVerification = async () => {
     if (await checkVerificationCodeEmail(email, verificationCode)) {
@@ -70,136 +63,138 @@ export default function First() {
       }
 
       setStep(step + 1);
-    }  
+  }  
 
     setStep(step + 1);
   };
 
-  if (loading) {
-    return <Spinner />;
-  }
-
-  if (!membre || membre.email == null) {
-      return <Spinner />;
-  }
-
   return (
     <div style={styles.container}>
       <div style={styles.background}></div>
-      <p style={styles.loading}>Üye bilgileri indiriliyor...</p>
-      <div style={styles.card}>
-        <h2 style={styles.greeting}>
-          Merhaba,{" "}
-          <span style={styles.name}>{membre.prenom + " " + membre.nom}</span>
-        </h2>
-        
-        <div style={styles.buttons}>
-          {step === 1 && (
-            <div>
-              <p style={styles.message}>Hoş geldiniz, lütfen devam edin.</p>
+
+      {!membre ? (
+        <div style={styles.card}>
+          <h2>Hesabınızı oluşturmanız gerekiyor</h2>
+          <p>Bu sayfaya erişmek için önce telefon numaranızı doğrulamanız gerekmektedir.</p>
+          <p>Lütfen telefon numaranızı doğrulayın ve ardından hesap oluşturma sayfasına geçiş yapın.</p>
+        </div>
+      ) : loading ? (
+        <p style={styles.loading}>Üye bilgileri indiriliyor...</p>
+      ) : (
+        <div style={styles.card}>
+          <h2 style={styles.greeting}>
+            Merhaba,{" "}
+            <span style={styles.name}>{membre.prenom + " " + membre.nom}</span>
+          </h2>
+          
+          <div style={styles.buttons}>
+            {step === 1 && (
+              <div>
+                <p style={styles.message}>Hoş geldiniz, lütfen devam edin.</p>
+                <button
+                  style={styles.buttonContinue}
+                  onClick={() => {
+                    setShowLogoutButton(false); 
+                    handleNextStep(); 
+                  }}
+                >
+                  DEVAM
+                </button>
+              </div>
+            )}
+
+            {step === 2 && (
+              <div>
+                <p style={styles.message}>E-Posta adresinizi giriniz.</p>
+                <input
+                  type="email"
+                  placeholder="Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  style={styles.input}
+                />
+                <button
+                  style={styles.buttonContinue}
+                  onClick={handleNextStep}
+                >
+                  DEVAM
+                </button>
+              </div>
+            )}
+
+            {step === 3 && (
+              <div>
+                <p style={styles.message}>E-Posta adresinize gelen kodu buraya giriniz.</p>
+                <input
+                  type="text"
+                  placeholder="Onaylama kodu"
+                  value={verificationCode}
+                  onChange={(e) => setVerificationCode(e.target.value)}
+                  style={styles.input}
+                />
+                <button
+                  style={styles.buttonContinue}
+                  onClick={handleVerification}
+                >
+                  Kodu doğrula
+                </button>
+                {codeValid && <p style={styles.successMessage}>Kod dogrulandi !</p>}
+              </div>
+            )}
+
+            {step === 4 && (
+              <div>
+                <p style={styles.message}>Lütfen bir sifre giriniz, bu sifreyi kimseye paylasmayin.</p>
+                <input
+                  type="password"
+                  placeholder="Sifre"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  style={styles.input}
+                />
+                <button
+                  style={styles.buttonContinue}
+                  onClick={handleNextStep}
+                >
+                  DEVAM
+                </button>
+              </div>
+            )}
+
+            {step === 5 && (
+              <div>
+                <h3>Hesap başarıyla oluşturuldu!</h3>
+                <br></br>
+                <p>Hesabınız başarıyla oluşturuldu. Şimdi giriş yapabilirsiniz.</p>
+                <br></br>
+                <button
+                  style={styles.buttonContinue}
+                  onClick={() => window.location.href = '/auth/login'} 
+                >
+                  Giriş Yap
+                </button>
+              </div>
+            )}
+
+
+            {showLogoutButton && (
               <button
-                style={styles.buttonContinue}
+                style={styles.buttonLogout}
                 onClick={() => {
-                  setShowLogoutButton(false); 
-                  handleNextStep(); 
+                  localStorage.removeItem("user");
+                  alert("Lütfen yönetim ile iletişime geçin.");
+                  router.push("/")
                 }}
               >
-                DEVAM
+                Siz değil misiniz?
               </button>
-            </div>
-          )}
-
-          {step === 2 && (
-            <div>
-              <p style={styles.message}>E-Posta adresinizi giriniz.</p>
-              <input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                style={styles.input}
-              />
-              <button
-                style={styles.buttonContinue}
-                onClick={handleNextStep}
-              >
-                DEVAM
-              </button>
-            </div>
-          )}
-
-          {step === 3 && (
-            <div>
-              <p style={styles.message}>E-Posta adresinize gelen kodu buraya giriniz.</p>
-              <input
-                type="text"
-                placeholder="Onaylama kodu"
-                value={verificationCode}
-                onChange={(e) => setVerificationCode(e.target.value)}
-                style={styles.input}
-              />
-              <button
-                style={styles.buttonContinue}
-                onClick={handleVerification}
-              >
-                Kodu doğrula
-              </button>
-              {codeValid && <p style={styles.successMessage}>Kod dogrulandi !</p>}
-            </div>
-          )}
-
-          {step === 4 && (
-            <div>
-              <p style={styles.message}>Lütfen bir sifre giriniz, bu sifreyi kimseye paylasmayin.</p>
-              <input
-                type="password"
-                placeholder="Sifre"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                style={styles.input}
-              />
-              <button
-                style={styles.buttonContinue}
-                onClick={handleNextStep}
-              >
-                DEVAM
-              </button>
-            </div>
-          )}
-
-          {step === 5 && (
-            <div>
-              <h3>Hesap başarıyla oluşturuldu!</h3>
-              <br></br>
-              <p>Hesabınız başarıyla oluşturuldu. Şimdi giriş yapabilirsiniz.</p>
-              <br></br>
-              <button
-                style={styles.buttonContinue}
-                onClick={() => window.location.href = '/auth/login'} 
-              >
-                Giriş Yap
-              </button>
-            </div>
-          )}
-
-          {showLogoutButton && (
-            <button
-              style={styles.buttonLogout}
-              onClick={() => {
-                localStorage.removeItem("user");
-                alert("Lütfen yönetim ile iletişime geçin.");
-                router.push("/")
-              }}
-            >
-              Siz değil misiniz?
-            </button>
-          )}
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
-
 
 const styles = {
   container: {
