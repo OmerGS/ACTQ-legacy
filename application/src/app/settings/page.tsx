@@ -28,10 +28,18 @@ export default function Settings() {
 
   return (
     <div style={styles.pageContainer}>
-      <h1 style={styles.title}>Paramètres</h1>
+      <h1 style={styles.title}>Ayarlar</h1>
+
+      {/* Carte avec les informations personnelles */}
+      <div style={styles.infoCard}>
+        <h2 style={styles.infoTitle}>Kişisel Bilgiler</h2>
+        <p><strong>İsim:</strong> {membre.prenom} {membre.nom}</p>
+        <p><strong>E-posta:</strong> {membre.email}</p>
+        <p><strong>Üyelik Numarası:</strong> {membre.barcode}</p>
+      </div>
 
       <button onClick={handleLogout} style={styles.logoutButton}>
-        Se Déconnecter
+        Çıkış Yap
       </button>
 
       <Navbar />
@@ -57,6 +65,22 @@ const styles = {
     fontWeight: "bold",
     color: "#333",
     marginBottom: "20px",
+  },
+  infoCard: {
+    backgroundColor: "#f4f4f4",
+    padding: "20px",
+    borderRadius: "12px",
+    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+    textAlign: "left",
+    width: "80%",
+    maxWidth: "400px",
+    marginBottom: "20px",
+  },
+  infoTitle: {
+    fontSize: "20px",
+    fontWeight: "bold",
+    marginBottom: "10px",
+    color: "#222",
   },
   logoutButton: {
     backgroundColor: "#ff4d4d",

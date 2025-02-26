@@ -48,9 +48,16 @@ export default function Card() {
     return <Spinner />;
   }
 
+  const handleBack = () => {
+    window.history.back();
+  };
+
   return (
     <div style={{ ...styles.container, backgroundImage: `url(${cardBackground})` }}>
       <div style={styles.card}>
+        {/* Bouton de retour */}
+        <button onClick={handleBack} style={styles.backButton}>←</button>
+
         {/* Logo */}
         <img src="/assets/logo/actq.png" alt="Association Logo" style={styles.logo} />
 
@@ -135,5 +142,21 @@ const styles = {
     justifyContent: "center",
     marginTop: "30px", 
     zIndex: 2,
+  },
+  backButton: {
+    position: "absolute" as "absolute",
+    top: "20px",
+    left: "20px",
+    background: "rgba(0, 0, 0, 0.4)", // Fond plus doux
+    color: "#fff",
+    border: "none",
+    borderRadius: "25px", // Coins arrondis
+    fontSize: "16px", // Taille de texte plus petite
+    padding: "8px 16px", // Moins d'espace autour du texte
+    cursor: "pointer",
+    transition: "all 0.3s ease-in-out", // Effet fluide au survol
+    zIndex: 2,
+    fontWeight: "500", // Moins de poids pour un effet plus subtil
+    textTransform: "uppercase", // Texte en majuscules
   },
 };
