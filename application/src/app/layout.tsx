@@ -1,10 +1,9 @@
 import React from "react";
-import Head from "next/head";
 import ServiceWorker from "@/components/reusable/ServiceWorker";
 
 export const metadata = {
   title: "ACTQ",
-  description: "Üyeler için bir plateforme",
+  description: "Üyeler için bir plateform",
   icons: {
     icon: "/icons/icon-192x192.png",
     apple: "/icons/icon-192x192.png",
@@ -15,7 +14,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="fr">
       <head>
-        <meta name="description" content="Üyeler için bir plateforme" />
+        <meta name="description" content="Üyeler için bir plateform" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#000000" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
