@@ -21,7 +21,7 @@ CREATE TABLE Membre (
   password VARCHAR(255),
   salt VARCHAR(512),
   statusSpecial ENUM('Retraite', 'Etudiant'),
-  statut ENUM('Actif','Suspendu', 'Parti') NOT NULL DEFAULT 'Actif',
+  statut ENUM('Actif', 'Suspendu', 'Parti') NOT NULL DEFAULT 'Actif',
   adresseFr VARCHAR(255),
   adresseTr VARCHAR(255)
 );

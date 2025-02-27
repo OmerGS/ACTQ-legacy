@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Navbar from "@/components/reusable/Navbar";
-import { FaIdCard, FaUsersCog, FaUserCircle } from "react-icons/fa";
+import { FaUsersCog, FaUser, FaHandHoldingUsd } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import useAuth from "../hooks/useAuth";
 import Spinner from "@/components/reusable/Spinner";
@@ -70,7 +70,7 @@ export default function Home() {
       const minutes = Math.floor((timeDiff % (1000 * 3600)) / (1000 * 60));
       const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
 
-      setCountdown(`${days}d ${hours}h ${minutes}m ${seconds}s`);
+      setCountdown(`${days}j ${hours}h ${minutes}m ${seconds}s`);
 
       if (days <= 14) {
         setFlash(true);
@@ -97,24 +97,24 @@ export default function Home() {
 
         {/* Add Son aidat ödeme tarihi and the countdown */}
         <div style={styles.countdownContainer}>
-          <p style={styles.countdownText}>Aidat son ödeme tarihi</p>
+          <p style={styles.countdownText}>Aidat son ödeme tarihine kalan süre</p>
           <p style={flash ? styles.countdownValueFlash : styles.countdownValue}>
             {countdown}
           </p>
         </div>
 
         <div style={styles.cardsContainer}>
-          <div style={styles.card} onClick={() => router.push("/card")}>
-            <FaIdCard size={38} color="#E30A17" style={styles.icon} />
-            <span style={styles.cardText}>Üye Kartı</span>
-          </div>
           <div style={styles.card} onClick={() => router.push("/conseil-administration")}>
-            <FaUsersCog size={38} color="#1E90FF" style={styles.icon} />
+            <FaUsersCog size={38} color="#4682B4" style={styles.icon} />
             <span style={styles.cardText}>Yönetim Kurulu</span>
           </div>
           <div style={styles.card} onClick={() => router.push("/uyeligim")}>
-            <FaUserCircle size={38} color="#1E90FF" style={styles.icon} />
-            <span style={styles.cardText}>Üyeliğim</span>
+            <FaUser size={38} color="#8A2BE2" style={styles.icon} />
+            <span style={styles.cardText}>Dernek Üyeliğim</span>
+          </div>
+          <div style={styles.card} onClick={() => router.push("/")}>
+            <FaHandHoldingUsd size={38} color="#FFD700" style={styles.icon} />
+            <span style={styles.cardText}>Cenaze Fonu Üyeliğim</span>
           </div>
         </div>
       </div>
@@ -185,7 +185,7 @@ const styles = {
   countdownContainer: {
     width: "100%",
     maxWidth: "350px",
-    padding: "20px",
+    padding: "5px",
     borderRadius: "12px",
     backgroundColor: "#f4f4f4",
     boxShadow: "2px 2px 8px rgba(102, 102, 102, 0.1)", 

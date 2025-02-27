@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { FaArrowLeft } from 'react-icons/fa';
 import { Membre } from "@/components/interface/Membre";
 import Spinner from '@/components/reusable/Spinner';
+import { aidat } from '@/components/interface/Aidat';
 
 const Uyeligim = () => {
   const [membre, setMembre] = useState<Membre | null>(null);
@@ -34,7 +35,6 @@ const Uyeligim = () => {
     return <Spinner />;
   }
 
-  // Calcul de l'âge
   const calculateAge = (birthDate: string) => {
     const today = new Date();
     const birth = new Date(birthDate);
@@ -44,6 +44,34 @@ const Uyeligim = () => {
       age--;
     }
     return age;
+  };
+
+  const calculatePrice = (membre: any) => {
+    if (membre?.statut === 'Suspendu') {
+      return 0;
+    }
+    const age = membre?.dateNaissance ? calculateAge(membre?.dateNaissance) : 0;
+    if (age >= 18 && age <= 25 && membre?.statut === 'Actif') {
+      return aidat.jeune;
+    }
+    if (age >= 26 && membre?.statusSpecial !== 'Retraite') {
+      return aidat.base;
+    }
+    if (membre?.statusSpecial === 'Retraite') {
+      return aidat.retraite;
+    }
+    return aidat.base;
+  }; 
+
+  const prix = calculatePrice(membre);
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, "0"); 
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+  
+    return `${day}/${month}/${year}`;
   };
 
   return (
@@ -57,16 +85,32 @@ const Uyeligim = () => {
       <div className="main-container">
         {/* Sayin NOM PRENOM (AGE) */}
         <div className="profile-card">
-          <p className="profile-info">{membre?.nom} {membre?.prenom} ({membre?.dateNaissance && calculateAge(membre?.dateNaissance)} yaşında)</p>
+        <p className="profile-info">
+          {membre?.nom} {membre?.prenom} ({membre?.dateNaissance ? `${calculateAge(membre?.dateNaissance)} yaşında` : "Yaşınızı belirtmediniz !"})
+        </p>
         </div>
 
-        {/* Widget Bilgi (Date Naissance et Üye Numarası) */}
+        {/* Widget Aidat */}
+        <div className="widget">
+          <h3>Aidat</h3>
+          <div className="sub-widget">
+            <div className="widget-item">
+              <strong>Üyelik Durumum :</strong> {membre?.statut}
+            </div>
+
+            <div className="widget-item">
+              <strong>{new Date().getFullYear()} Fiyat :</strong> {prix}€
+            </div>
+          </div>
+        </div>
+
+        {/* Widget Bilgi */}
         <div className="widget">
           <h3>Bilgi</h3>
           <div className="sub-widget">
-            <div className="widget-item">
-              <strong>Doğum Tarihi :</strong> {membre?.dateNaissance}
-            </div>
+          <div className="widget-item">
+            <strong>Doğum Tarihi :</strong> {membre?.dateNaissance ? formatDate(membre?.dateNaissance) : ""}
+          </div>
             <div className="widget-item">
               <strong>Üye Numarası :</strong> {membre?.barcode}
             </div>
