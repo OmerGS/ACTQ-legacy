@@ -337,7 +337,7 @@ const styles = {
     fontFamily: "'SF Pro Display', sans-serif",
   },
   background: {
-    position: "absolute",
+    position: "absolute" as "absolute", 
     width: "100%",
     height: "100%",
     backgroundColor: "#fff",
@@ -353,12 +353,12 @@ const styles = {
     boxShadow: "0 10px 30px rgba(0, 0, 0, 0.1)",
     textAlign: "center",
     display: "flex",
-    flexDirection: "column",
+    flexDirection: "column",  // Type vérifié comme une valeur CSS valide
     alignItems: "center",
     border: "1px solid rgba(0, 0, 0, 0.1)",
     margin: "20px", 
     willChange: "transform, opacity",
-  },
+  } as React.CSSProperties,
   greeting: {
     fontSize: "28px",
     fontWeight: "600",
@@ -368,7 +368,7 @@ const styles = {
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-  },    
+  } as React.CSSProperties,    
   name: {
     display: "inline-block",
     whiteSpace: "nowrap",
@@ -396,7 +396,7 @@ const styles = {
     gap: "20px",
     marginTop: "20px",
     width: "100%",
-  },
+  } as React.CSSProperties,
   buttonContinue: {
     padding: "12px 18px",
     borderRadius: "12px",
@@ -409,7 +409,7 @@ const styles = {
     transition: "all 0.3s",
     boxShadow: "0 15px 30px rgba(0, 0, 0, 0.2)",
     textTransform: "uppercase",
-  },
+  } as React.CSSProperties,
   buttonLogout: {
     padding: "12px 18px",
     borderRadius: "12px",
@@ -421,7 +421,7 @@ const styles = {
     cursor: "pointer",
     transition: "all 0.3s",
     textTransform: "uppercase",
-  },
+  } as React.CSSProperties,
   input: {
     padding: "12px 18px",
     borderRadius: "12px",

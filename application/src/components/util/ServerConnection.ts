@@ -180,7 +180,7 @@ class ServerConnection {
         }  
     }
 
-    public static async login(identifier: string, password: string) : Promise<string> {
+    public static async login(identifier: string, password: string) : Promise<any> {
         try {
             const response = await axios.post(`${BACKEND_API.baseURL}/membre/login`, {
                 identifier: identifier,
@@ -200,7 +200,7 @@ class ServerConnection {
         }
     }
 
-    public static async getSaltByIdentifier(identifier:string) : Promise<string> {
+    public static async getSaltByIdentifier(identifier:string) : Promise<any> {
         try {
             const response = await axios.post(`${BACKEND_API.baseURL}/membre/getSaltByIdentifier`, {
                 identifier: identifier,

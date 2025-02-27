@@ -131,9 +131,9 @@ const styles = {
     color: "#fff",
     marginBottom: "20px",
     letterSpacing: "2px",
-    textTransform: "uppercase",
+    textTransform: "uppercase" as "uppercase",
     zIndex: 2,
-  },
+  },  
   barcode: {
     width: "100%",
     height: "80px", 
@@ -157,6 +157,6 @@ const styles = {
     transition: "all 0.3s ease-in-out", 
     zIndex: 2,
     fontWeight: "500", 
-    textTransform: "uppercase",
-  },
+    textTransform: "uppercase" as "uppercase",
+  },  
 };

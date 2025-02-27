@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { FaHome, FaCog } from "react-icons/fa";
+import { JSX } from "react";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -49,7 +50,7 @@ const styles = {
     padding: "12px 0",
     borderRadius: "15px",
     boxShadow: "0 4px 10px rgba(0, 0, 0, 0.15)",
-  },
+  } as React.CSSProperties,
   navItem: {
     display: "flex",
     flexDirection: "column",
@@ -57,7 +58,7 @@ const styles = {
     justifyContent: "center",
     position: "relative",
     textDecoration: "none",
-  },
+  } as React.CSSProperties,
   iconContainer: {
     fontSize: "28px",
     transition: "color 0.3s ease, transform 0.3s ease",
@@ -70,5 +71,5 @@ const styles = {
     backgroundColor: "#ff4757",
     borderRadius: "2px",
     transition: "opacity 0.3s ease, transform 0.3s ease",
-  },
+  } as React.CSSProperties,
 };

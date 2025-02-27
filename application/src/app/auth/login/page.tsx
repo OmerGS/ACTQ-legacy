@@ -131,7 +131,7 @@ const styles = {
     border: "1px solid rgba(0, 0, 0, 0.1)",
     margin: "20px", 
     willChange: "transform, opacity",
-  },
+  } as React.CSSProperties,
   title: {
     fontSize: "24px",
     fontWeight: "600",

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import PhoneInput from 'react-phone-number-input';
+import { E164Number } from 'libphonenumber-js';
 import 'react-phone-number-input/style.css';
 
 import { handleSendCode, handleCheckCode } from "@/components/controller/signup";
@@ -51,7 +52,7 @@ export default function Signup() {
     }
   };
 
-  const handlePhoneChange = (value) => {
+  const handlePhoneChange = (value: E164Number | undefined) => {
     if (value) {
       const formattedPhone = value.replace(/[^0-9+]/g, '');
       setPhone(formattedPhone);
@@ -71,7 +72,7 @@ export default function Signup() {
         justifyContent: "center",
         alignItems: "center",    
         height: "100vh",
-        background: "linear-gradient(135deg, #f8f8f8, #ffffff)",  // Légère couleur de fond
+        background: "linear-gradient(135deg, #f8f8f8, #ffffff)",
         padding: "30px 20px 20px", 
         fontFamily: "'SF Pro Display', sans-serif",
         overflow: "hidden",

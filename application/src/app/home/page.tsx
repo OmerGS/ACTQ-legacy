@@ -62,13 +62,13 @@ const styles = {
     alignItems: "center",
     padding: "20px",
     fontFamily: "'Nunito', sans-serif",
-  },
+  } as React.CSSProperties,
   appContainer: {
     width: "100%",
     maxWidth: "400px",
     padding: "20px",
     textAlign: "left",
-  },
+  } as React.CSSProperties,
   welcomeText: {
     fontSize: "22px",
     fontWeight: "bold",
@@ -83,7 +83,7 @@ const styles = {
     flexDirection: "column",
     gap: "15px",
     marginTop: "20px",
-  },
+  } as React.CSSProperties,
   card: {
     display: "flex",
     alignItems: "center",
@@ -101,12 +101,12 @@ const styles = {
     transition: "transform 0.2s ease, box-shadow 0.2s ease",
     boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
     boxSizing: "border-box",
-  },
+  } as React.CSSProperties,
   cardText: {
     flex: 1,
     textAlign: "center",
     fontSize: "20px",
-  },
+  } as React.CSSProperties,
   icon: {
     marginRight: "10px",
   },

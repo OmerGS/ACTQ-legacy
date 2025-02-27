@@ -24,11 +24,10 @@ export default function Home() {
     const userPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
     setIsDarkMode(userPrefersDark);
 
-    // iOS ve Standalone olup olmadığını kontrol et
-    const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
-    const isStandalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone;
+    // Detect if the app is in standalone mode
+    const isStandalone = window.matchMedia("(display-mode: standalone)").matches;
 
-    if (isIOS && !isStandalone) {
+    if (!isStandalone) {
       setShowInstallPrompt(true);
     }
   }, [router]);
@@ -60,7 +59,7 @@ export default function Home() {
         padding: "20px",
         position: "relative",
         transition: "background-color 0.5s ease",
-        fontFamily: "Nunito, sans-serif",  // Appliquer la police Nunito
+        fontFamily: "Nunito, sans-serif",  // Apply Nunito font
       }}
     >
       <div style={{ position: "absolute", top: "20px", right: "20px", display: "flex", gap: "20px" }}>
@@ -122,7 +121,7 @@ export default function Home() {
 }
 
 const styles = {
-  iconButton: (isDarkMode) => ({
+  iconButton: (isDarkMode: boolean) => ({
     background: "none",
     border: "none",
     cursor: "pointer",
@@ -172,7 +171,7 @@ const styles = {
     maxWidth: "300px",
     fontSize: "14px",
     lineHeight: "1.5",
-  },
+  } as React.CSSProperties,
   closeButton: {
     marginTop: "15px",
     padding: "8px 15px",

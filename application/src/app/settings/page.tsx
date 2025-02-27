@@ -59,7 +59,7 @@ const styles = {
     fontFamily: "'Nunito', sans-serif",
     boxSizing: "border-box",
     textAlign: "center",
-  },
+  } as React.CSSProperties,
   title: {
     fontSize: "24px",
     fontWeight: "bold",
@@ -75,7 +75,7 @@ const styles = {
     width: "80%",
     maxWidth: "400px",
     marginBottom: "20px",
-  },
+  } as React.CSSProperties,
   infoTitle: {
     fontSize: "20px",
     fontWeight: "bold",
