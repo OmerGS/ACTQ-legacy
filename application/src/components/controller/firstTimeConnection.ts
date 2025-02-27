@@ -1,4 +1,4 @@
-import ServerConnection from "../util/ServerConnection";
+import ServerConnection from "../api/ServerConnection";
 import { PasswordUtil } from "../util/password-util";
 
 export async function fetchMembreInfo(phone: string): Promise<boolean> {

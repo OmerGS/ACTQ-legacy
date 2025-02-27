@@ -1,4 +1,4 @@
-import ServerConnection from '@/components/util/ServerConnection';
+import ServerConnection from '@/components/api/ServerConnection';
 
 export async function handleSendCode(phoneNumber: string): Promise<boolean>{
     if (!phoneNumber) {

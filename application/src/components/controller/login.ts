@@ -1,5 +1,5 @@
 import { PasswordUtil } from "../util/password-util";
-import ServerConnection from "../util/ServerConnection"
+import ServerConnection from "../api/ServerConnection"
 
 export async function login(identifier: string, password: string): Promise<boolean> {   
     if(!identifier || !password) {
