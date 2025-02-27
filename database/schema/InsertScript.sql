@@ -3,6 +3,7 @@ SELECT * FROM Membre;
 SELECT id FROM Role WHERE nomRole = 'Membre';
 
 DELETE From Membre WHERE id = 263;
+SELECT * FROM Membre WHERE id = 266;
 
 INSERT INTO MembreRole (membre_id, role_id)
 SELECT id, (SELECT id FROM Role WHERE nomRole = 'Membre') FROM Membre

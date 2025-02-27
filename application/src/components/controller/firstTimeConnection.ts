@@ -7,6 +7,11 @@ export async function fetchMembreInfo(phone: string): Promise<boolean> {
 }
 
 export async function checkMail(email: string): Promise<boolean> {
+    if(!email){
+        alert("Lütfen bir e-posta adresi girin.");
+        return(false);
+    }
+
     let mailExist = await ServerConnection.checkMail(email);
 
     console.log(mailExist);
@@ -20,27 +25,46 @@ export async function checkMail(email: string): Promise<boolean> {
 }
 
 export async function checkVerificationCodeEmail(email: string, code: string): Promise<boolean> {
+    if(!code){
+        alert("Lütfen doğrulama kodunu girin.");
+        return(false);
+    }
+
     let codeSucess = await ServerConnection.checkVerificationCodeEmail(email, code);
+    
+    if(!codeSucess){
+        alert("Doğrulama kodu yanlış. Lütfen tekrar deneyin.");
+        return(false);
+    } else if(codeSucess){
+        return(true);
+    }
 
-    console.log(codeSucess);
-
-    return(codeSucess);
+    alert("Bir hata oluştu. Lütfen tekrar deneyin.");
+    return(false);
 }
 
-export function registerMemberIntoDatabase(
+export async function registerMemberIntoDatabase(
     telephone: string,
     email: string, 
     password: string, 
     rueFR: string, 
     codePostalFR: string, 
     villeFR: string,
-    rueTR: string,
-    codePostalTR: string,
-    villeTR: string,
+    rueTR: string | null,   
+    codePostalTR: string | null, 
+    villeTR: string | null, 
     dateNaissance: string
-): void {
+): Promise<boolean> {
     const addressFR = rueFR + ", " + codePostalFR + ", " + villeFR + ", Fransa";
-    const addressTR = rueTR + ", " + codePostalTR + ", " + villeTR + ", Türkiye";
+    let addressTR = "";
+
+    if(rueTR == "" || codePostalTR == "" || villeTR == ""){
+        addressTR = "Adres bilgileri yok";
+    } else {
+        addressTR = rueTR + ", " + codePostalTR + ", " + villeTR + ", Türkiye";
+    }
+
+
     
     console.log("Telephone : " + telephone);
     console.log("Email : " + email);
@@ -48,8 +72,22 @@ export function registerMemberIntoDatabase(
     console.log("AddressFR : " + addressFR);
     console.log("AddressTR : " + addressTR);
     console.log("Date de naissance : " + dateNaissance);
+
+    try {
+        const salt = await PasswordUtil.getSalt();
+        const hashedPassword = PasswordUtil.hashPassword(password, salt);
+    
+        const accountCreated = await ServerConnection.registerMember(telephone, email, hashedPassword, salt, addressFR, addressTR, dateNaissance);
+    
+        console.log("Compte créé : " + accountCreated);
+        return accountCreated;
+    } catch (error) {
+        console.error("Erreur lors de la création du compte :", error);
+        return false;
+    }
 }
 
+/*
 export async function registerPassword(telephone: string, email: string, password: string): Promise<boolean> {
     try {
         const salt = await PasswordUtil.getSalt();
@@ -64,8 +102,7 @@ export async function registerPassword(telephone: string, email: string, passwor
         return false;
     }
 }
-
-
+*/
 
 export async function sendVerificationCode(email: string): Promise<void> {
     await ServerConnection.sendMailVerificationCode(email);

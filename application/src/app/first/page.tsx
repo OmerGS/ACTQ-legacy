@@ -41,7 +41,6 @@ export default function First() {
       setCodeValid(true);
       setStep(4);
     } else {
-      alert("Geçersiz kod. Lütfen tekrar deneyin.");
       return;
     }
   };
@@ -58,6 +57,7 @@ export default function First() {
           return;
         }
         sendVerificationCode(email);
+        alert("E-posta adresinize bir doğrulama kodu gönderildi. Lütfen kontrol edin.");
         setStep(step + 1);
       }
     }
@@ -68,15 +68,51 @@ export default function First() {
         return;
       }
     }
+
+    if(step === 5){
+      if(rueFR === '' || codePostalFR === '' || villeFR === ''){
+        alert("Fransiz adresinizi eksiksiz giriniz.");
+        return;
+      }
+    }
+
+    if (step === 6) {
+      if (rueTR === '' || codePostalTR === '' || villeTR === ''){
+        alert("Turk adresinizi eksiksiz giriniz.");
+        return;
+      }
+    }
     
     if(step === 7){
+      if (dateNaissance === '') {
+        alert("Doğum tarihinizi giriniz.");
+        return;
+      }
+      
+      const birthDate = new Date(dateNaissance);
+      const today = new Date();
+      
+      const age = today.getFullYear() - birthDate.getFullYear();
+      
+      if (age < 18) {
+        alert("Bir üye en az 18 yaşında olması gerekmektedir.");
+        return;
+      }    
+    
+
+
       /*const success = await registerPassword(membre.telephone, email, password);
       if (!success) {
           alert("Bir hata oluştu. Lütfen tekrar deneyin.");
           return;
       }*/
 
-      registerMemberIntoDatabase(membre.telephone, email, password, rueFR, codePostalFR, villeFR, rueTR, codePostalTR, villeTR, dateNaissance);
+      const success = await registerMemberIntoDatabase(membre.telephone, email, password, rueFR, codePostalFR, villeFR, rueTR, codePostalTR, villeTR, dateNaissance);
+      if (!success) {
+          alert("Bir hata oluştu. Lütfen tekrar deneyin.");
+          return;
+      }
+      
     }
 
     setStep(step + 1);
@@ -261,7 +297,9 @@ export default function First() {
                   disabled
                   style={styles.input}
                 />
-                <br></br>
+                
+                <br />
+
                 <button
                   style={styles.buttonContinue}
                   onClick={handleNextStep}
@@ -397,6 +435,15 @@ const styles = {
     marginTop: "20px",
     width: "100%",
   } as React.CSSProperties,
+  buttonSkip: {
+    marginTop: "10px",
+    backgroundColor: "gray",
+    color: "white",
+    padding: "10px 20px",
+    border: "none",
+    borderRadius: "5px",
+    cursor: "pointer",
+  },  
   buttonContinue: {
     padding: "12px 18px",
     borderRadius: "12px",

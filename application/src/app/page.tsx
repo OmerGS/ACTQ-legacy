@@ -15,8 +15,12 @@ export default function Home() {
     const storedUser = localStorage.getItem("user");
 
     if (storedUser) {
-      setIsUserConnected(true);
-      router.push("/home");
+      if(storedUser?.email == null){
+        return;
+      } else {
+        setIsUserConnected(true);
+        router.push("/home");
+      }
     } else {
       setIsUserConnected(false);
     }

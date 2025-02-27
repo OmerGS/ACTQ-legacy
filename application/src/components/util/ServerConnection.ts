@@ -161,6 +161,31 @@ class ServerConnection {
         }
     }
 
+    public static async registerMember(telephone: string, email: string, password: string, salt: string, addressFR: string, addressTR: string, dateNaissance: string): Promise<any> {
+        try {
+            const response = await axios.post (`${BACKEND_API.baseURL}/membre/registerMember`, {
+                telephone: telephone,
+                email: email,
+                password: password,
+                salt: salt,
+                addressFR: addressFR,
+                addressTR: addressTR,
+                dateNaissance: dateNaissance,
+            },
+            {
+                headers: {
+                  'x-api-key': `${API_KEY.API_KEY}`,
+                  'Content-Type': 'application/json',
+                },
+            });
+
+            return response.data.success;
+        } catch (error) {
+            console.error("Erreur lors de l'envoi du code de vérification :", error);
+            throw error; 
+        }
+    }
+
     public static async checkMail(email: string): Promise<any> {
         try {
             const response = await axios.post (`${BACKEND_API.baseURL}/membre/checkMail`, {
