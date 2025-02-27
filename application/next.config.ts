@@ -6,6 +6,9 @@ const nextConfig = {
       enabled: true,
     },
   },
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production',
+  },
 };
 
-export default withPWA(nextConfig);
+module.exports = withPWA(nextConfig);
