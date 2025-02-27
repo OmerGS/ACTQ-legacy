@@ -24,10 +24,11 @@ export default function Home() {
     const userPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
     setIsDarkMode(userPrefersDark);
 
-    // Detect if the app is in standalone mode
+    const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
+
     const isStandalone = window.matchMedia("(display-mode: standalone)").matches;
 
-    if (!isStandalone) {
+    if (isIOS && !isStandalone) {
       setShowInstallPrompt(true);
     }
   }, [router]);
@@ -59,7 +60,7 @@ export default function Home() {
         padding: "20px",
         position: "relative",
         transition: "background-color 0.5s ease",
-        fontFamily: "Nunito, sans-serif",  // Apply Nunito font
+        fontFamily: "Nunito, sans-serif",
       }}
     >
       <div style={{ position: "absolute", top: "20px", right: "20px", display: "flex", gap: "20px" }}>
