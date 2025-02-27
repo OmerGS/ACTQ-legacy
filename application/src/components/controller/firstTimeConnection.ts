@@ -1,9 +1,8 @@
-import { BsCodeSlash } from "react-icons/bs";
 import ServerConnection from "../util/ServerConnection";
 import { PasswordUtil } from "../util/password-util";
 
 export async function fetchMembreInfo(phone: string): Promise<boolean> {
-    const response = await ServerConnection.foundMembreByPhoneNumber(phone);
+    const response = await ServerConnection.getMemberByIdentifier(phone);
     return response;
 }
 
@@ -26,6 +25,29 @@ export async function checkVerificationCodeEmail(email: string, code: string): P
     console.log(codeSucess);
 
     return(codeSucess);
+}
+
+export function registerMemberIntoDatabase(
+    telephone: string,
+    email: string, 
+    password: string, 
+    rueFR: string, 
+    codePostalFR: string, 
+    villeFR: string,
+    rueTR: string,
+    codePostalTR: string,
+    villeTR: string,
+    dateNaissance: string
+): void {
+    const addressFR = rueFR + ", " + codePostalFR + ", " + villeFR + ", Fransa";
+    const addressTR = rueTR + ", " + codePostalTR + ", " + villeTR + ", Türkiye";
+    
+    console.log("Telephone : " + telephone);
+    console.log("Email : " + email);
+    console.log("Password : " + password);
+    console.log("AddressFR : " + addressFR);
+    console.log("AddressTR : " + addressTR);
+    console.log("Date de naissance : " + dateNaissance);
 }
 
 export async function registerPassword(telephone: string, email: string, password: string): Promise<boolean> {

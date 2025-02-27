@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { sendVerificationCode, checkMail, checkVerificationCodeEmail, registerPassword } from "@/components/controller/firstTimeConnection";
+import { sendVerificationCode, checkMail, checkVerificationCodeEmail, registerMemberIntoDatabase } from "@/components/controller/firstTimeConnection";
 
-export default function Login() {
+export default function First() {
   const router = useRouter();
   const [membre, setMembre] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -13,6 +13,17 @@ export default function Login() {
   const [codeValid, setCodeValid] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const [rueFR, setRueFR] = useState('');
+  const [codePostalFR, setCodePostalFR] = useState('');
+  const [villeFR, setVilleFR] = useState('');
+
+  const [rueTR, setRueTR] = useState('');
+  const [codePostalTR, setCodePostalTR] = useState('');
+  const [villeTR, setVilleTR] = useState('');
+
+  const [dateNaissance, setDateNaissance] = useState('');
+
   const [showLogoutButton, setShowLogoutButton] = useState(true);
 
   useEffect(() => {
@@ -56,14 +67,17 @@ export default function Login() {
         alert("Sifreniz en az 8 karakter olmalidir.");
         return;
       }
-      const success = await registerPassword(membre.telephone, email, password);
+    }
+    
+    if(step === 7){
+      /*const success = await registerPassword(membre.telephone, email, password);
       if (!success) {
           alert("Bir hata oluştu. Lütfen tekrar deneyin.");
           return;
-      }
+      }*/
 
-      setStep(step + 1);
-  }  
+      registerMemberIntoDatabase(membre.telephone, email, password, rueFR, codePostalFR, villeFR, rueTR, codePostalTR, villeTR, dateNaissance);
+    }
 
     setStep(step + 1);
   };
@@ -83,9 +97,12 @@ export default function Login() {
       ) : (
         <div style={styles.card}>
           <h2 style={styles.greeting}>
-            Merhaba,{" "}
+            Merhaba,<br />
+            <span style={{ marginBottom: "10px" }}></span>
             <span style={styles.name}>{membre.prenom + " " + membre.nom}</span>
           </h2>
+
+
           
           <div style={styles.buttons}>
             {step === 1 && (
@@ -113,6 +130,7 @@ export default function Login() {
                   onChange={(e) => setEmail(e.target.value)}
                   style={styles.input}
                 />
+                <br></br>
                 <button
                   style={styles.buttonContinue}
                   onClick={handleNextStep}
@@ -132,6 +150,7 @@ export default function Login() {
                   onChange={(e) => setVerificationCode(e.target.value)}
                   style={styles.input}
                 />
+                <br></br>
                 <button
                   style={styles.buttonContinue}
                   onClick={handleVerification}
@@ -152,6 +171,7 @@ export default function Login() {
                   onChange={(e) => setPassword(e.target.value)}
                   style={styles.input}
                 />
+                <br></br>
                 <button
                   style={styles.buttonContinue}
                   onClick={handleNextStep}
@@ -162,6 +182,116 @@ export default function Login() {
             )}
 
             {step === 5 && (
+              <div>
+                <p style={styles.message}>Fransiz adresinizi giriniz.</p>
+
+                <input
+                  type="text"
+                  placeholder="Sokak"
+                  value={rueFR}
+                  onChange={(e) => setRueFR(e.target.value)}
+                  style={styles.input}
+                />
+
+                <input
+                  type="text"
+                  placeholder="Posta Kodu"
+                  value={codePostalFR}
+                  onChange={(e) => setCodePostalFR(e.target.value)}
+                  style={styles.input}
+                />
+
+                <input
+                  type="text"
+                  placeholder="Sehir"
+                  value={villeFR}
+                  onChange={(e) => setVilleFR(e.target.value)}
+                  style={styles.input}
+                />
+
+                <input
+                  type="text"
+                  placeholder="Ülke"
+                  value="Fransa"
+                  disabled
+                  style={styles.input}
+                />
+                <br></br>
+                <button
+                  style={styles.buttonContinue}
+                  onClick={handleNextStep}
+                >
+                  DEVAM
+                </button>
+              </div>
+            )}
+
+            {step === 6 && (
+              <div>
+                <p style={styles.message}>Veuillez entrer votre adresse TR.</p>
+
+                <input
+                  type="text"
+                  placeholder="Sokak"
+                  value={rueTR}
+                  onChange={(e) => setRueTR(e.target.value)}
+                  style={styles.input}
+                />
+
+                <input
+                  type="text"
+                  placeholder="Mahalle"
+                  value={codePostalTR}
+                  onChange={(e) => setCodePostalTR(e.target.value)}
+                  style={styles.input}
+                />
+
+                <input
+                  type="text"
+                  placeholder="Sehir"
+                  value={villeTR}
+                  onChange={(e) => setVilleTR(e.target.value)}
+                  style={styles.input}
+                />
+
+                <input
+                  type="text"
+                  placeholder="Ülke"
+                  value="Turquie"
+                  disabled
+                  style={styles.input}
+                />
+                <br></br>
+                <button
+                  style={styles.buttonContinue}
+                  onClick={handleNextStep}
+                >
+                  DEVAM
+                </button>
+              </div>
+            )}
+
+            {step === 7 && (
+              <div>
+                <p style={styles.message}>Dogum tarihinizi giriniz.</p>
+
+                <input
+                  type="date"
+                  value={dateNaissance}
+                  onChange={(e) => setDateNaissance(e.target.value)}
+                  style={styles.input}
+                />
+                <br></br>
+                <button
+                  style={styles.buttonContinue}
+                  onClick={handleNextStep}
+                >
+                  DEVAM
+                </button>
+              </div>
+            )}
+
+            {step === 8 && (
               <div>
                 <h3>Hesap başarıyla oluşturuldu!</h3>
                 <br></br>
@@ -198,100 +328,108 @@ export default function Login() {
 
 const styles = {
   container: {
-    position: "relative" as "relative",
-    width: "100vw",
+    width: "100%",
     height: "100vh",
+    background: "linear-gradient(135deg, #f8f8f8, #ffffff)",
     display: "flex",
-    alignItems: "center",
     justifyContent: "center",
-    overflow: "hidden",
+    alignItems: "center",
+    fontFamily: "'SF Pro Display', sans-serif",
   },
   background: {
-    position: "absolute" as "absolute",
+    position: "absolute",
     width: "100%",
     height: "100%",
-    background: "linear-gradient(-45deg, #c8d7de, #b5e2d7, #f5c6cb, #e8d6f3)",
-    backgroundSize: "400% 400%",
-    animation: "nobleGradient 12s ease infinite",
+    backgroundColor: "#fff",
+    backgroundSize: "cover",
   },
   card: {
-    background: "rgba(255, 255, 255, 0.9)",
+    width: "65%",
+    maxWidth: "380px",
+    background: "rgba(255, 255, 255, 0.1)",
     backdropFilter: "blur(10px)",
-    padding: "25px",
-    borderRadius: "15px",
-    boxShadow: "0 8px 20px rgba(0, 0, 0, 0.2)",
-    textAlign: "center" as "center",
-    width: "90%",
-    maxWidth: "350px", 
-    animation: "fadeIn 0.5s ease-in-out",
-    position: "relative" as "relative",
-    zIndex: 10,
+    padding: "40px",
+    borderRadius: "20px",
+    boxShadow: "0 10px 30px rgba(0, 0, 0, 0.1)",
+    textAlign: "center",
     display: "flex",
-    flexDirection: "column" as "column",
+    flexDirection: "column",
     alignItems: "center",
-    whiteSpace: "normal",
+    border: "1px solid rgba(0, 0, 0, 0.1)",
+    margin: "20px", 
+    willChange: "transform, opacity",
   },
   greeting: {
-    fontSize: "24px",
-    fontWeight: "bold",
-    color: "#00BFAE",
-    marginBottom: "10px",
-    textAlign: "center",
-  },
+    fontSize: "28px",
+    fontWeight: "600",
+    color: "#000",
+    marginBottom: "20px",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+  },    
   name: {
     display: "inline-block",
     whiteSpace: "nowrap",
     overflow: "hidden",
-    textOverflow: "ellipsis", 
+    textOverflow: "ellipsis",
+    fontSize: "22px",
+    color: "#FF0000",
     maxWidth: "100%",
+    marginLeft: "15px",
   },
   message: {
-    color: "#333",
+    color: "#000",
     fontSize: "16px",
-    marginTop: "-16px",
+    marginTop: "-10px",
     marginBottom: "20px",
   },
   loading: {
-    color: "#fff",
+    color: "#000",
     fontSize: "18px",
-    fontWeight: "bold",
+    fontWeight: "500",
   },
   buttons: {
     display: "flex",
-    flexDirection: "column" as "column",
-    gap: "10px",
-    marginTop: "15px",
+    flexDirection: "column",
+    gap: "20px",
+    marginTop: "20px",
+    width: "100%",
   },
   buttonContinue: {
-    padding: "10px",
-    borderRadius: "8px",
+    padding: "12px 18px",
+    borderRadius: "12px",
     border: "none",
     fontSize: "16px",
-    fontWeight: "bold",
-    background: "#00BFAE",
+    fontWeight: "600",
+    background: "#000",
     color: "#fff",
     cursor: "pointer",
     transition: "all 0.3s",
-    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.2)",
+    boxShadow: "0 15px 30px rgba(0, 0, 0, 0.2)",
+    textTransform: "uppercase",
   },
   buttonLogout: {
-    padding: "10px",
-    borderRadius: "8px",
-    border: "none",
+    padding: "12px 18px",
+    borderRadius: "12px",
+    border: "1px solid #000",
     fontSize: "16px",
-    fontWeight: "bold",
-    background: "#fff",
-    color: "#00BFAE",
+    fontWeight: "600",
+    background: "transparent",
+    color: "#000",
     cursor: "pointer",
     transition: "all 0.3s",
-    border: "1px solid #00BFAE",
+    textTransform: "uppercase",
   },
   input: {
-    padding: "10px",
-    borderRadius: "8px",
+    padding: "12px 18px",
+    borderRadius: "12px",
     fontSize: "16px",
-    border: "1px solid #ccc",
-    marginBottom: "10px",
+    border: "1px solid #000",
+    marginBottom: "20px",
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
+    color: "#000",
   },
   successMessage: {
     color: "green",
