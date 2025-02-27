@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Navbar from "@/components/reusable/Navbar";
-import { FaIdCard, FaUsersCog } from "react-icons/fa";
+import { FaIdCard, FaUsersCog, FaUserCircle } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import useAuth from "../hooks/useAuth";
 import Spinner from "@/components/reusable/Spinner";
@@ -43,6 +43,10 @@ export default function Home() {
           <div style={styles.card} onClick={() => router.push("/conseil-administration")}>
             <FaUsersCog size={38} color="#1E90FF" style={styles.icon} />
             <span style={styles.cardText}>Yönetim Kurulu</span>
+          </div>
+          <div style={styles.card} onClick={() => router.push("/uyeligim")}>
+          <FaUserCircle size={38} color="#1E90FF" style={styles.icon} />
+            <span style={styles.cardText}>Üyeliğim</span>
           </div>
         </div>
       </div>
