@@ -1,47 +1,78 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { FaRegSun, FaRegMoon } from "react-icons/fa";
 import { motion } from "framer-motion";
+import { Membre } from "@/components/interface/Membre";
+import ServerConnection from "@/components/api/ServerConnection";
 
 export default function Home() {
   const router = useRouter();
+  const pathname = usePathname();
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isUserConnected, setIsUserConnected] = useState(false);
   const [showInstallPrompt, setShowInstallPrompt] = useState(false);
+  const [membre, setMembre] = useState<Membre | null>(null);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
+    const fetchMembre = async (email: string) => {
+      try {
+        const membreServeur = await ServerConnection.getMemberByIdentifier(email);
+        if (membreServeur) {
+          localStorage.setItem("user", JSON.stringify(membreServeur));
+          setMembre(membreServeur);
+        }
+      } catch (error) {
+        console.error("Erreur lors de la récupération du membre :", error);
+      }
+    };
 
-    if (storedUser) {
+    const fetchedMembre = localStorage.getItem("user");
+
+    if (fetchedMembre) {
+      let membreObj;
+
+      try {
+        membreObj = JSON.parse(fetchedMembre);
+      } catch (error) {
+        console.error("Erreur lors du parsing du membre :", error);
+        return;
+      }
+
+      if (membreObj?.member?.email) {
+        fetchMembre(membreObj.member.email);
+      }
+
+      if (membreObj.member?.dateNaissance) {
+        const dateNaissance = new Date(membreObj.member.dateNaissance);
+        dateNaissance.setDate(dateNaissance.getDate() + 1);
+        membreObj.member.dateNaissance = dateNaissance.toISOString().split("T")[0];
+      }
+
+      setMembre(membreObj.member);
+    }
+
+    if (membre?.email && pathname !== "/home") {
       setIsUserConnected(true);
-      router.push("/home");
+      router.replace("/home");
     } else {
       setIsUserConnected(false);
     }
 
-    const userPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    setIsDarkMode(userPrefersDark);
+    // Mode sombre
+    setIsDarkMode(window.matchMedia("(prefers-color-scheme: dark)").matches);
 
     const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
-
     const isStandalone = window.matchMedia("(display-mode: standalone)").matches;
-
-    if (isIOS && !isStandalone) {
-      setShowInstallPrompt(true);
-    }
-  }, [router]);
+    setShowInstallPrompt(isIOS && !isStandalone);
+  }, [pathname]); 
 
   const buttonLabels = { 
     firstTime: "Kayıt Ol", 
     login: "Giriş Yap", 
     install: "Ana Ekrana Ekle" 
   };
-
-  if (isUserConnected) {
-    return null;
-  }
 
   return (
     <motion.div
@@ -176,11 +207,12 @@ const styles = {
   closeButton: {
     marginTop: "15px",
     padding: "8px 15px",
-    background: "#FF0000", 
-    border: "none",
+    backgroundColor: "transparent",
     color: "#fff",
-    borderRadius: "8px",
+    border: "1px solid #fff",
+    borderRadius: "30px",
     cursor: "pointer",
     fontSize: "14px",
+    transition: "background-color 0.3s",
   },
 };
