@@ -5,7 +5,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { FaRegSun, FaRegMoon } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { Membre } from "@/components/interface/Membre";
-import ServerConnection from "@/components/api/ServerConnection";
+import Spinner from "@/components/reusable/Spinner";
 
 export default function Home() {
   const router = useRouter();
@@ -14,65 +14,57 @@ export default function Home() {
   const [isUserConnected, setIsUserConnected] = useState(false);
   const [showInstallPrompt, setShowInstallPrompt] = useState(false);
   const [membre, setMembre] = useState<Membre | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchMembre = async (email: string) => {
-      try {
-        const membreServeur = await ServerConnection.getMemberByIdentifier(email);
-        if (membreServeur) {
-          localStorage.setItem("user", JSON.stringify(membreServeur));
-          setMembre(membreServeur);
-        }
-      } catch (error) {
-        console.error("Erreur lors de la récupération du membre :", error);
-      }
-    };
-
     const fetchedMembre = localStorage.getItem("user");
 
     if (fetchedMembre) {
-      let membreObj;
+      const membreObj = JSON.parse(fetchedMembre);
 
-      try {
-        membreObj = JSON.parse(fetchedMembre);
-      } catch (error) {
-        console.error("Erreur lors du parsing du membre :", error);
-        return;
-      }
-
-      if (membreObj?.member?.email) {
-        fetchMembre(membreObj.member.email);
-      }
-
-      if (membreObj.member?.dateNaissance) {
+      if (membreObj.member && membreObj.member.dateNaissance) {
         const dateNaissance = new Date(membreObj.member.dateNaissance);
         dateNaissance.setDate(dateNaissance.getDate() + 1);
-        membreObj.member.dateNaissance = dateNaissance.toISOString().split("T")[0];
+        const formattedDateNaissance = dateNaissance.toISOString().split('T')[0];
+        membreObj.member.dateNaissance = formattedDateNaissance;
       }
 
-      setMembre(membreObj.member);
+      if (membre?.email !== membreObj.member?.email) {
+        setMembre(membreObj.member);
+      }
     }
 
-    if (membre?.email && pathname !== "/home") {
+    if (membre?.email != null && pathname !== "/home") {
       setIsUserConnected(true);
       router.replace("/home");
     } else {
       setIsUserConnected(false);
     }
 
-    // Mode sombre
-    setIsDarkMode(window.matchMedia("(prefers-color-scheme: dark)").matches);
+    // Simule le temps de chargement
+    const userPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    setIsDarkMode(userPrefersDark);
 
     const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
     const isStandalone = window.matchMedia("(display-mode: standalone)").matches;
-    setShowInstallPrompt(isIOS && !isStandalone);
-  }, [pathname]); 
+
+    if (isIOS && !isStandalone) {
+      setShowInstallPrompt(true);
+    }
+
+    // Après la vérification, on change l'état du loading
+    setLoading(false);
+  }, [router, membre, pathname]);
 
   const buttonLabels = { 
     firstTime: "Kayıt Ol", 
     login: "Giriş Yap", 
     install: "Ana Ekrana Ekle" 
   };
+
+  if (loading) {
+    return <Spinner />; // Afficher le spinner tant que le chargement est en cours
+  }
 
   return (
     <motion.div
