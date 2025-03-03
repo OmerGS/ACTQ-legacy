@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { sendVerificationCode, checkMail, checkVerificationCodeEmail, registerMemberIntoDatabase } from "@/components/controller/firstTimeConnection";
+import axios from "axios";
+import BACKEND_API from "@/properties/BACKEND_API";
 
 export default function First() {
   const router = useRouter();
@@ -27,14 +29,23 @@ export default function First() {
   const [showLogoutButton, setShowLogoutButton] = useState(true);
 
   useEffect(() => {
-    const fetchedMembre = localStorage.getItem("user");
-    if (fetchedMembre) {
-      const membreObj = JSON.parse(fetchedMembre);
-      console.log(membreObj);
-      setMembre(membreObj.member);
-    }
-    setLoading(false);
-  }, []);
+    const checkAuthentication = async () => {
+      try {
+        const response = await axios.get(`${BACKEND_API.baseURL}/auth/me`, { withCredentials: true });
+        
+        if (response.data) {
+          console.log(response);
+          setMembre(response.data);
+        }
+      } catch (error) {
+        console.error('Erreur lors de la vérification de l\'authentification', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkAuthentication();
+  }, []); 
 
   const handleVerification = async () => {
     if (await checkVerificationCodeEmail(email, verificationCode)) {

@@ -22,7 +22,7 @@ CREATE TABLE Membre (
   adresseTr VARCHAR(255)
 );
 
--- Table HistoriqueStatut (suivi des changements de statut des membres)
+-- Table HistoriqueStatut
 CREATE TABLE HistoriqueStatut (
   id INT AUTO_INCREMENT PRIMARY KEY,
   membre_id INT NOT NULL,
@@ -33,7 +33,7 @@ CREATE TABLE HistoriqueStatut (
   CHECK (statutPrecedent <> statutActuel)
 );
 
--- Table Aidat
+-- Table Payment
 CREATE TABLE Payment (
   id INT AUTO_INCREMENT PRIMARY KEY,
   memberId INT NOT NULL,
@@ -47,6 +47,7 @@ CREATE TABLE Payment (
   FOREIGN KEY (memberId) REFERENCES Membre(id) ON DELETE CASCADE
 );
 
+-- Table Aidat
 CREATE TABLE Aidat (
   id INT AUTO_INCREMENT PRIMARY KEY,
   category ENUM('Genç', 'Normal', 'Emekli') NOT NULL,

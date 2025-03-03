@@ -34,14 +34,13 @@ export default function Home() {
       }
     }
 
-    if (membre?.email != null && pathname !== "/home") {
+    if (membre?.email != null) {
       setIsUserConnected(true);
       router.replace("/home");
     } else {
       setIsUserConnected(false);
     }
 
-    // Simule le temps de chargement
     const userPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
     setIsDarkMode(userPrefersDark);
 
@@ -52,7 +51,6 @@ export default function Home() {
       setShowInstallPrompt(true);
     }
 
-    // Après la vérification, on change l'état du loading
     setLoading(false);
   }, [router, membre, pathname]);
 
@@ -63,7 +61,7 @@ export default function Home() {
   };
 
   if (loading) {
-    return <Spinner />; // Afficher le spinner tant que le chargement est en cours
+    return <Spinner />;
   }
 
   return (
