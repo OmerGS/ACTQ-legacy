@@ -18,10 +18,7 @@ export async function login(identifier: string, password: string): Promise<boole
         if(!loginResponse.success){
             alert(loginResponse.message);
         } else {
-            const membre = await ServerConnection.getMemberByIdentifier(identifier);
-            localStorage.setItem("user", JSON.stringify(membre));
-
-            return true;
+            return(true)
         }
     }
 

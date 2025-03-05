@@ -5,13 +5,12 @@ import Navbar from "@/components/reusable/Navbar";
 import { FaUsersCog, FaUser, FaHandHoldingUsd } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import useAuth from "../hooks/useAuth";
-import Spinner from "@/components/reusable/Spinner";
+import { useMembre } from "../hooks/MemberContext";
 
 export default function Home() {
   const router = useRouter();
   const isAuthenticated = useAuth();
-  const [membre, setMembre] = useState<any>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const { membre } = useMembre();
   const [flash, setFlash] = useState(false);
   const [countdown, setCountdown] = useState<string>("");
 
@@ -38,15 +37,6 @@ export default function Home() {
 
   useEffect(() => {
     injectKeyframes();
-
-    if (isAuthenticated) {
-      const fetchedMembre = localStorage.getItem("user");
-      if (fetchedMembre) {
-        const membreObj = JSON.parse(fetchedMembre);
-        setMembre(membreObj.member);
-      }
-      setLoading(false);
-    }
 
     const updateCountdown = () => {
       //const now = new Date("2025-07-32T00:00:00");
@@ -83,10 +73,6 @@ export default function Home() {
 
     return () => clearInterval(interval);
   }, [isAuthenticated]);
-
-  if (loading) {
-    return <Spinner />;
-  }
 
   return (
     <div style={styles.pageContainer}>

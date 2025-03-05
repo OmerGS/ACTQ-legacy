@@ -54,17 +54,29 @@ class ServerConnection {
                     code: code,
                 },
                 {
+                    withCredentials: true,
                     headers: {
                         'x-api-key': `${API_KEY.API_KEY}`,
                         'Content-Type': 'application/json',
                     },
-                    withCredentials: true,
                 });
     
             return response.data.success;
         } catch (error) {
             console.error("Erreur lors de l'envoi du code de vérification :", error);
             throw error;
+        }
+    }
+
+    public static async logout(): Promise<any> {
+        try {
+            const response = await axios.post(`${BACKEND_API.baseURL}/auth/logout`, {}, {
+              withCredentials: true
+            });
+      
+            console.log(response.data);
+        } catch (error) {
+            console.error('Erreur lors de la suppression du token', error);
         }
     }
 
@@ -214,6 +226,7 @@ class ServerConnection {
                 password: password,
             },
             {
+                withCredentials: true,
                 headers: {
                     'x-api-key': `${API_KEY.API_KEY}`,
                     'Content-Type': 'application/json',

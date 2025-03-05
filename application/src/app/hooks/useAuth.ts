@@ -1,17 +1,18 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useMembre } from "./MemberContext";
 
 const useAuth = () => {
   const router = useRouter();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const { membre } = useMembre();
 
   useEffect(() => {
-    const user = localStorage.getItem("user"); 
-    if (user) {
+    if (membre != null) {
       setIsAuthenticated(true);
     } else {
       setIsAuthenticated(false);
-      router.push("/auth/login");
+      router.push("/");
     }
   }, [router]);
 

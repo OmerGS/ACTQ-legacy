@@ -3,19 +3,12 @@
 import { useEffect, useState, useRef } from "react";
 import JsBarcode from "jsbarcode";
 import Spinner from "@/components/reusable/Spinner";
+import { useMembre } from "../hooks/MemberContext";
 
 export default function Card() {
-  const [membre, setMembre] = useState<any>(null);
   const [cardBackground, setCardBackground] = useState<string>("");
   const barcodeRef = useRef<SVGSVGElement>(null);
-
-  useEffect(() => {
-    const fetchedMembre = localStorage.getItem("user");
-    if (fetchedMembre) {
-      const membreObj = JSON.parse(fetchedMembre);
-      setMembre(membreObj.member);
-    }
-  }, []);
+  const { membre } = useMembre();
 
   useEffect(() => {
     const backgrounds = [

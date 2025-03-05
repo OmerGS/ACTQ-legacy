@@ -32,7 +32,7 @@ export default function First() {
   useEffect(() => {
     const checkAuthentication = async () => {
       try {
-        const response = await axios.get(`${BACKEND_API.baseURL}/auth/me`, { withCredentials: true });
+        const response = await axios.get(`${BACKEND_API.baseURL}/auth/signingMe`, { withCredentials: true });
         
         if (response.data) {
           console.log(response);
@@ -351,7 +351,7 @@ export default function First() {
                   style={styles.buttonContinue}
                   onClick={async () => {
                     try {
-                      const response = await axios.post(`${BACKEND_API.baseURL}/auth/removeToken`, {}, {
+                      const response = await axios.post(`${BACKEND_API.baseURL}/auth/logout`, {}, {
                         withCredentials: true
                       });
                 
@@ -374,7 +374,7 @@ export default function First() {
                 style={styles.buttonLogout}
                 onClick={async () => {
                   try {
-                    const response = await axios.post(`${BACKEND_API.baseURL}/auth/removeToken`, {}, {
+                    const response = await axios.post(`${BACKEND_API.baseURL}/auth/logout`, {}, {
                       withCredentials: true
                     });
               
