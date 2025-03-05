@@ -12,4 +12,5 @@ export interface Membre {
   statut: string;
   adresseFr: number;
   adresseTr: number;
+  specialRole: string;
 }
