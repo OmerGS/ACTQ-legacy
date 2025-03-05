@@ -16,27 +16,25 @@ const MembreContext = createContext<MembreContextType | undefined>(undefined);
 
 export const MembreProvider = ({ children }: { children: ReactNode }) => {
   const [membre, setMembre] = useState<Membre | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const getMembre = async () => {
-    setLoading(true);
-    try {
-      const response = await axios.get(`${BACKEND_API.baseURL}/auth/me`, { withCredentials: true });
-      if (response.data) {
-        setMembre(response.data);
-      } else {
-        setMembre(null);        
+      try {
+        const response = await axios.get(`${BACKEND_API.baseURL}/auth/me`, { withCredentials: true });
+        if (response.data) {
+          setMembre(response.data);
+        } else {
+          setMembre(null);       
+        }
+      } catch (error) {
+        console.log('Erreur lors de la récupération du membre');
+        setMembre(null);
       }
-    } catch (error) {
-      console.error('Erreur lors de la récupération du membre', error);
-      setMembre(null);
-    }
-    setLoading(false);
-  };
+    };  
 
-  useEffect(() => {
-    getMembre();
-  }, []);
+    useEffect(() => {
+      getMembre();
+    }, []);
 
   return (
     <MembreContext.Provider value={{ membre, setMembre, getMembre }}>

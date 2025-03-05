@@ -9,10 +9,11 @@ import { useMembre } from "../hooks/MemberContext";
 
 export default function Home() {
   const router = useRouter();
+  const { membre, getMembre } = useMembre();
   const isAuthenticated = useAuth();
-  const { membre } = useMembre();
   const [flash, setFlash] = useState(false);
   const [countdown, setCountdown] = useState<string>("");
+
 
   const injectKeyframes = () => {
     const style = document.createElement("style");
@@ -37,78 +38,105 @@ export default function Home() {
 
   useEffect(() => {
     injectKeyframes();
-
+  
     const updateCountdown = () => {
-      //const now = new Date("2025-07-32T00:00:00");
       const now = new Date();
       const currentYear = now.getFullYear();
       let targetDate = new Date(`${currentYear}-07-31T00:00:00`);
-      
+  
       if (now > targetDate) {
         targetDate = new Date(`${currentYear + 1}-07-31T00:00:00`);
       }
-
+  
       const timeDiff = targetDate.getTime() - now.getTime();
-      
+  
       if (timeDiff <= 0) {
         setCountdown("00:00:00:00");
         return;
       }
-
+  
       const days = Math.floor(timeDiff / (1000 * 3600 * 24));
       const hours = Math.floor((timeDiff % (1000 * 3600 * 24)) / (1000 * 3600));
       const minutes = Math.floor((timeDiff % (1000 * 3600)) / (1000 * 60));
       const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
-
+  
       setCountdown(`${days}j ${hours}h ${minutes}m ${seconds}s`);
-
+  
       if (days <= 14) {
         setFlash(true);
       } else {
         setFlash(false);
       }
     };
-
+  
+    updateCountdown();
+  
     const interval = setInterval(updateCountdown, 1000);
-
+  
     return () => clearInterval(interval);
-  }, [isAuthenticated]);
+  }, []); 
+  
 
   return (
     <div style={styles.pageContainer}>
       <div style={styles.appContainer}>
-        <p style={styles.welcomeText}>
-          Merhaba <span style={styles.highlight}>{membre.prenom} {membre.nom}</span>
-        </p>
-
-        {/* Add Son aidat ödeme tarihi and the countdown */}
-        <div style={styles.countdownContainer}>
-          <p style={styles.countdownText}>Aidat son ödeme tarihine kalan süre</p>
-          <p style={flash ? styles.countdownValueFlash : styles.countdownValue}>
-            {countdown}
-          </p>
-        </div>
-
-        <div style={styles.cardsContainer}>
-          <div style={styles.card} onClick={() => router.push("/conseil-administration")}>
-            <FaUsersCog size={38} color="#4682B4" style={styles.icon} />
-            <span style={styles.cardText}>Yönetim Kurulu</span>
+        {membre ? (
+          <>
+            <p style={styles.welcomeText}>
+              Merhaba <span style={styles.highlight}>{membre.prenom} {membre.nom}</span>
+            </p>
+  
+            <div style={styles.countdownContainer}>
+              <p style={styles.countdownText}>Aidat son ödeme tarihine kalan süre</p>
+              <p style={flash ? styles.countdownValueFlash : styles.countdownValue}>
+                {countdown}
+              </p>
+            </div>
+  
+            <div style={styles.cardsContainer}>
+              <div style={styles.card} onClick={() => router.push("/conseil-administration")}>
+                <FaUsersCog size={38} color="#4682B4" style={styles.icon} />
+                <span style={styles.cardText}>Yönetim Kurulu</span>
+              </div>
+              <div style={styles.card} onClick={() => router.push("/uyeligim")}>
+                <FaUser size={38} color="#8A2BE2" style={styles.icon} />
+                <span style={styles.cardText}>Dernek Üyeliğim</span>
+              </div>
+              <div style={styles.card} onClick={() => router.push("/")}>
+                <FaHandHoldingUsd size={38} color="#FFD700" style={styles.icon} />
+                <span style={styles.cardText}>Cenaze Fonu Üyeliğim</span>
+              </div>
+            </div>
+  
+            <Navbar />
+          </>
+        ) : (
+          <div>
+            <p style={{ textAlign: "center", marginTop: "50px", fontSize: "24px", fontWeight: "bold" }}>
+              404 - İzinsiz giriş
+            </p>
+            <button
+              onClick={() => router.push("/")}
+              style={{
+                display: "block",
+                margin: "20px auto",
+                padding: "10px 20px",
+                fontSize: "16px",
+                cursor: "pointer",
+                backgroundColor: "#4682B4", 
+                color: "#fff", 
+                border: "none", 
+                borderRadius: "5px", 
+              }}
+            >
+              Ana ekrana geri dön
+            </button>
           </div>
-          <div style={styles.card} onClick={() => router.push("/uyeligim")}>
-            <FaUser size={38} color="#8A2BE2" style={styles.icon} />
-            <span style={styles.cardText}>Dernek Üyeliğim</span>
-          </div>
-          <div style={styles.card} onClick={() => router.push("/")}>
-            <FaHandHoldingUsd size={38} color="#FFD700" style={styles.icon} />
-            <span style={styles.cardText}>Cenaze Fonu Üyeliğim</span>
-          </div>
-        </div>
+        )}
       </div>
-
-      <Navbar />
     </div>
   );
-}
+}  
 
 const styles = {
   pageContainer: {
