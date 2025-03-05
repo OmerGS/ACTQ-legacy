@@ -1,26 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/reusable/Navbar";
 import Spinner from "@/components/reusable/Spinner";
+import { useMembre } from "../hooks/MemberContext";
+import axios from "axios";
+import BACKEND_API from "@/properties/BACKEND_API";
 
 export default function Settings() {
   const router = useRouter();
-  const [membre, setMembre] = useState<any>(null);
-
-  useEffect(() => {
-    const fetchedMembre = localStorage.getItem("user");
-    if (fetchedMembre) {
-      const membreObj = JSON.parse(fetchedMembre);
-      setMembre(membreObj.member);
-    }
-  }, []);
-
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    router.push("/");
-  };
+  const { membre, setMembre } = useMembre();
 
   if (!membre) {
     return <Spinner />;
@@ -38,7 +27,19 @@ export default function Settings() {
         <p><strong>Üyelik Numarası:</strong> {membre.barcode}</p>
       </div>
 
-      <button onClick={handleLogout} style={styles.logoutButton}>
+      <button onClick={async () => {
+                  try {
+                    const response = await axios.post(`${BACKEND_API.baseURL}/auth/logout`, {}, {
+                      withCredentials: true
+                    });
+              
+                    console.log(response.data);
+                  } catch (error) {
+                    console.error('Erreur lors de la suppression du token', error);
+                  }
+                  setMembre(null);
+                  router.push("/")
+                }} style={styles.logoutButton}>
         Çıkış Yap
       </button>
 

@@ -49,21 +49,34 @@ class ServerConnection {
 
     public static async checkVerificationCode(phoneNumber: string, code: string): Promise<any> {
         try {
-            const response = await axios.post (`${BACKEND_API.baseURL}/verificationcode/check-phone`, {
-                telephone: phoneNumber,
-                code: code,
-            },
-            {
-                headers: {
-                  'x-api-key': `${API_KEY.API_KEY}`,
-                  'Content-Type': 'application/json',
+            const response = await axios.post(`${BACKEND_API.baseURL}/verificationcode/check-phone`, {
+                    telephone: phoneNumber,
+                    code: code,
                 },
-            });
-
+                {
+                    withCredentials: true,
+                    headers: {
+                        'x-api-key': `${API_KEY.API_KEY}`,
+                        'Content-Type': 'application/json',
+                    },
+                });
+    
             return response.data.success;
         } catch (error) {
             console.error("Erreur lors de l'envoi du code de vérification :", error);
-            throw error; 
+            throw error;
+        }
+    }
+
+    public static async logout(): Promise<any> {
+        try {
+            const response = await axios.post(`${BACKEND_API.baseURL}/auth/logout`, {}, {
+              withCredentials: true
+            });
+      
+            console.log(response.data);
+        } catch (error) {
+            console.error('Erreur lors de la suppression du token', error);
         }
     }
 
@@ -173,6 +186,7 @@ class ServerConnection {
                 dateNaissance: dateNaissance,
             },
             {
+                withCredentials: true,
                 headers: {
                   'x-api-key': `${API_KEY.API_KEY}`,
                   'Content-Type': 'application/json',
@@ -212,6 +226,7 @@ class ServerConnection {
                 password: password,
             },
             {
+                withCredentials: true,
                 headers: {
                     'x-api-key': `${API_KEY.API_KEY}`,
                     'Content-Type': 'application/json',

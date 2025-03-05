@@ -3,36 +3,60 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { FaArrowLeft } from 'react-icons/fa';
-import { Membre } from "@/components/interface/Membre";
 import Spinner from '@/components/reusable/Spinner';
 import { aidat } from '@/components/interface/Aidat';
+import { useMembre } from "../hooks/MemberContext";
+import useAuth from '../hooks/useAuth';
+
 
 const Uyeligim = () => {
-  const [membre, setMembre] = useState<Membre | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
   const router = useRouter();
+  const { membre } = useMembre();
+  const [loading, setLoading] = useState(false);
+  const isAuthenticated = useAuth();
 
   useEffect(() => {
-    if (isAuthenticated) {
-      const fetchedMembre = localStorage.getItem("user");
-      if (fetchedMembre) {
-        const membreObj = JSON.parse(fetchedMembre);
-
-        if (membreObj.member && membreObj.member.dateNaissance) {
-          const dateNaissance = new Date(membreObj.member.dateNaissance);
-          dateNaissance.setDate(dateNaissance.getDate() + 1);
-          const formattedDateNaissance = dateNaissance.toISOString().split('T')[0];
-          membreObj.member.dateNaissance = formattedDateNaissance;
-        }
-        setMembre(membreObj.member);
+    if (isAuthenticated && membre) {
+      if (membre.dateNaissance) {
+        const dateNaissance = new Date(membre.dateNaissance);
+        dateNaissance.setDate(dateNaissance.getDate() + 1); 
+        const formattedDateNaissance = dateNaissance.toISOString().split('T')[0];
+        membre.dateNaissance = formattedDateNaissance;
       }
       setLoading(false);
+    } else {
+      setLoading(false);
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, membre]);
 
   if (loading) {
     return <Spinner />;
+  }
+
+  if (!membre) {
+    return (
+      <div>
+        <p style={{ textAlign: "center", marginTop: "50px", fontSize: "24px", fontWeight: "bold" }}>
+          404 - İzinsiz giriş
+        </p>
+        <button
+          onClick={() => router.push("/")}
+          style={{
+            display: "block",
+            margin: "20px auto",
+            padding: "10px 20px",
+            fontSize: "16px",
+            cursor: "pointer",
+            backgroundColor: "#4682B4", 
+            color: "#fff", 
+            border: "none", 
+            borderRadius: "5px", 
+          }}
+        >
+          Ana ekrana geri dön
+        </button>
+      </div>
+    );
   }
 
   const calculateAge = (birthDate: string) => {

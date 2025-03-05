@@ -54,10 +54,9 @@ export async function handleCheckCode(phoneNumber: string, code: string, router:
         return false;
     }
 
-    const membre = await ServerConnection.getMemberByIdentifier(phoneNumber);
-    localStorage.setItem("user", JSON.stringify(membre));
-
-    router.push("/first/");
+    // A ce stade, l'utilisateur est validé et le cookie JWT est déjà dans les cookies du navigateur.
+    // Pas besoin de récupérer le membre ici via une autre requête, car le serveur peut renvoyer l'utilisateur avec /me ou via le cookie
+    router.push("/first");
 
     return true;
 }
