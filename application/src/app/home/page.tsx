@@ -9,7 +9,7 @@ import { useMembre } from "../hooks/MemberContext";
 
 export default function Home() {
   const router = useRouter();
-  const { membre, getMembre } = useMembre();
+  const { membre } = useMembre();
   const isAuthenticated = useAuth();
   const [flash, setFlash] = useState(false);
   const [countdown, setCountdown] = useState<string>("");

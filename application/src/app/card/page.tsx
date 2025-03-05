@@ -2,12 +2,13 @@
 
 import { useEffect, useState, useRef } from "react";
 import JsBarcode from "jsbarcode";
-import Spinner from "@/components/reusable/Spinner";
 import { useMembre } from "../hooks/MemberContext";
+import { useRouter } from 'next/navigation';
 
 export default function Card() {
   const [cardBackground, setCardBackground] = useState<string>("");
   const barcodeRef = useRef<SVGSVGElement>(null);
+  const router = useRouter();
   const { membre } = useMembre();
 
   useEffect(() => {
@@ -27,7 +28,7 @@ export default function Card() {
   useEffect(() => {
     if (membre && membre.barcode && barcodeRef.current) {
       JsBarcode(barcodeRef.current, membre.barcode, {
-        format: "CODE128",
+        format: "CODE39",
         displayValue: true, 
         lineColor: "#fff",
         width: 3,
@@ -37,13 +38,35 @@ export default function Card() {
     }
   }, [membre]);
 
-  if (!membre) {
-    return <Spinner />;
-  }
-
   const handleBack = () => {
     window.history.back();
   };
+
+  if (!membre) {
+    return (
+      <div>
+        <p style={{ textAlign: "center", marginTop: "50px", fontSize: "24px", fontWeight: "bold" }}>
+          404 - İzinsiz giriş
+        </p>
+        <button
+          onClick={() => router.push("/")}
+          style={{
+            display: "block",
+            margin: "20px auto",
+            padding: "10px 20px",
+            fontSize: "16px",
+            cursor: "pointer",
+            backgroundColor: "#4682B4", 
+            color: "#fff", 
+            border: "none", 
+            borderRadius: "5px", 
+          }}
+        >
+          Ana ekrana geri dön
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div style={{ ...styles.container, backgroundImage: `url(${cardBackground})` }}>

@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { sendVerificationCode, checkMail, checkVerificationCodeEmail, registerMemberIntoDatabase } from "@/components/controller/firstTimeConnection";
 import axios from "axios";
 import BACKEND_API from "@/properties/BACKEND_API";
-import ServerConnection from "@/components/api/ServerConnection";
 
 export default function First() {
   const router = useRouter();
@@ -30,6 +29,11 @@ export default function First() {
   const [showLogoutButton, setShowLogoutButton] = useState(true);
 
   useEffect(() => {
+    if(membre === null || membre.email != null){
+      setMembre(null);
+      return;
+    }
+    
     const checkAuthentication = async () => {
       try {
         const response = await axios.get(`${BACKEND_API.baseURL}/auth/signingMe`, { withCredentials: true });
@@ -129,6 +133,32 @@ export default function First() {
 
     setStep(step + 1);
   };
+
+  if (!membre) {
+    return (
+      <div>
+        <p style={{ textAlign: "center", marginTop: "50px", fontSize: "24px", fontWeight: "bold" }}>
+          404 - İzinsiz giriş
+        </p>
+        <button
+          onClick={() => router.push("/")}
+          style={{
+            display: "block",
+            margin: "20px auto",
+            padding: "10px 20px",
+            fontSize: "16px",
+            cursor: "pointer",
+            backgroundColor: "#4682B4", 
+            color: "#fff", 
+            border: "none", 
+            borderRadius: "5px", 
+          }}
+        >
+          Ana ekrana geri dön
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div style={styles.container}>
