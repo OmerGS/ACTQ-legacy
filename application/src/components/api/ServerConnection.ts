@@ -58,7 +58,7 @@ class ServerConnection {
                         'x-api-key': `${API_KEY.API_KEY}`,
                         'Content-Type': 'application/json',
                     },
-                    withCredentials: false,
+                    withCredentials: true,
                 });
     
             return response.data.success;
@@ -174,6 +174,7 @@ class ServerConnection {
                 dateNaissance: dateNaissance,
             },
             {
+                withCredentials: true,
                 headers: {
                   'x-api-key': `${API_KEY.API_KEY}`,
                   'Content-Type': 'application/json',

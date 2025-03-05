@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { sendVerificationCode, checkMail, checkVerificationCodeEmail, registerMemberIntoDatabase } from "@/components/controller/firstTimeConnection";
 import axios from "axios";
 import BACKEND_API from "@/properties/BACKEND_API";
+import ServerConnection from "@/components/api/ServerConnection";
 
 export default function First() {
   const router = useRouter();
@@ -348,7 +349,19 @@ export default function First() {
                 <br></br>
                 <button
                   style={styles.buttonContinue}
-                  onClick={() => window.location.href = '/auth/login'} 
+                  onClick={async () => {
+                    try {
+                      const response = await axios.post(`${BACKEND_API.baseURL}/auth/removeToken`, {}, {
+                        withCredentials: true
+                      });
+                
+                      console.log(response.data);
+                    } catch (error) {
+                      console.error('Erreur lors de la suppression du token', error);
+                    }
+
+                    router.push('/auth/login')
+                  }}
                 >
                   Giriş Yap
                 </button>
@@ -359,8 +372,17 @@ export default function First() {
             {showLogoutButton && (
               <button
                 style={styles.buttonLogout}
-                onClick={() => {
-                  localStorage.removeItem("user");
+                onClick={async () => {
+                  try {
+                    const response = await axios.post(`${BACKEND_API.baseURL}/auth/removeToken`, {}, {
+                      withCredentials: true
+                    });
+              
+                    console.log(response.data);
+                  } catch (error) {
+                    console.error('Erreur lors de la suppression du token', error);
+                  }
+                  
                   alert("Lütfen yönetim ile iletişime geçin.");
                   router.push("/")
                 }}
