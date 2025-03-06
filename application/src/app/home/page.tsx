@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from "react";
 import Navbar from "@/components/reusable/Navbar";
-import { FaUsersCog, FaUser, FaHandHoldingUsd } from "react-icons/fa";
+import { FaUser, FaHandHoldingUsd, FaCreditCard } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import useAuth from "../hooks/useAuth";
 import { useMembre } from "../hooks/MemberContext";
+import Unauthorized from '@/components/reusable/Unauthorized';
 
 export default function Home() {
   const router = useRouter();
@@ -94,44 +95,24 @@ export default function Home() {
             </div>
   
             <div style={styles.cardsContainer}>
-              <div style={styles.card} onClick={() => router.push("/conseil-administration")}>
-                <FaUsersCog size={38} color="#4682B4" style={styles.icon} />
-                <span style={styles.cardText}>Yönetim Kurulu</span>
-              </div>
               <div style={styles.card} onClick={() => router.push("/uyeligim")}>
                 <FaUser size={38} color="#8A2BE2" style={styles.icon} />
                 <span style={styles.cardText}>Dernek Üyeliğim</span>
               </div>
-              <div style={styles.card} onClick={() => router.push("/")}>
+              <div style={styles.card} onClick={() => router.push("/soon")}>
                 <FaHandHoldingUsd size={38} color="#FFD700" style={styles.icon} />
                 <span style={styles.cardText}>Cenaze Fonu Üyeliğim</span>
+              </div>
+              <div style={styles.card} onClick={() => router.push("/soon")}>
+                <FaCreditCard size={38} color="#32CD32" style={styles.icon} />
+                <span style={styles.cardText}>Ödeme Yap</span>
               </div>
             </div>
   
             <Navbar />
           </>
         ) : (
-          <div>
-            <p style={{ textAlign: "center", marginTop: "50px", fontSize: "24px", fontWeight: "bold" }}>
-              404 - İzinsiz giriş
-            </p>
-            <button
-              onClick={() => router.push("/")}
-              style={{
-                display: "block",
-                margin: "20px auto",
-                padding: "10px 20px",
-                fontSize: "16px",
-                cursor: "pointer",
-                backgroundColor: "#4682B4", 
-                color: "#fff", 
-                border: "none", 
-                borderRadius: "5px", 
-              }}
-            >
-              Ana ekrana geri dön
-            </button>
-          </div>
+          <Unauthorized></Unauthorized>
         )}
       </div>
     </div>
