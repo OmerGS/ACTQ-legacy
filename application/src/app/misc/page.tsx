@@ -39,7 +39,7 @@ export default function Misc() {
           <p style={styles.widgetText}>Sosyal Medyalar</p>
         </button>
 
-        <button style={styles.widget}>
+        <button style={styles.widget} onClick={async () => { router.push('/soon') }}>
           <FaBullhorn size={38} style={{ ...styles.icon, color: "#FFC107" }} />
           <p style={styles.widgetText}>Duyuru ve Haber</p>
         </button>

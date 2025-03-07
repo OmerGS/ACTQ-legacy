@@ -7,12 +7,15 @@ import Spinner from '@/components/reusable/Spinner';
 import { aidat } from '@/components/interface/Aidat';
 import { useMembre } from "../hooks/MemberContext";
 import useAuth from '../hooks/useAuth';
-
+import ServerConnection from '@/components/api/ServerConnection';
+import PaymentType from '@/components/enum/PaymentType';
 
 const Uyeligim = () => {
   const router = useRouter();
   const { membre } = useMembre();
   const [loading, setLoading] = useState(false);
+  const [transactions, setTransactions] = useState<any[]>([]);
+  const [error, setError] = useState<string | null>(null);
   const isAuthenticated = useAuth();
 
   useEffect(() => {
@@ -29,35 +32,30 @@ const Uyeligim = () => {
     }
   }, [isAuthenticated, membre]);
 
-  if (loading) {
-    return <Spinner />;
-  }
+  useEffect(() => {
+    const fetchTransaction = async () => {
+      setLoading(true);
+      try {
+        const response = await ServerConnection.getFilteredTransaction(membre.barcode, "Aidat");
+        
+        if (response.success) {
+          setTransactions(response.transactions || []);
+        } else {
+          setTransactions([]);
+          setError(response.message);
+        }
+      } catch (error) {
+        console.error('Error fetching transactions:', error);
+        setError('Une erreur est survenue lors de la récupération des transactions.');
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  if (!membre) {
-    return (
-      <div>
-        <p style={{ textAlign: "center", marginTop: "50px", fontSize: "24px", fontWeight: "bold" }}>
-          404 - İzinsiz giriş
-        </p>
-        <button
-          onClick={() => router.push("/")}
-          style={{
-            display: "block",
-            margin: "20px auto",
-            padding: "10px 20px",
-            fontSize: "16px",
-            cursor: "pointer",
-            backgroundColor: "#4682B4", 
-            color: "#fff", 
-            border: "none", 
-            borderRadius: "5px", 
-          }}
-        >
-          Ana ekrana geri dön
-        </button>
-      </div>
-    );
-  }
+    if (membre) {
+      fetchTransaction();
+    }
+  }, [membre]);
 
   const calculateAge = (birthDate: string) => {
     const today = new Date();
@@ -85,7 +83,7 @@ const Uyeligim = () => {
       return aidat.retraite;
     }
     return aidat.base;
-  }; 
+  };
 
   const prix = calculatePrice(membre);
 
@@ -98,6 +96,50 @@ const Uyeligim = () => {
     return `${day}/${month}/${year}`;
   };
 
+  const formatDateWithSeconds = (dateString: string) => {
+    const date = new Date(dateString);
+    
+    const day = String(date.getDate()).padStart(2, '0'); 
+    const month = String(date.getMonth() + 1).padStart(2, '0'); 
+    const year = date.getFullYear(); // Année
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+    
+    return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+  }
+  
+
+  if (!membre) {
+    return (
+      <div>
+        <p style={{ textAlign: "center", marginTop: "50px", fontSize: "24px", fontWeight: "bold" }}>
+          404 - İzinsiz giriş
+        </p>
+        <button
+          onClick={() => router.push("/")}
+          style={{
+            display: "block",
+            margin: "20px auto",
+            padding: "10px 20px",
+            fontSize: "16px",
+            cursor: "pointer",
+            backgroundColor: "#4682B4", 
+            color: "#fff", 
+            border: "none", 
+            borderRadius: "5px", 
+          }}
+        >
+          Ana ekrana geri dön
+        </button>
+      </div>
+    );
+  }
+
+  if (loading) {
+    return <Spinner />;
+  }
+
   return (
     <div className="page-container">
       {/* Retour Button */}
@@ -109,9 +151,9 @@ const Uyeligim = () => {
       <div className="main-container">
         {/* Sayin NOM PRENOM (AGE) */}
         <div className="profile-card">
-        <p className="profile-info">
-          {membre?.nom} {membre?.prenom} ({membre?.dateNaissance ? `${calculateAge(membre?.dateNaissance)} yaşında` : "Yaşınızı belirtmediniz !"})
-        </p>
+          <p className="profile-info">
+            {membre?.nom} {membre?.prenom} ({membre?.dateNaissance ? `${calculateAge(membre?.dateNaissance)} yaşında` : "Yaşınızı belirtmediniz !"})
+          </p>
         </div>
 
         {/* Widget Aidat */}
@@ -128,41 +170,42 @@ const Uyeligim = () => {
           </div>
         </div>
 
+        {/* Son Aidat Ödemeleri */}
+        <div className="widget">
+          <h3>Son Ödemeleriniz</h3>
+
+          {loading ? (
+            <p>Yükleniyor...</p>
+          ) : error ? (
+            <p>{error}</p>
+          ) : transactions.length === 0 ? (
+            <p>Henüz ödeme yapılmamış.</p>
+          ) : (
+            <div className="transactions-list">
+              {transactions.map((transaction, index) => (
+                <div key={index} className="transaction-widget">
+                  <h4>Ödeme {index + 1}</h4>
+                  <div className="widget-item">
+                    <strong>Tarih:</strong> {formatDateWithSeconds(transaction.date)}
+                  </div>
+                  <div className="widget-item">
+                    <strong>Tutar:</strong> {transaction.amount}€
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
         {/* Widget Bilgi */}
         <div className="widget">
           <h3>Bilgi</h3>
           <div className="sub-widget">
-          <div className="widget-item">
-            <strong>Doğum Tarihi :</strong> {membre?.dateNaissance ? formatDate(membre?.dateNaissance) : ""}
-          </div>
+            <div className="widget-item">
+              <strong>Doğum Tarihi :</strong> {membre?.dateNaissance ? formatDate(membre?.dateNaissance) : ""}
+            </div>
             <div className="widget-item">
               <strong>Üye Numarası :</strong> {membre?.barcode}
-            </div>
-          </div>
-        </div>
-
-        {/* Iritibat Widget */}
-        <div className="widget">
-          <h3>İletişim</h3>
-          <div className="sub-widget">
-            <div className="widget-item">
-              <strong>Telefonu :</strong> {membre?.telephone}
-            </div>
-            <div className="widget-item">
-              <strong>Email :</strong> {membre?.email}
-            </div>
-          </div>
-        </div>
-
-        {/* Adres Widget */}
-        <div className="widget">
-          <h3>Adresleriniz</h3>
-          <div className="sub-widget">
-            <div className="widget-item">
-              <strong>Fransız Adresi :</strong> {membre?.adresseFr}
-            </div>
-            <div className="widget-item">
-              <strong>Türk Adresi :</strong> {membre?.adresseTr}
             </div>
           </div>
         </div>
@@ -171,6 +214,38 @@ const Uyeligim = () => {
       <style jsx global>{`
         /* Lien Google Fonts pour Nunito */
         @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600&display=swap');
+
+        .transactions-list {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr); /* 3 éléments par ligne */
+          gap: 15px; /* Espacement entre les éléments */
+          margin-top: 20px; /* Marge au-dessus de la grille */
+        }
+
+        .transaction-widget {
+          padding: 15px;
+          border: 1px solid #ddd;
+          border-radius: 8px;
+          background-color: #f9f9f9;
+          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+          text-align: center;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          min-width: 0; /* Empêche le widget de se couper */
+          box-sizing: border-box; /* Assure que le padding et les bordures sont inclus dans la largeur totale */
+          word-wrap: break-word; /* Empêche le texte de déborder */
+        }
+
+        .widget-item {
+          margin-bottom: 8px; /* Espacement entre chaque ligne de texte */
+          font-size: 14px;
+        }
+
+        .widget-item strong {
+          font-weight: bold;
+        }
+
 
         /* Global Reset */
         * {
@@ -279,28 +354,6 @@ const Uyeligim = () => {
         .profile-info {
           font-size: 1.6rem;
           font-weight: bold;
-        }
-
-        /* Irtibat Widget */
-        .widget h3 {
-          color: #ff6f61;
-          margin-bottom: 15px;
-        }
-
-        .sub-widget {
-          display: flex;
-          flex-direction: column;
-        }
-
-        .widget-item {
-          font-size: 1.1rem;
-          color: #555;
-          margin-bottom: 10px;
-        }
-
-        .widget-item strong {
-          font-weight: 600;
-          color: #333;
         }
 
         /* Mobile Responsiveness */
