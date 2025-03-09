@@ -15,7 +15,8 @@ const Uyeligim = () => {
   const [loading, setLoading] = useState(false);
   const [transactions, setTransactions] = useState<any[]>([]);
   const [aidatInformations, setAidatInformations] = useState<any[]>([]);
-  const [error, setError] = useState<string | null>(null);
+  const [AidatError, setAidatError] = useState<string | null>(null);
+  const [TransactionError, setTransactionError] = useState<string | null>(null);
   const isAuthenticated = useAuth();
   const currentYear = new Date().getFullYear();
   const [selectedYear, setSelectedYear] = useState<number>(currentYear);
@@ -38,7 +39,7 @@ const Uyeligim = () => {
     const fetchTransaction = async () => {
   
       if (!membre) {
-        setError("Utilisateur non autorisé.");
+        setTransactionError("Utilisateur non autorisé.");
         return; 
       }
   
@@ -47,15 +48,15 @@ const Uyeligim = () => {
 
         if (response.success) {
           setTransactions(response.transactions || []);
-          setError(""); 
+          setTransactionError(""); 
         } else {
           setTransactions([]); 
-          setError(response.message);
+          setTransactionError(response.message);
         }
       } catch (error) {
         console.error("Error fetching transactions:", error);
         setTransactions([]);
-        setError("Une erreur est survenue lors de la récupération des transactions.");
+        setTransactionError("Une erreur est survenue lors de la récupération des transactions.");
       } 
     };
   
@@ -72,7 +73,7 @@ const Uyeligim = () => {
       }
     
       try {
-        const response = await ServerConnection.getAidatInformationForMember(membre.barcode, selectedYear);
+        const response = await ServerConnection.getAidatInformationForMember(membre.barcode, currentYear);
   
         if (response.success) {
           setAidatInformations(response.data);
@@ -159,8 +160,8 @@ const Uyeligim = () => {
               <div className="widget-item">
                 <strong>{new Date().getFullYear()} Fiyat :</strong> {loading ? (
                   <p>Yükleniyor...</p>
-                ) : error ? (
-                  <p>{error}</p>
+                ) : AidatError ? (
+                  <p>{AidatError}</p>
                 ) : aidatInformations.length === 0 ? (
                   <p>Aidat verisi bulunamadı.</p>
                 ) : (
@@ -171,8 +172,8 @@ const Uyeligim = () => {
                 <strong>Kalan Ödeme Miktarı : </strong>
                 {loading ? (
                   <p>Yükleniyor...</p>
-                ) : error ? (
-                  <p>{error}</p>
+                ) : AidatError ? (
+                  <p>{AidatError}</p>
                 ) : aidatInformations.length === 0 ? (
                   <p>Aidat verisi bulunamadı.</p>
                 ) : (
@@ -201,8 +202,8 @@ const Uyeligim = () => {
 
             {loading ? (
               <p>Yükleniyor...</p>
-            ) : error ? (
-              <p>{error}</p>
+            ) : TransactionError ? (
+              <p>{TransactionError}</p>
             ) : transactions.length === 0 ? (
               <p>Henüz ödeme yapılmamış.</p>
             ) : (
