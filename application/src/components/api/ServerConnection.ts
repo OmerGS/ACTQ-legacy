@@ -262,11 +262,32 @@ class ServerConnection {
 
 
 
-    public static async getFilteredTransaction(barcode: string, reason: string) : Promise<any> {
+    public static async getFilteredTransaction(barcode: string, year: number) : Promise<any> {
         try {
             const response = await axios.post(`${BACKEND_API.baseURL}/membre/transaction/filter`, {
                 barcode: barcode,
-                reason: reason,
+                year: year,
+            },
+            {
+                headers: 
+                {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            console.log(response);
+            return response.data;
+        } catch (error) {
+            console.error("Erreur lors de la recuperation des paiements.");
+            throw error;
+        }
+    }
+
+    public static async getAidatInformation(barcode: string, year: number) : Promise<any> {
+        try {
+            const response = await axios.post(`${BACKEND_API.baseURL}/membre/transaction/filter`, {
+                barcode: barcode,
+                year: year,
             },
             {
                 headers: 
