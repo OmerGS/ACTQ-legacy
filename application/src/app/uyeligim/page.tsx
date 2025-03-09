@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { FaArrowLeft } from 'react-icons/fa';
 import Spinner from '@/components/reusable/Spinner';
-import { aidat } from '@/components/interface/Aidat';
 import { useMembre } from "../hooks/MemberContext";
 import useAuth from '../hooks/useAuth';
 import ServerConnection from '@/components/api/ServerConnection';
@@ -15,6 +14,7 @@ const Uyeligim = () => {
   const { membre } = useMembre();
   const [loading, setLoading] = useState(false);
   const [transactions, setTransactions] = useState<any[]>([]);
+  const [aidatInformations, setAidatInformations] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
   const isAuthenticated = useAuth();
   const currentYear = new Date().getFullYear();
@@ -63,8 +63,32 @@ const Uyeligim = () => {
       fetchTransaction(); 
     }
   }, [membre, selectedYear]);
+
+  useEffect(() => {
+    const fetchAidatInformation = async () => {
+    
+      if (!membre) {
+        return; 
+      }
+    
+      try {
+        const response = await ServerConnection.getAidatInformationForMember(membre.barcode, selectedYear);
   
-  
+        if (response.success) {
+          setAidatInformations(response.data);
+        } else {
+          setAidatInformations([]); 
+        }
+      } catch (error) {
+        console.error("Error fetching aidat information:", error);
+        setAidatInformations([]);
+      } 
+    };
+    
+    if (membre) {
+      fetchAidatInformation(); 
+    }
+  }, [membre, selectedYear]);
 
   const years = Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - i);
 
@@ -78,25 +102,6 @@ const Uyeligim = () => {
     }
     return age;
   };
-
-  const calculatePrice = (membre: any) => {
-    if (membre?.statut === 'Suspendu') {
-      return 0;
-    }
-    const age = membre?.dateNaissance ? calculateAge(membre?.dateNaissance) : 0;
-    if (age >= 18 && age <= 25 && membre?.statut === 'Actif') {
-      return aidat.jeune;
-    }
-    if (age >= 26 && membre?.statusSpecial !== 'Retraite') {
-      return aidat.base;
-    }
-    if (membre?.statusSpecial === 'Retraite') {
-      return aidat.retraite;
-    }
-    return aidat.base;
-  };
-
-  const prix = calculatePrice(membre);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -151,9 +156,28 @@ const Uyeligim = () => {
               <div className="widget-item">
                 <strong>Üyelik Durumum :</strong> {membre?.statut}
               </div>
-
               <div className="widget-item">
-                <strong>{new Date().getFullYear()} Fiyat :</strong> {prix}€
+                <strong>{new Date().getFullYear()} Fiyat :</strong> {loading ? (
+                  <p>Yükleniyor...</p>
+                ) : error ? (
+                  <p>{error}</p>
+                ) : aidatInformations.length === 0 ? (
+                  <p>Aidat verisi bulunamadı.</p>
+                ) : (
+                  <span>{aidatInformations[0]?.amountDue}€</span>
+                )}
+              </div>
+              <div className="widget-item">
+                <strong>Kalan Ödeme Miktarı : </strong>
+                {loading ? (
+                  <p>Yükleniyor...</p>
+                ) : error ? (
+                  <p>{error}</p>
+                ) : aidatInformations.length === 0 ? (
+                  <p>Aidat verisi bulunamadı.</p>
+                ) : (
+                  <span>{aidatInformations[0]?.amountDue - aidatInformations[0]?.amountPaid}€</span>
+                )}
               </div>
             </div>
           </div>
@@ -183,7 +207,7 @@ const Uyeligim = () => {
               <p>Henüz ödeme yapılmamış.</p>
             ) : (
               <div className="transactions-list">
-                {transactions.map((transaction, index) => (
+                {transactions.slice().reverse().map((transaction, index) => (
                   <div key={index} className="transaction-widget">
                     <h4>{transaction.reason}</h4>
                     <div className="widget-item">
@@ -217,7 +241,7 @@ const Uyeligim = () => {
 
           {/* Widget Bilgi */}
           <div className="widget">
-            <h3>Bilgi</h3>
+            <h3>Bilgileriniz</h3>
             <div className="sub-widget">
               <div className="widget-item">
                 <strong>Doğum Tarihi :</strong> {membre?.dateNaissance ? formatDate(membre?.dateNaissance) : ""}

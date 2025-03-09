@@ -283,9 +283,9 @@ class ServerConnection {
         }
     }
 
-    public static async getAidatInformation(barcode: string, year: number) : Promise<any> {
+    public static async getAidatInformationForMember(barcode: string, year: number) : Promise<any> {
         try {
-            const response = await axios.post(`${BACKEND_API.baseURL}/membre/transaction/filter`, {
+            const response = await axios.post(`${BACKEND_API.baseURL}/membre/aidat/history`, {
                 barcode: barcode,
                 year: year,
             },
