@@ -13,4 +13,5 @@ export interface Membre {
   adresseFr: string;
   adresseTr: string;
   specialRole: string;
+  aidatCategory: string;
 }

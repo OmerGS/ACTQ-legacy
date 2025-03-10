@@ -1,6 +1,7 @@
 import axios from 'axios';
 import BACKEND_API from '@/properties/BACKEND_API';
 import API_KEY from '@/properties/API_KEY';
+import { Membre } from '../interface/Membre';
 
 /**
  * API class for interacting with the application's database.
@@ -13,6 +14,7 @@ class AdminServerConnection {
     public static async getAllMember(): Promise<any> {
         try {
             const response = await axios.get(`${BACKEND_API.baseURL}/administration/fetchAllMembre`, {
+                withCredentials: true,
                 headers: {
                     'x-api-key': `${API_KEY.API_KEY}`,
                     'Content-Type': 'application/json',
@@ -25,6 +27,42 @@ class AdminServerConnection {
             throw error; 
         }
     }
+
+    public static async updateMember(membre: Membre): Promise<void> {
+        try {
+            const response = await axios.post(`${BACKEND_API.baseURL}/administration/updateMembre`, {
+                id: membre.id,
+                nom: membre.nom,
+                prenom: membre.prenom,
+                telephone: membre.telephone,
+                email: membre.email,
+                statut: membre.statut,
+                adresseFr: membre.adresseFr,
+                adresseTr: membre.adresseTr,
+                aidatCategory: membre.aidatCategory,
+            },
+            {    
+                withCredentials: true,
+                headers: {
+                    'x-api-key': API_KEY.API_KEY,
+                    'Content-Type': 'application/json',
+                }
+            });
+    
+            alert("✅ Üye başarıyla güncellendi!");  
+
+        } catch (error: any) {  
+            console.error("❌ Güncelleme sırasında hata oluştu:", error);  
+        
+            if (error.response && error.response.data && error.response.data.message) {  
+                alert(`⚠️ Hata: ${error.response.data.message}`);  
+            } else {  
+                alert("❌ Beklenmeyen bir hata oluştu.");  
+            }  
+        
+            throw error;  
+        }        
+    }    
 }    
 
 export default AdminServerConnection;
