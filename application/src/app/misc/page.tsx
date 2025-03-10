@@ -64,7 +64,7 @@ export default function Misc() {
 
         {(membre.specialRole === "Administrator" || membre.specialRole === "Moderator") && (
           <button style={{ ...styles.widget, borderColor: "#1E2A47", borderWidth: 2, borderStyle: "solid", }}
-                  onClick={async () => { router.push('/soon')}}
+                  onClick={async () => { router.push('/panel/actq-core')}}
           >
             <FaUserSecret size={38} style={{ ...styles.icon, color: "#1E2A47" }} />
             <p style={styles.widgetText}>Yönetici Paneli</p>
