@@ -29,29 +29,44 @@ export default function Misc() {
 
       {/* Grille des widgets */}
       <div style={styles.gridContainer}>
-        <button style={styles.widget} onClick={async () => { router.push('/conseil-administration') }}>
+
+        <button style={{ ...styles.widget, borderColor: "#FF6347", borderWidth: 2, borderStyle: "solid", }} 
+              onClick={async () => { router.push('/conseil-administration'); }}
+        >
           <FaUsersCog size={38} style={{ ...styles.icon, color: "#FF6347" }} />
           <p style={styles.widgetText}>Yönetim Kurulu</p>
         </button>
 
-        <button style={styles.widget} onClick={async () => { router.push('/sosyal-medya')}}>
+
+        <button style={{ ...styles.widget, borderColor: "#4CAF50", borderWidth: 2, borderStyle: "solid", }} 
+                onClick={async () => { router.push('/sosyal-medya')}}
+        >
           <FaUsers size={38} style={{ ...styles.icon, color: "#4CAF50" }} />
           <p style={styles.widgetText}>Sosyal Medyalar</p>
         </button>
 
-        <button style={styles.widget} onClick={async () => { router.push('/soon') }}>
+
+        <button style={{ ...styles.widget, borderColor: "#FFC107", borderWidth: 2, borderStyle: "solid", }}
+                onClick={async () => { router.push('/soon') }}
+        >
           <FaBullhorn size={38} style={{ ...styles.icon, color: "#FFC107" }} />
           <p style={styles.widgetText}>Duyuru ve Haber</p>
         </button>
 
-        <button style={styles.widget} onClick={async () => { router.push('/guncellemeler')}}>
+
+        <button style={{ ...styles.widget, borderColor: "#B317D3", borderWidth: 2, borderStyle: "solid", }}
+                onClick={async () => { router.push('/guncellemeler')}}
+        >
           <FaClipboardList size={38} style={{ ...styles.icon, color: "#B317D3" }} />
           <p style={styles.widgetText}>Güncellemeler</p>
         </button>
 
+
         {(membre.specialRole === "Administrator" || membre.specialRole === "Moderator") && (
-          <button style={styles.widget}>
-            <FaUserSecret size={38} style={{ ...styles.icon, color: "#9C27B0" }} />
+          <button style={{ ...styles.widget, borderColor: "#1E2A47", borderWidth: 2, borderStyle: "solid", }}
+                  onClick={async () => { router.push('/soon')}}
+          >
+            <FaUserSecret size={38} style={{ ...styles.icon, color: "#1E2A47" }} />
             <p style={styles.widgetText}>Yönetici Paneli</p>
           </button>
         )}
