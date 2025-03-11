@@ -157,6 +157,27 @@ class AdminServerConnection {
             throw error; 
         }
     }
+
+    public static async getPaymentsByMonthAndYear(month: any, year: any): Promise<any> {
+        try {
+            const response = await axios.post(`${BACKEND_API.baseURL}/administration/payments`, {
+                month: month,
+                year: year,
+            },
+            {
+                withCredentials: true,
+                headers: {
+                    'x-api-key': `${API_KEY.API_KEY}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+    
+            return response.data; 
+        } catch (error) {
+            console.error("Erreur lors de la récupération des paiements :", error);
+            throw error; 
+        }
+    }
 }    
 
 export default AdminServerConnection;

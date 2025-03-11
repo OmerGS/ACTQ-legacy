@@ -58,8 +58,8 @@ export default function MembresPage() {
 
   return (
     <div style={styles.container}>
-      <button onClick={() => router.back()} style={styles.backButton}>
-        <FaArrowLeft /> Retour
+      <button style={styles.backButton} onClick={() => router.back()}>
+        <FaArrowLeft size={18} style={styles.backIcon} /> Geri
       </button>
 
       <h2 style={styles.title}>Üye Ekleme Formu</h2>
@@ -138,12 +138,19 @@ const styles: { [key: string]: React.CSSProperties } = {
     display: "flex",
     alignItems: "center",
     gap: "8px",
-    backgroundColor: "transparent",
+    backgroundColor: "#D9534F",
+    color: "white",
     border: "none",
-    color: "#D9534F",
-    fontSize: "1rem",
+    padding: "10px 15px",
+    borderRadius: "8px",
     cursor: "pointer",
-    transition: "color 0.3s ease",
+    fontSize: "16px",
+    fontWeight: "bold",
+    marginBottom: "15px",
+    transition: "background-color 0.2s ease",
+    width: "auto",
+    maxWidth: "100px", 
+    textAlign: "center", 
   },
   form: {
     display: "flex",
