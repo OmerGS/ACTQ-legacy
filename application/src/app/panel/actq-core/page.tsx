@@ -49,7 +49,7 @@ export default function AdminPanel() {
                     <span style={styles.cardText}>Aidat Fiyati Düzenle</span>
                   </div>
 
-                  <div style={{ ...styles.card, backgroundColor: "#CFA920", borderWidth: 2 }} onClick={() => router.push("/panel/payments")}>
+                  <div style={{ ...styles.card, backgroundColor: "#CFA920", borderWidth: 2 }} onClick={() => router.push("/panel/payments/list")}>
                     <FaCashRegister size={38} color="#FFF" style={styles.icon} />
                     <span style={styles.cardText}>Ödemeler</span>
                   </div>
@@ -64,7 +64,7 @@ export default function AdminPanel() {
                     <span style={styles.cardText}>Üye Aidatlari</span>
                   </div>
 
-                  <div style={{ ...styles.card, backgroundColor: "#007BFF", borderWidth: 2 }} onClick={() => router.push("/soon")}>
+                  <div style={{ ...styles.card, backgroundColor: "#007BFF", borderWidth: 2 }} onClick={() => router.push("/panel/payments/add")}>
                     <FaCreditCard size={38} color="#FFF" style={styles.icon} />
                     <span style={styles.cardText}>Ödeme Ekle</span>
                   </div>

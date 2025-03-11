@@ -178,6 +178,10 @@ class AdminServerConnection {
             throw error; 
         }
     }
+
+    public static async addPayments(formData: any): Promise<void> {
+        console.log(formData);
+    }
 }    
 
 export default AdminServerConnection;
