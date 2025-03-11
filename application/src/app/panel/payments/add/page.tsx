@@ -1,17 +1,25 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useMembre } from "@/app/hooks/MemberContext";
 import { calculateAge } from "@/components/littleComponents/CalculateAge";
 import AdminServerConnection from "@/components/api/AdminServerConnection";
 import Unauthorized from "@/components/reusable/Unauthorized";
 import { Membre } from "@/components/interface/Membre";
+import ServerConnection from "@/components/api/ServerConnection";
+import { useRouter } from "next/navigation";
+import { FaArrowLeft } from "react-icons/fa";
 
 export default function PaymentForm() {
+  const router = useRouter();
   const { membre } = useMembre();
   const [members, setMembers] = useState<Membre[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [selectedMember, setSelectedMember] = useState<Membre | null>(null);
+  const [aidatInformations, setAidatInformations] = useState<any[]>([]);
+
+
+
   const [formData, setFormData] = useState({
     memberId: 0,
     reason: "Aidat",
@@ -27,7 +35,7 @@ export default function PaymentForm() {
         const allMembers = await AdminServerConnection.getAllMember();
         setMembers(allMembers);
       } catch (error) {
-        console.error("Erreur lors du chargement des membres", error);
+        console.error("Üyeler yüklenirken hata oluştu", error);
       }
     };
 
@@ -40,15 +48,42 @@ export default function PaymentForm() {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    if (formData.amount <= 0) return alert("Le montant doit être positif.");
+    
+    if (formData.amount <= 0) {
+        return alert("Miktar pozitif olmalıdır.");
+    }
 
+    if (!formData.memberId) {
+        alert("Lütfen üye giriniz.");
+        return;
+    }
+
+    if(!membre){
+      router.push('/');
+      return;
+    }
+
+    formData.receiverId = membre.id;
+    const response = await AdminServerConnection.addPayments(formData);
+
+    if (response.success) {
+      alert(response.message);
+    } else {
+      alert(response.error);
+    }
+
+    setFormData({ ...formData, amount: 0 });
+  };
+
+  const fetchAidatInfo = async (barcode: string) => {
     try {
-      formData.receiverId = membre.id;
-      await AdminServerConnection.addPayments(formData);
-      alert("Paiement ajouté !");
-      setFormData({ ...formData, amount: 0 });
-    } catch {
-      alert("Erreur !");
+      const result = await ServerConnection.getAidatInformationForMember(
+        barcode, 
+        formData.year
+      );
+      setAidatInformations(result.data);
+    } catch (error) {
+      console.error("Error fetching Aidat info", error);
     }
   };
 
@@ -60,17 +95,26 @@ export default function PaymentForm() {
     `${member.prenom} ${member.nom}`.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const handleResetMember = () => {
+    setSelectedMember(null);
+    setSearchTerm("");
+    setFormData({ ...formData, memberId: 0 });
+  };
+
   return (
     <form onSubmit={handleSubmit} style={styles.form}>
-      <h2 style={styles.title}>Paiement</h2>
-
+      <button style={styles.backButton} onClick={() => router.back()}>
+        <FaArrowLeft size={18} /> Geri
+      </button>
+      
+      <h2 style={styles.title}>Ödeme</h2>
       {/* Afficher le champ de recherche uniquement si aucun membre n'est sélectionné */}
       {!selectedMember && (
         <div style={styles.searchContainer}>
-          <label style={styles.label}>Rechercher un membre</label>
+          <label style={styles.label}>Üye Arama</label>
           <input
             type="text"
-            placeholder="Rechercher un membre (nom ou prénom)"
+            placeholder="Üye ara (isim veya soyisim)"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             style={styles.searchInput}
@@ -86,11 +130,12 @@ export default function PaymentForm() {
                     setSelectedMember(member);
                     setFormData({ ...formData, memberId: member.id });
                     setSearchTerm(`${member.prenom} ${member.nom}`);
+                    fetchAidatInfo(member.barcode);
                   }}
                   style={styles.suggestionItem}
                 >
                   {member.nom} {member.prenom}{" "}
-                  {"(Age: " + (member.dateNaissance ? calculateAge(member.dateNaissance) : "Inconnu") + ")"}
+                  {"(Yaş: " + (member.dateNaissance ? calculateAge(member.dateNaissance) : "Bilinmiyor") + ")"}
                 </li>
               ))}
             </ul>
@@ -101,18 +146,28 @@ export default function PaymentForm() {
       {/* Afficher l'information du membre sélectionné */}
       {selectedMember && (
         <>
-          <label style={styles.label}>Membre sélectionné</label>
+          <label style={styles.label}>Seçilen Üye</label>
           <input
             type="text"
-            value={`${selectedMember.prenom} ${selectedMember.nom}`}
+            value={`${selectedMember.prenom} ${selectedMember.nom} (Yaş: ${selectedMember.dateNaissance ? calculateAge(selectedMember.dateNaissance) : "Bilinmiyor"})`}
             disabled
             style={styles.selectedMemberInput}
           />
+
+          <p style={styles.aidatInfo}>Aidat Borcu : {aidatInformations[0]?.amountDue - aidatInformations[0]?.amountPaid}€</p>
+
+          <button
+            type="button"
+            onClick={handleResetMember}
+            style={styles.resetButton}
+          >
+            Seçilen Üyeyi Sıfırla
+          </button>
         </>
       )}
 
       {/* Raison de paiement */}
-      <label style={styles.label}>Raison</label>
+      <label style={styles.label}>Sebep</label>
       <select name="reason" value={formData.reason} onChange={handleChange} style={styles.selectInput}>
         <option value="Aidat">Aidat</option>
         <option value="Bağış">Bağış</option>
@@ -121,7 +176,7 @@ export default function PaymentForm() {
       </select>
 
       {/* Méthode de paiement */}
-      <label style={styles.label}>Méthode de paiement</label>
+      <label style={styles.label}>Ödeme Yöntemi</label>
       <select name="paymentMethod" value={formData.paymentMethod} onChange={handleChange} style={styles.selectInput}>
         <option value="Nakit">Nakit</option>
         <option value="Kart">Kart</option>
@@ -131,7 +186,7 @@ export default function PaymentForm() {
       </select>
 
       {/* Montant */}
-      <label style={styles.label}>Montant (€)</label>
+      <label style={styles.label}>Tutar (€)</label>
       <input
         type="number"
         name="amount"
@@ -144,7 +199,7 @@ export default function PaymentForm() {
       />
 
       <button type="submit" style={styles.submitButton}>
-        Valider
+        Onayla
       </button>
     </form>
   );
@@ -152,87 +207,130 @@ export default function PaymentForm() {
 
 const styles = {
   form: {
-    maxWidth: "350px",
-    margin: "20px auto",
-    padding: "20px",
+    maxWidth: "420px",
+    margin: "30px auto",
+    padding: "25px",
     display: "flex",
     flexDirection: "column",
-    gap: "15px",
-    border: "1px solid #ddd",
-    borderRadius: "8px",
+    gap: "20px",
+    borderRadius: "15px",
     backgroundColor: "#fff",
-    boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
-  },
-  title: {
-    fontSize: "24px",
-    color: "#333",
+    boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.1)",
+    fontFamily: "'Nunito', sans-serif",
+  } as React.CSSProperties,
+  backButton: {
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+    backgroundColor: "#D9534F",
+    color: "white",
+    border: "none",
+    padding: "10px 15px",
+    borderRadius: "8px",
+    cursor: "pointer",
+    fontSize: "16px",
+    fontWeight: "bold",
+    marginBottom: "15px",
+    transition: "background-color 0.2s ease",
+    width: "auto",
+    maxWidth: "100px",
     textAlign: "center",
-    marginBottom: "10px",
-  },
+  } as React.CSSProperties,
+  title: {
+    fontSize: "32px",
+    color: "#fff",
+    textAlign: "center",
+    fontWeight: "700",
+    marginBottom: "25px",
+    background: "linear-gradient(45deg, #d32f2f, #f44336)",
+    padding: "10px",
+    borderRadius: "8px",
+  } as React.CSSProperties,
   label: {
-    fontSize: "14px",
-    color: "#555",
+    fontSize: "15px",
+    color: "#333",
     marginBottom: "5px",
+    fontWeight: "600",
   },
   searchContainer: {
     position: "relative",
-  },
+  } as React.CSSProperties,
   searchInput: {
-    padding: "10px",
-    border: "1px solid #ccc",
-    borderRadius: "4px",
+    padding: "14px 20px",
+    border: "2px solid #d32f2f",
+    borderRadius: "12px",
     width: "100%",
-    fontSize: "14px",
-    marginBottom: "10px",
-    transition: "border-color 0.3s",
-  },
+    fontSize: "16px",
+    marginBottom: "15px",
+    transition: "border-color 0.3s ease",
+    outline: "none",
+    boxSizing: "border-box",
+  } as React.CSSProperties,
   suggestionList: {
     listStyle: "none",
     padding: 0,
-    marginTop: "5px",
-    border: "1px solid #ccc",
-    borderRadius: "4px",
+    marginTop: "10px",
+    border: "2px solid #d32f2f",
+    borderRadius: "12px",
     maxHeight: "200px",
     overflowY: "auto",
     backgroundColor: "#fff",
-    boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
-  },
+    boxShadow: "0px 6px 15px rgba(0, 0, 0, 0.1)",
+    width: "100%",
+    boxSizing: "border-box",
+  } as React.CSSProperties,
   suggestionItem: {
-    padding: "10px",
+    padding: "12px 15px",
     cursor: "pointer",
-    transition: "background-color 0.3s",
+    transition: "background-color 0.3s ease",
+    borderBottom: "1px solid #eaeaea",
   },
   selectedMemberInput: {
-    padding: "10px",
-    border: "1px solid #ccc",
-    borderRadius: "4px",
-    backgroundColor: "#f9f9f9",
+    padding: "12px 15px",
+    border: "2px solid #d0d0d0",
+    borderRadius: "12px",
+    backgroundColor: "#f0f0f0",
+    color: "#333",
     fontStyle: "italic",
-    marginBottom: "15px",
-    color: "#888",
   },
+  aidatInfo: {
+    fontSize: "16px",
+    color: "#333",
+  },
+  resetButton: {
+    backgroundColor: "#ff5733",
+    color: "#fff",
+    padding: "12px 18px",
+    border: "none",
+    borderRadius: "8px",
+    cursor: "pointer",
+    textAlign: "center",
+    transition: "background-color 0.3s ease",
+  } as React.CSSProperties,
   selectInput: {
-    padding: "10px",
-    border: "1px solid #ccc",
-    borderRadius: "4px",
-    fontSize: "14px",
-    marginBottom: "10px",
+    padding: "14px 20px",
+    border: "2px solid #d32f2f",
+    borderRadius: "12px",
+    fontSize: "16px",
+    marginBottom: "15px",
+    transition: "border-color 0.3s ease",
   },
   input: {
-    padding: "10px",
-    border: "1px solid #ccc",
-    borderRadius: "4px",
-    fontSize: "14px",
+    padding: "14px 20px",
+    border: "2px solid #d32f2f",
+    borderRadius: "12px",
+    fontSize: "16px",
     marginBottom: "20px",
+    transition: "border-color 0.3s ease",
   },
   submitButton: {
-    padding: "12px",
-    backgroundColor: "#007bff",
+    padding: "15px 25px",
+    backgroundColor: "#d32f2f",
     color: "#fff",
     border: "none",
-    borderRadius: "4px",
+    borderRadius: "12px",
     fontSize: "16px",
     cursor: "pointer",
-    transition: "background-color 0.3s",
+    transition: "background-color 0.3s ease",
   },
 };

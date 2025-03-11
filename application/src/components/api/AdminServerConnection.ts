@@ -179,8 +179,28 @@ class AdminServerConnection {
         }
     }
 
-    public static async addPayments(formData: any): Promise<void> {
-        console.log(formData);
+    public static async addPayments(formData: any): Promise<any> {
+        try {
+            const response = await axios.post(`${BACKEND_API.baseURL}/administration/payments/add`, {
+                memberId: formData.memberId, 
+                reason: formData.reason, 
+                year: formData.year, 
+                paymentMethod: formData.paymentMethod, 
+                amount: formData.amount, 
+                receiverId: formData.receiverId 
+            },
+            {
+                withCredentials: true,
+                headers: {
+                    'x-api-key': `${API_KEY.API_KEY}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            return response.data;
+        } catch (error) {
+            console.log("Erreur lors de l'enregistrement des paiements : ", error);
+        }
     }
 }    
 

@@ -260,8 +260,6 @@ class ServerConnection {
         }
     }
 
-
-
     public static async getFilteredTransaction(barcode: string, year: number) : Promise<any> {
         try {
             const response = await axios.post(`${BACKEND_API.baseURL}/membre/transaction/filter`, {
