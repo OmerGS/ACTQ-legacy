@@ -228,7 +228,7 @@ const Uyeligim = () => {
                       <strong>Tarih :</strong> {formatDateWithSeconds(transaction.date)}
                     </div>
                     <div className="widget-item">
-                      <strong>Onaylayan :</strong> {transaction.receiver}
+                      <strong>Onaylayan :</strong> {transaction.receiverPrenom} {transaction.receiverNom}
                     </div>
                     <div className="widget-item">
                       <strong>Miktar :</strong> {transaction.amount}€
