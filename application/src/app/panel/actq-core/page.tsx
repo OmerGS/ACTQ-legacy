@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { FaArrowLeft, FaUser, FaHandHoldingUsd, FaCreditCard } from "react-icons/fa";
+import { FaArrowLeft, FaUsers, FaUserPlus, FaMoneyBillWave, FaCashRegister, FaCreditCard, FaReceipt } from "react-icons/fa";
 import { useMembre } from "../../hooks/MemberContext";
 import Unauthorized from '@/components/reusable/Unauthorized';
 
@@ -34,41 +34,40 @@ export default function AdminPanel() {
               {/* Carte pour les administrateurs uniquement */}
               {isAdmin && (
                 <div style={styles.cardsContainer}>
-                  <div style={{ ...styles.card, borderColor: "#E30A17", borderWidth: 2 }} onClick={() => router.push("/panel/memberList")}>
-                    <FaUser size={38} color="#E30A17" style={styles.icon} />
+                  <div style={{ ...styles.card, backgroundColor: "#E30A17", borderWidth: 2 }} onClick={() => router.push("/panel/memberList")}>
+                    <FaUsers size={38} color="#FFF" style={styles.icon} />
                     <span style={styles.cardText}>Üye Listesi</span>
                   </div>
 
-                  <div style={{ ...styles.card, borderColor: "#E30A17", borderWidth: 2 }} onClick={() => router.push("/soon")}>
-                    <FaUser size={38} color="#E30A17" style={styles.icon} />
+                  <div style={{ ...styles.card, backgroundColor: "#E30A17", borderWidth: 2 }} onClick={() => router.push("/soon")}>
+                    <FaUserPlus size={38} color="#FFF" style={styles.icon} />
                     <span style={styles.cardText}>Üye Ekle</span>
                   </div>
 
-                  <div style={{ ...styles.card, borderColor: "#E30A17", borderWidth: 2 }} onClick={() => router.push("/soon")}>
-                    <FaUser size={38} color="#E30A17" style={styles.icon} />
+                  <div style={{ ...styles.card, backgroundColor: "#CFA920", borderWidth: 2 }} onClick={() => router.push("/soon")}>
+                    <FaMoneyBillWave size={38} color="#FFF" style={styles.icon} />
                     <span style={styles.cardText}>Aidat Fiyati Düzenle</span>
                   </div>
 
-                  <div style={{ ...styles.card, borderColor: "#E30A17", borderWidth: 2 }} onClick={() => router.push("/soon")}>
-                    <FaUser size={38} color="#E30A17" style={styles.icon} />
+                  <div style={{ ...styles.card, backgroundColor: "#CFA920", borderWidth: 2 }} onClick={() => router.push("/soon")}>
+                    <FaCashRegister size={38} color="#FFF" style={styles.icon} />
                     <span style={styles.cardText}>Ödemeler</span>
                   </div>
                 </div>
               )}
 
-              {/* Carte pour les modérateurs uniquement */}
-              {isModerator && (
-                <div style={{ ...styles.card, borderColor: "#32CD32", borderWidth: 2 }} onClick={() => router.push("/soon")}>
-                  <FaHandHoldingUsd size={38} color="#32CD32" style={styles.icon} />
-                  <span style={styles.cardText}>Üye Aidatlari</span>
-                </div>
-              )}
-
               {/* Carte pour les administrateurs et modérateurs */}
               {(isAdmin || isModerator) && (
-                <div style={{ ...styles.card, borderColor: "#007BFF", borderWidth: 2 }} onClick={() => router.push("/soon")}>
-                  <FaCreditCard size={38} color="#007BFF" style={styles.icon} />
-                  <span style={styles.cardText}>Ödeme Ekle</span>
+                <div style={styles.cardsContainer}>
+                  <div style={{ ...styles.card, backgroundColor: "#007BFF", borderWidth: 2 }} onClick={() => router.push("/soon")}>
+                    <FaReceipt size={38} color="#FFF" style={styles.icon} />
+                    <span style={styles.cardText}>Üye Aidatlari</span>
+                  </div>
+
+                  <div style={{ ...styles.card, backgroundColor: "#007BFF", borderWidth: 2 }} onClick={() => router.push("/soon")}>
+                    <FaCreditCard size={38} color="#FFF" style={styles.icon} />
+                    <span style={styles.cardText}>Ödeme Ekle</span>
+                  </div>
                 </div>
               )}
             </div>
@@ -157,8 +156,7 @@ const styles = {
     maxWidth: "100%",
     padding: "15px",
     borderRadius: "14px",
-    backgroundColor: "#fff",
-    color: "#333",
+    color: "#FFF",
     fontSize: "18px",
     fontWeight: "bold",
     border: "2px solid #ddd",

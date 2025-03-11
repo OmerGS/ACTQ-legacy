@@ -93,7 +93,9 @@ export default function Home() {
                 {countdown}
               </p>
             </div>
-  
+
+            <div style={styles.logoBackground}></div>
+
             <div style={styles.cardsContainer}>
             <div style={{...styles.card, borderColor: "#E30A17", borderWidth: 2, }} onClick={() => router.push("/uyeligim")} >
               <FaUser size={38} color="#E30A17" style={styles.icon} />
@@ -121,7 +123,6 @@ export default function Home() {
 
 const styles = {
   pageContainer: {
-    backgroundColor: "#ffffff",
     minHeight: "100vh",
     display: "flex",
     flexDirection: "column",
@@ -130,6 +131,21 @@ const styles = {
     padding: "20px",
     fontFamily: "'Nunito', sans-serif",
   } as React.CSSProperties,
+  logoBackground: {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: "500px", 
+    height: "500px",
+    backgroundImage: "url('/assets/logo/actq.png')",
+    backgroundSize: "contain",
+    backgroundRepeat: "no-repeat",
+    backgroundPosition: "center",
+    opacity: 0.2,
+    zIndex: -1, 
+  } as React.CSSProperties,
+  
   appContainer: {
     width: "100%",
     maxWidth: "400px",
@@ -179,18 +195,30 @@ const styles = {
   },
   countdownContainer: {
     width: "100%",
-    maxWidth: "350px",
-    padding: "5px",
-    borderRadius: "12px",
-    backgroundColor: "#f4f4f4",
-    boxShadow: "2px 2px 8px rgba(102, 102, 102, 0.1)", 
-    margin: "0 auto",
+    maxWidth: "400px",
+    padding: "20px 30px",
+    borderRadius: "18px",
+    background: "rgba(255, 255, 255, 0.15)",
+    backdropFilter: "blur(12px)",
+    WebkitBackdropFilter: "blur(12px)",
+    border: "2px solid rgba(255, 255, 255, 0.3)",
+    boxShadow: "0 8px 25px rgba(0, 0, 0, 0.15)",
+    margin: "20px auto",
     display: "flex",
-    flexDirection: "column", 
-    alignItems: "center", 
+    flexDirection: "column",
+    alignItems: "center",
     justifyContent: "center",
+    textAlign: "center",
     boxSizing: "border-box",
-  } as React.CSSProperties,   
+    position: "relative",
+    overflow: "hidden",
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: "1.5rem",
+    letterSpacing: "1px",
+    transition: "transform 0.2s ease, box-shadow 0.3s ease",
+    animation: "pulse 3s infinite",
+  } as React.CSSProperties,
   countdownText: {
     fontSize: "16px",
     color: "#333",
