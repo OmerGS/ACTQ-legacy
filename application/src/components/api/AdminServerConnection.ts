@@ -62,7 +62,39 @@ class AdminServerConnection {
         
             throw error;  
         }        
-    }    
+    }   
+    
+    public static async addMember(formData: any): Promise<void> {
+        try {
+            const response = await axios.post(`${BACKEND_API.baseURL}/administration/addMembre`, {
+                nom: formData.nom,
+                prenom: formData.prenom,
+                telephone: formData.telephone,
+                barcode: formData.barcode,
+                aidatCategory: formData.aidatCategory,
+            },
+            {    
+                withCredentials: true,
+                headers: {
+                    'x-api-key': API_KEY.API_KEY,
+                    'Content-Type': 'application/json',
+                }
+            });
+    
+            alert("✅ Üye başarıyla eklendi!");  
+
+        } catch (error: any) {  
+            console.error("❌ Ekleme sırasında hata oluştu:", error);  
+        
+            if (error.response && error.response.data && error.response.data.message) {  
+                alert(`⚠️ Hata: ${error.response.data.message}`);  
+            } else {  
+                alert("❌ Beklenmeyen bir hata oluştu.");  
+            }  
+        
+            throw error;  
+        }        
+    }
 }    
 
 export default AdminServerConnection;

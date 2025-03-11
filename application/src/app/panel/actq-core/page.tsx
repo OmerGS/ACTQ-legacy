@@ -39,7 +39,7 @@ export default function AdminPanel() {
                     <span style={styles.cardText}>Üye Listesi</span>
                   </div>
 
-                  <div style={{ ...styles.card, backgroundColor: "#E30A17", borderWidth: 2 }} onClick={() => router.push("/soon")}>
+                  <div style={{ ...styles.card, backgroundColor: "#E30A17", borderWidth: 2 }} onClick={() => router.push("/panel/addMember")}>
                     <FaUserPlus size={38} color="#FFF" style={styles.icon} />
                     <span style={styles.cardText}>Üye Ekle</span>
                   </div>
