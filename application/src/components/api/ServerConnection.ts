@@ -1,6 +1,7 @@
 import axios from 'axios';
 import BACKEND_API from '@/properties/BACKEND_API';
 import API_KEY from '@/properties/API_KEY';
+import PaymentType from '../enum/PaymentType';
 
 /**
  * API class for interacting with the application's database.
@@ -255,6 +256,50 @@ class ServerConnection {
             return response.data;
         } catch (error) {
             console.error("Erreur lors de la recuperation du sel :", error);
+            throw error;
+        }
+    }
+
+
+
+    public static async getFilteredTransaction(barcode: string, year: number) : Promise<any> {
+        try {
+            const response = await axios.post(`${BACKEND_API.baseURL}/membre/transaction/filter`, {
+                barcode: barcode,
+                year: year,
+            },
+            {
+                headers: 
+                {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            console.log(response);
+            return response.data;
+        } catch (error) {
+            console.error("Erreur lors de la recuperation des paiements.");
+            throw error;
+        }
+    }
+
+    public static async getAidatInformationForMember(barcode: string, year: number) : Promise<any> {
+        try {
+            const response = await axios.post(`${BACKEND_API.baseURL}/membre/aidat/history`, {
+                barcode: barcode,
+                year: year,
+            },
+            {
+                headers: 
+                {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            console.log(response);
+            return response.data;
+        } catch (error) {
+            console.error("Erreur lors de la recuperation des paiements.");
             throw error;
         }
     }

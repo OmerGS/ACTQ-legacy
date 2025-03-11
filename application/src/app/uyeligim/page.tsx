@@ -4,16 +4,22 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { FaArrowLeft } from 'react-icons/fa';
 import Spinner from '@/components/reusable/Spinner';
-import { aidat } from '@/components/interface/Aidat';
 import { useMembre } from "../hooks/MemberContext";
 import useAuth from '../hooks/useAuth';
-
+import ServerConnection from '@/components/api/ServerConnection';
+import Unauthorized from '@/components/reusable/Unauthorized';
 
 const Uyeligim = () => {
   const router = useRouter();
   const { membre } = useMembre();
   const [loading, setLoading] = useState(false);
+  const [transactions, setTransactions] = useState<any[]>([]);
+  const [aidatInformations, setAidatInformations] = useState<any[]>([]);
+  const [AidatError, setAidatError] = useState<string | null>(null);
+  const [TransactionError, setTransactionError] = useState<string | null>(null);
   const isAuthenticated = useAuth();
+  const currentYear = new Date().getFullYear();
+  const [selectedYear, setSelectedYear] = useState<number>(currentYear);
 
   useEffect(() => {
     if (isAuthenticated && membre) {
@@ -29,35 +35,63 @@ const Uyeligim = () => {
     }
   }, [isAuthenticated, membre]);
 
-  if (loading) {
-    return <Spinner />;
-  }
+  useEffect(() => {
+    const fetchTransaction = async () => {
+  
+      if (!membre) {
+        setTransactionError("Utilisateur non autorisé.");
+        return; 
+      }
+  
+      try {
+        const response = await ServerConnection.getFilteredTransaction(membre.barcode, selectedYear);
 
-  if (!membre) {
-    return (
-      <div>
-        <p style={{ textAlign: "center", marginTop: "50px", fontSize: "24px", fontWeight: "bold" }}>
-          404 - İzinsiz giriş
-        </p>
-        <button
-          onClick={() => router.push("/")}
-          style={{
-            display: "block",
-            margin: "20px auto",
-            padding: "10px 20px",
-            fontSize: "16px",
-            cursor: "pointer",
-            backgroundColor: "#4682B4", 
-            color: "#fff", 
-            border: "none", 
-            borderRadius: "5px", 
-          }}
-        >
-          Ana ekrana geri dön
-        </button>
-      </div>
-    );
-  }
+        if (response.success) {
+          setTransactions(response.transactions || []);
+          setTransactionError(""); 
+        } else {
+          setTransactions([]); 
+          setTransactionError(response.message);
+        }
+      } catch (error) {
+        console.error("Error fetching transactions:", error);
+        setTransactions([]);
+        setTransactionError("Une erreur est survenue lors de la récupération des transactions.");
+      } 
+    };
+  
+    if (membre) {
+      fetchTransaction(); 
+    }
+  }, [membre, selectedYear]);
+
+  useEffect(() => {
+    const fetchAidatInformation = async () => {
+    
+      if (!membre) {
+        return; 
+      }
+    
+      try {
+        const response = await ServerConnection.getAidatInformationForMember(membre.barcode, currentYear);
+  
+        if (response.success) {
+          setAidatInformations(response.data);
+        } else {
+          setAidatInformations([]); 
+        }
+      } catch (error) {
+        console.error("Error fetching aidat information:", error);
+        setAidatInformations([]);
+      } 
+    };
+    
+    if (membre) {
+      fetchAidatInformation(); 
+    }
+  }, [membre, selectedYear]);
+
+  const years = Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - i);
 
   const calculateAge = (birthDate: string) => {
     const today = new Date();
@@ -70,25 +104,6 @@ const Uyeligim = () => {
     return age;
   };
 
-  const calculatePrice = (membre: any) => {
-    if (membre?.statut === 'Suspendu') {
-      return 0;
-    }
-    const age = membre?.dateNaissance ? calculateAge(membre?.dateNaissance) : 0;
-    if (age >= 18 && age <= 25 && membre?.statut === 'Actif') {
-      return aidat.jeune;
-    }
-    if (age >= 26 && membre?.statusSpecial !== 'Retraite') {
-      return aidat.base;
-    }
-    if (membre?.statusSpecial === 'Retraite') {
-      return aidat.retraite;
-    }
-    return aidat.base;
-  }; 
-
-  const prix = calculatePrice(membre);
-
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     const day = String(date.getDate()).padStart(2, "0"); 
@@ -98,232 +113,363 @@ const Uyeligim = () => {
     return `${day}/${month}/${year}`;
   };
 
+  const formatDateWithSeconds = (dateString: string) => {
+    const date = new Date(dateString);
+    
+    const day = String(date.getDate()).padStart(2, '0'); 
+    const month = String(date.getMonth() + 1).padStart(2, '0'); 
+    const year = date.getFullYear();
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+    
+    return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+  }
+
+  if (loading) {
+    return <Spinner />;
+  }
+
   return (
-    <div className="page-container">
-      {/* Retour Button */}
-      <button onClick={() => router.back()} className="back-button">
-        <FaArrowLeft /> Geri
-      </button>
+    <div>
+      { !membre ? (
+        <Unauthorized /> 
+      ) : (
+        <div className="page-container">
+        {/* Retour Button */}
+        <button onClick={() => router.back()} className="back-button">
+          <FaArrowLeft /> Geri
+        </button>
 
-      {/* Conteneur Principal */}
-      <div className="main-container">
-        {/* Sayin NOM PRENOM (AGE) */}
-        <div className="profile-card">
-        <p className="profile-info">
-          {membre?.nom} {membre?.prenom} ({membre?.dateNaissance ? `${calculateAge(membre?.dateNaissance)} yaşında` : "Yaşınızı belirtmediniz !"})
-        </p>
-        </div>
+        {/* Conteneur Principal */}
+        <div className="main-container">
+          {/* Sayin NOM PRENOM (AGE) */}
+          <div className="profile-card">
+            <p className="profile-info">
+              {membre?.nom} {membre?.prenom} ({membre?.dateNaissance ? `${calculateAge(membre?.dateNaissance)} yaşında` : "Yaşınızı belirtmediniz !"})
+            </p>
+          </div>
 
-        {/* Widget Aidat */}
-        <div className="widget">
-          <h3>Aidat</h3>
-          <div className="sub-widget">
-            <div className="widget-item">
-              <strong>Üyelik Durumum :</strong> {membre?.statut}
-            </div>
-
-            <div className="widget-item">
-              <strong>{new Date().getFullYear()} Fiyat :</strong> {prix}€
+          {/* Widget Aidat */}
+          <div className="widget">
+            <h3>Aidat</h3>
+            <div className="sub-widget">
+              <div className="widget-item">
+                <strong>Üyelik Durumum :</strong> {membre?.statut}
+              </div>
+              <div className="widget-item">
+                <strong>{new Date().getFullYear()} Fiyat :</strong> {loading ? (
+                  <p>Yükleniyor...</p>
+                ) : AidatError ? (
+                  <p>{AidatError}</p>
+                ) : aidatInformations.length === 0 ? (
+                  <p>Aidat verisi bulunamadı.</p>
+                ) : (
+                  <span>{aidatInformations[0]?.amountDue}€</span>
+                )}
+              </div>
+              <div className="widget-item">
+                <strong>Kalan Ödeme Miktarı : </strong>
+                {loading ? (
+                  <p>Yükleniyor...</p>
+                ) : AidatError ? (
+                  <p>{AidatError}</p>
+                ) : aidatInformations.length === 0 ? (
+                  <p>Aidat verisi bulunamadı.</p>
+                ) : (
+                  <span>{aidatInformations[0]?.amountDue - aidatInformations[0]?.amountPaid}€</span>
+                )}
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Widget Bilgi */}
-        <div className="widget">
-          <h3>Bilgi</h3>
-          <div className="sub-widget">
-          <div className="widget-item">
-            <strong>Doğum Tarihi :</strong> {membre?.dateNaissance ? formatDate(membre?.dateNaissance) : ""}
-          </div>
-            <div className="widget-item">
-              <strong>Üye Numarası :</strong> {membre?.barcode}
-            </div>
-          </div>
-        </div>
+          {/* Son Aidat Ödemeleri */}
+          <div className="widget">
+            <h3>{selectedYear} yılı ödemeleriniz</h3>
 
-        {/* Iritibat Widget */}
-        <div className="widget">
-          <h3>İletişim</h3>
-          <div className="sub-widget">
-            <div className="widget-item">
-              <strong>Telefonu :</strong> {membre?.telephone}
+            {/* SELECTION D'ANNEE */}
+            <div className="year-selector">
+              {years.map((year) => (
+                <button
+                  key={year}
+                  className={`year-btn ${selectedYear === year ? "active" : ""}`}
+                  onClick={() => setSelectedYear(year)}
+                >
+                  {year}
+                </button>
+              ))}
             </div>
-            <div className="widget-item">
-              <strong>Email :</strong> {membre?.email}
-            </div>
-          </div>
-        </div>
 
-        {/* Adres Widget */}
-        <div className="widget">
-          <h3>Adresleriniz</h3>
-          <div className="sub-widget">
-            <div className="widget-item">
-              <strong>Fransız Adresi :</strong> {membre?.adresseFr}
-            </div>
-            <div className="widget-item">
-              <strong>Türk Adresi :</strong> {membre?.adresseTr}
+            {loading ? (
+              <p>Yükleniyor...</p>
+            ) : TransactionError ? (
+              <p>{TransactionError}</p>
+            ) : transactions.length === 0 ? (
+              <p>Henüz ödeme yapılmamış.</p>
+            ) : (
+              <div className="transactions-list">
+                {transactions.slice().reverse().map((transaction, index) => (
+                  <div key={index} className="transaction-widget">
+                    <h4>{transaction.reason}</h4>
+                    <div className="widget-item">
+                      <strong>Fatura N° :</strong> {transaction.transactionId}
+                    </div>
+                    <div className="widget-item">
+                      {transaction.makbuzId && (
+                        <>
+                          <strong>Makbuz N° :</strong> {transaction.makbuzId}
+                        </>
+                      )}
+                    </div>
+                    <div className="widget-item">
+                      <strong>Ödeme Şekli :</strong> {transaction.paymentMethod}
+                    </div>
+                    <div className="widget-item">
+                      <strong>Tarih :</strong> {formatDateWithSeconds(transaction.date)}
+                    </div>
+                    <div className="widget-item">
+                      <strong>Onaylayan :</strong> {transaction.receiverPrenom} {transaction.receiverNom}
+                    </div>
+                    <div className="widget-item">
+                      <strong>Miktar :</strong> {transaction.amount}€
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+
+          {/* Widget Bilgi */}
+          <div className="widget">
+            <h3>Bilgileriniz</h3>
+            <div className="sub-widget">
+              <div className="widget-item">
+                <strong>Doğum Tarihi :</strong> {membre?.dateNaissance ? formatDate(membre?.dateNaissance) : ""}
+              </div>
+              <div className="widget-item">
+                <strong>Üye Numarası :</strong> {membre?.barcode}
+              </div>
             </div>
           </div>
         </div>
       </div>
+      )}:
+      
 
-      <style jsx global>{`
-        /* Lien Google Fonts pour Nunito */
-        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600&display=swap');
+        <style jsx global>{`
+          /* Lien Google Fonts pour Nunito */
+          @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600&display=swap');
 
-        /* Global Reset */
-        * {
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
-        }
-
-        body {
-          font-family: 'Nunito', sans-serif;
-          background-color: #f5f5f5;
-          color: #333;
-          line-height: 1.6;
-          font-size: 16px;
-        }
-
-        /* Conteneur principal */
-        .page-container {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          padding: 20px;
-          position: relative;
-        }
-
-        /* Bouton Retour */
-        .back-button {
-          background-color: transparent;
-          border: 2px solid #ff6f61;
-          padding: 12px 20px;
-          font-size: 18px;
-          color: #ff6f61;
-          font-weight: bold;
-          cursor: pointer;
-          border-radius: 50px;
-          transition: all 0.3s ease;
-          display: flex;
-          align-items: center;
-          margin-bottom: 20px;
-          position: absolute;
-          top: 20px;
-          left: 20px;
-          z-index: 10;
-        }
-
-        .back-button:hover {
-          background-color: #ff6f61;
-          color: white;
-        }
-
-        .back-button svg {
-          margin-right: 8px;
-        }
-
-        /* Conteneur Principal avec Alignement */
-        .main-container {
-          width: 100%;
-          max-width: 800px;
-          background-color: #ffffff;
-          padding: 20px;
-          border-radius: 16px;
-          box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.1);
-          margin-top: 60px; /* Décalage pour éviter que le contenu se superpose au bouton */
-        }
-
-        /* Widget Bilgi */
-        .widget {
-          background-color: #ffffff;
-          padding: 20px;
-          border-radius: 16px;
-          margin-bottom: 20px;
-          box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .widget h3 {
-          color: #ff6f61;
-          margin-bottom: 15px;
-        }
-
-        .sub-widget {
-          display: flex;
-          flex-direction: column;
-        }
-
-        .widget-item {
-          font-size: 1.1rem;
-          color: #555;
-          margin-bottom: 10px;
-        }
-
-        .widget-item strong {
-          font-weight: 600;
-          color: #333;
-        }
-
-        /* Carte Profil */
-        .profile-card {
-          background-color: #ff6f61;
-          padding: 20px;
-          border-radius: 16px;
-          margin-bottom: 30px;
-          color: white;
-          text-align: center;
-        }
-
-        .profile-info {
-          font-size: 1.6rem;
-          font-weight: bold;
-        }
-
-        /* Irtibat Widget */
-        .widget h3 {
-          color: #ff6f61;
-          margin-bottom: 15px;
-        }
-
-        .sub-widget {
-          display: flex;
-          flex-direction: column;
-        }
-
-        .widget-item {
-          font-size: 1.1rem;
-          color: #555;
-          margin-bottom: 10px;
-        }
-
-        .widget-item strong {
-          font-weight: 600;
-          color: #333;
-        }
-
-        /* Mobile Responsiveness */
-        @media (max-width: 600px) {
-          .profile-info {
-            font-size: 1.4rem;
+          .transactions-list {
+            display: grid;
+            grid-template-columns: 1fr; /* Par défaut : 1 colonne (mobile) */
+            gap: 15px;
+            margin-top: 20px;
           }
 
-          .back-button {
-            font-size: 16px;
-            padding: 10px 15px;
+          .year-selector {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap; /* Permet aux boutons de passer à la ligne si nécessaire */
+            justify-content: center; /* Aligne les boutons au centre */
           }
 
-          .main-container {
-            padding: 10px;
+          .year-btn {
+            background-color: #f0f0f0;
+            border: 2px solid #ddd;
+            color: #555;
+            padding: 8px 15px;
+            font-size: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 80px; /* Définit une largeur minimale pour chaque bouton */
+            max-width: 100%; /* Empêche le bouton de dépasser */
+            text-align: center;
+          }
+
+          .year-btn:hover {
+            background-color: #ff6f61;
+            color: white;
+            border-color: #ff6f61;
+          }
+
+          .year-btn.active {
+            background-color: #ff6f61;
+            color: white;
+            border-color: #ff6f61;
+          }
+
+          @media (max-width: 600px) {
+            .year-btn {
+              font-size: 0.9rem; /* Réduit la taille du texte sur mobile */
+              padding: 6px 12px; /* Ajuste l'espacement interne des boutons */
+            }
+          }
+
+
+          .transaction-widget {
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 0;
+            box-sizing: border-box;
+            word-wrap: break-word;
+            width: 100%;
           }
 
           .widget-item {
-            font-size: 1rem;
+            margin-bottom: 8px;
+            font-size: 14px;
           }
-        }
-      `}</style>
-    </div>
+
+          /* Tablette (≥ 600px) : 2 colonnes */
+          @media (min-width: 600px) {
+            .transactions-list {
+              grid-template-columns: repeat(2, 1fr);
+            }
+          }
+
+
+
+          /* Global Reset */
+          * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+          }
+
+          body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            font-size: 16px;
+          }
+
+          /* Conteneur principal */
+          .page-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+          }
+
+          /* Bouton Retour */
+          .back-button {
+            background-color: transparent;
+            border: 2px solid #ff6f61;
+            padding: 12px 20px;
+            font-size: 18px;
+            color: #ff6f61;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+          }
+
+          .back-button:hover {
+            background-color: #ff6f61;
+            color: white;
+          }
+
+          .back-button svg {
+            margin-right: 8px;
+          }
+
+          /* Conteneur Principal avec Alignement */
+          .main-container {
+            width: 100%;
+            max-width: 800px;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.1);
+            margin-top: 60px; /* Décalage pour éviter que le contenu se superpose au bouton */
+          }
+
+          /* Widget Bilgi */
+          .widget {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+          }
+
+          .widget h3 {
+            color: #ff6f61;
+            margin-bottom: 15px;
+          }
+
+          .sub-widget {
+            display: flex;
+            flex-direction: column;
+          }
+
+          .widget-item {
+            font-size: 1.1rem;
+            color: #555;
+            margin-bottom: 10px;
+          }
+
+          .widget-item strong {
+            font-weight: 600;
+            color: #333;
+          }
+
+          /* Carte Profil */
+          .profile-card {
+            background-color: #ff6f61;
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            color: white;
+            text-align: center;
+          }
+
+          .profile-info {
+            font-size: 1.6rem;
+            font-weight: bold;
+          }
+
+          /* Mobile Responsiveness */
+          @media (max-width: 600px) {
+            .profile-info {
+              font-size: 1.4rem;
+            }
+
+            .back-button {
+              font-size: 16px;
+              padding: 10px 15px;
+            }
+
+            .main-container {
+              padding: 10px;
+            }
+
+            .widget-item {
+              font-size: 1rem;
+            }
+          }
+        `}</style>
+      </div>
   );
 };
 

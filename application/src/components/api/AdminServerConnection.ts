@@ -1,6 +1,7 @@
 import axios from 'axios';
 import BACKEND_API from '@/properties/BACKEND_API';
 import API_KEY from '@/properties/API_KEY';
+import { Membre } from '../interface/Membre';
 
 /**
  * API class for interacting with the application's database.
@@ -10,25 +11,173 @@ import API_KEY from '@/properties/API_KEY';
  * which verifies API keys before interacting with the database.
  */
 class AdminServerConnection {
-    public static async getMemberByIdentifier(identifier: string): Promise<any> {
+    public static async getAllMember(): Promise<any> {
         try {
-            const response = await axios.post(`${BACKEND_API.baseURL}/membre/getMemberByIdentifier`, {
-                identifier: identifier,
-            },
-            {
+            const response = await axios.get(`${BACKEND_API.baseURL}/administration/fetchAllMembre`, {
+                withCredentials: true,
                 headers: {
-                  'x-api-key': `${API_KEY.API_KEY}`,
-                  'Content-Type': 'application/json',
+                    'x-api-key': `${API_KEY.API_KEY}`,
+                    'Content-Type': 'application/json',
                 },
-            }
-            );
+            });
     
             return response.data; 
         } catch (error) {
-            console.error("Erreur lors de la recherche de l'utilisateur :", error);
+            console.error("Erreur lors de la récupération des membres :", error);
             throw error; 
         }
     }
-}
+
+    public static async updateMember(membre: Membre): Promise<void> {
+        try {
+            const response = await axios.post(`${BACKEND_API.baseURL}/administration/updateMembre`, {
+                id: membre.id,
+                nom: membre.nom,
+                prenom: membre.prenom,
+                telephone: membre.telephone,
+                email: membre.email,
+                statut: membre.statut,
+                adresseFr: membre.adresseFr,
+                adresseTr: membre.adresseTr,
+                aidatCategory: membre.aidatCategory,
+            },
+            {    
+                withCredentials: true,
+                headers: {
+                    'x-api-key': API_KEY.API_KEY,
+                    'Content-Type': 'application/json',
+                }
+            });
+    
+            alert("✅ Üye başarıyla güncellendi!");  
+
+        } catch (error: any) {  
+            console.error("❌ Güncelleme sırasında hata oluştu:", error);  
+        
+            if (error.response && error.response.data && error.response.data.message) {  
+                alert(`⚠️ Hata: ${error.response.data.message}`);  
+            } else {  
+                alert("❌ Beklenmeyen bir hata oluştu.");  
+            }  
+        
+            throw error;  
+        }        
+    }   
+    
+    public static async addMember(formData: any): Promise<void> {
+        try {
+            const response = await axios.post(`${BACKEND_API.baseURL}/administration/addMembre`, {
+                nom: formData.nom,
+                prenom: formData.prenom,
+                telephone: formData.telephone,
+                barcode: formData.barcode,
+                aidatCategory: formData.aidatCategory,
+            },
+            {    
+                withCredentials: true,
+                headers: {
+                    'x-api-key': API_KEY.API_KEY,
+                    'Content-Type': 'application/json',
+                }
+            });
+    
+            alert("✅ Üye başarıyla eklendi!");  
+
+        } catch (error: any) {  
+            console.error("❌ Ekleme sırasında hata oluştu:", error);  
+        
+            if (error.response && error.response.data && error.response.data.message) {  
+                alert(`⚠️ Hata: ${error.response.data.message}`);  
+            } else {  
+                alert("❌ Beklenmeyen bir hata oluştu.");  
+            }  
+        
+            throw error;  
+        }        
+    }
+
+    public static async getAidat(): Promise<any> {
+        try {
+            const response = await axios.get(`${BACKEND_API.baseURL}/administration/fetchAidatPrice`, {
+                withCredentials: true,
+                headers: {
+                    'x-api-key': `${API_KEY.API_KEY}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+    
+            return response.data; 
+        } catch (error) {
+            console.error("Erreur lors de la récupération des prix :", error);
+            throw error; 
+        }
+    }
+
+    /*
+    public static async addNewAidatCategory(category: any, price: any): Promise<any> {
+        try {
+            const response = await axios.post(`${BACKEND_API.baseURL}/administration/addNewAidatCategory`, {
+                category: category,
+                price: price,
+            },
+            {
+                withCredentials: true,
+                headers: {
+                    'x-api-key': `${API_KEY.API_KEY}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+    
+            return response.data; 
+        } catch (error) {
+            console.error("Erreur lors de la récupération des prix :", error);
+            throw error; 
+        }
+    }
+    */
+
+    public static async editAidatPrice(category: any, price: any): Promise<any> {
+        console.log(category, price);
+        try {
+            const response = await axios.post(`${BACKEND_API.baseURL}/administration/editAidatPrice`, {
+                category: category,
+                price: price,
+            },
+            {
+                withCredentials: true,
+                headers: {
+                    'x-api-key': `${API_KEY.API_KEY}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+    
+            return response.data; 
+        } catch (error) {
+            console.error("Erreur lors de la récupération des prix :", error);
+            throw error; 
+        }
+    }
+
+    public static async getPaymentsByMonthAndYear(month: any, year: any): Promise<any> {
+        try {
+            const response = await axios.post(`${BACKEND_API.baseURL}/administration/payments`, {
+                month: month,
+                year: year,
+            },
+            {
+                withCredentials: true,
+                headers: {
+                    'x-api-key': `${API_KEY.API_KEY}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+    
+            return response.data; 
+        } catch (error) {
+            console.error("Erreur lors de la récupération des paiements :", error);
+            throw error; 
+        }
+    }
+}    
 
 export default AdminServerConnection;
