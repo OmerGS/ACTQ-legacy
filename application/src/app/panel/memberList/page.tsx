@@ -113,9 +113,6 @@ export default function MembresPage() {
 
   return (
     <div style={styles.container}>
-      <button style={styles.backButton} onClick={() => router.back()}>
-        <FaArrowLeft size={18} style={styles.backIcon} /> Geri
-      </button>
       <h2 style={styles.title}>Liste des Membres</h2>
   
       <input

@@ -95,6 +95,68 @@ class AdminServerConnection {
             throw error;  
         }        
     }
+
+    public static async getAidat(): Promise<any> {
+        try {
+            const response = await axios.get(`${BACKEND_API.baseURL}/administration/fetchAidatPrice`, {
+                withCredentials: true,
+                headers: {
+                    'x-api-key': `${API_KEY.API_KEY}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+    
+            return response.data; 
+        } catch (error) {
+            console.error("Erreur lors de la récupération des prix :", error);
+            throw error; 
+        }
+    }
+
+    /*
+    public static async addNewAidatCategory(category: any, price: any): Promise<any> {
+        try {
+            const response = await axios.post(`${BACKEND_API.baseURL}/administration/addNewAidatCategory`, {
+                category: category,
+                price: price,
+            },
+            {
+                withCredentials: true,
+                headers: {
+                    'x-api-key': `${API_KEY.API_KEY}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+    
+            return response.data; 
+        } catch (error) {
+            console.error("Erreur lors de la récupération des prix :", error);
+            throw error; 
+        }
+    }
+    */
+
+    public static async editAidatPrice(category: any, price: any): Promise<any> {
+        console.log(category, price);
+        try {
+            const response = await axios.post(`${BACKEND_API.baseURL}/administration/editAidatPrice`, {
+                category: category,
+                price: price,
+            },
+            {
+                withCredentials: true,
+                headers: {
+                    'x-api-key': `${API_KEY.API_KEY}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+    
+            return response.data; 
+        } catch (error) {
+            console.error("Erreur lors de la récupération des prix :", error);
+            throw error; 
+        }
+    }
 }    
 
 export default AdminServerConnection;

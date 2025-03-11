@@ -44,7 +44,7 @@ export default function AdminPanel() {
                     <span style={styles.cardText}>Üye Ekle</span>
                   </div>
 
-                  <div style={{ ...styles.card, backgroundColor: "#CFA920", borderWidth: 2 }} onClick={() => router.push("/soon")}>
+                  <div style={{ ...styles.card, backgroundColor: "#CFA920", borderWidth: 2 }} onClick={() => router.push("/panel/editAidat")}>
                     <FaMoneyBillWave size={38} color="#FFF" style={styles.icon} />
                     <span style={styles.cardText}>Aidat Fiyati Düzenle</span>
                   </div>
