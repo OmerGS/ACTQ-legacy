@@ -6,6 +6,7 @@ import Unauthorized from "@/components/reusable/Unauthorized";
 import { FaArrowLeft } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import AdminServerConnection from "@/components/api/AdminServerConnection";
+import Spinner from "@/components/reusable/Spinner";
 
 export default function MembresPage() {
   const { membre } = useMembre();
@@ -13,9 +14,6 @@ export default function MembresPage() {
 
   const [aidatPrices, setAidatPrices] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-
-  const [newCategory, setNewCategory] = useState<string>("");
-  const [newPrice, setNewPrice] = useState<string>("");
 
   const [editingPrice, setEditingPrice] = useState<{ [key: string]: string }>({});
 
@@ -78,7 +76,7 @@ export default function MembresPage() {
   };
 
   if (loading) {
-    return <div style={styles.loadingText}>Yükleniyor...</div>;
+    return <Spinner></Spinner>;
   }
 
   if (!membre || membre?.specialRole !== "Administrator") {
