@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { FaArrowLeft, FaUsers, FaUserPlus, FaMoneyBillWave, FaCashRegister, FaCreditCard, FaPen } from "react-icons/fa";
+import { FaArrowLeft, FaUsers, FaUserPlus, FaMoneyBillWave, FaCashRegister, FaCreditCard, FaPen, FaClock } from "react-icons/fa";
 import { useMembre } from "../../hooks/MemberContext";
 import Unauthorized from '@/components/reusable/Unauthorized';
 
@@ -34,11 +34,22 @@ export default function AdminPanel() {
               {/* Carte pour les administrateurs uniquement */}
               {isAdmin && (
                 <div style={styles.cardsContainer}>
-                  <div style={{ ...styles.card, backgroundColor: "#E30A17", borderWidth: 3, borderColor: "#C02917" }} onClick={() => router.push("/panel/uye/list")}>
+                  <div style={{ ...styles.card, backgroundColor: "#8B0000", borderWidth: 3, borderColor: "#C02917" }} onClick={() => router.push("/panel/uye/list")}>
                     <FaUsers size={38} color="#FFF" style={styles.icon} />
                     <span style={styles.cardText}>Üye Listesi</span>
                   </div>
+                </div>
+              )}
 
+              {(isAdmin || isModerator) && (
+                <div style={{ ...styles.card, backgroundColor: "#C02917", borderWidth: 3, borderColor: "#8B0000" }} onClick={() => router.push("/panel/uye/new")}>
+                  <FaClock size={38} color="#FFF" style={styles.icon} />
+                  <span style={styles.cardText}>Son Eklenen Üyeler</span>
+                </div>
+              )}
+
+              {isAdmin && (
+                <div style={styles.cardsContainer}>
                   <div style={{ ...styles.card, backgroundColor: "#F24A33", borderWidth: 3, borderColor: "#D1352B" }} onClick={() => router.push("/panel/uye/add")}>
                     <FaUserPlus size={38} color="#FFF" style={styles.icon} />
                     <span style={styles.cardText}>Üye Ekle</span>
@@ -49,7 +60,7 @@ export default function AdminPanel() {
                     <span style={styles.cardText}>Aidat Fiyatı Düzenle</span>
                   </div>
 
-                  <div style={{ ...styles.card, backgroundColor: "#0066CC", borderWidth: 3, borderColor: "#004A99" }} onClick={() => router.push("/panel/payments/list")}>
+                  <div style={{ ...styles.card, backgroundColor: "#4CAF50", borderWidth: 3, borderColor: "#388E3C" }} onClick={() => router.push("/panel/payments/list")}>
                     <FaCashRegister size={38} color="#FFF" style={styles.icon} />
                     <span style={styles.cardText}>Ödemeler</span>
                   </div>
@@ -59,7 +70,7 @@ export default function AdminPanel() {
               {/* Carte pour les administrateurs et modérateurs */}
               {(isAdmin || isModerator) && (
                 <div style={styles.cardsContainer}>
-                  <div style={{ ...styles.card, backgroundColor: "#0056B3", borderWidth: 3, borderColor: "#004194" }} onClick={() => router.push("/panel/payments/add")}>
+                  <div style={{ ...styles.card, backgroundColor: "#0D7377", borderWidth: 3, borderColor: "#006F66" }} onClick={() => router.push("/panel/payments/add")}>
                     <FaCreditCard size={38} color="#FFF" style={styles.icon} />
                     <span style={styles.cardText}>Ödeme Ekle</span>
                   </div>
@@ -67,11 +78,6 @@ export default function AdminPanel() {
                   <div style={{ ...styles.card, backgroundColor: "#005B8C", borderWidth: 3, borderColor: "#004C77" }} onClick={() => router.push("/panel/payments/edit")}>
                     <FaPen size={38} color="#FFF" style={styles.icon} />
                     <span style={styles.cardText}>Son Eklediğim Ödemeler</span>
-                  </div>
-
-                  <div style={{ ...styles.card, backgroundColor: "#005B8C", borderWidth: 3, borderColor: "#004C77" }} onClick={() => router.push("/panel/uye/new")}>
-                    <FaPen size={38} color="#FFF" style={styles.icon} />
-                    <span style={styles.cardText}>Son Eklenen Üyeler</span>
                   </div>
                 </div>
               )}

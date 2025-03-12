@@ -58,43 +58,53 @@ export default function MembresPage() {
       </div>
       
       <h2 style={styles.title}>Son Eklenen Üyeler</h2>
-  
-      <div style={styles.membreList}>
-        {filteredMembres.map((membre) => (
-          <div
-            key={membre.id}
-            style={styles.membreCard}
-            onClick={() => toggleOpen(membre.id)}
-          >
-            <div style={styles.membreHeader}>
-              <span style={styles.membreName}>
-                {membre.prenom} {membre.nom}
-              </span>
-              <span style={styles.arrow}>
-                {openId === membre.id ? "▲" : "▼"}
-              </span>
+
+      <p style={styles.totalFilteredText}>
+        Bu sayfada, son 1 hafta içinde eklenen üyeler gösterilecektir
+      </p>
+
+      {filteredMembres.length === 0 ? (
+        <p style={styles.totalFilteredText}>
+          1 Hafta içinde hiçbir üye kaydolmamıştır.
+        </p>
+      ) : (
+        <div style={styles.membreList}>
+          {filteredMembres.map((membre) => (
+            <div
+              key={membre.id}
+              style={styles.membreCard}
+              onClick={() => toggleOpen(membre.id)}
+            >
+              <div style={styles.membreHeader}>
+                <span style={styles.membreName}>
+                  {membre.prenom} {membre.nom}
+                </span>
+                <span style={styles.arrow}>
+                  {openId === membre.id ? "▲" : "▼"}
+                </span>
+              </div>
+    
+              {openId === membre.id && (
+                <div style={styles.membreDetails}>
+                  {Object.entries(membre).map(([key, value]) =>
+                    value && key !== "id" ? (
+                      <p key={key}>
+                        <strong>{fieldLabels[key] || key} : </strong>
+                        {key === "createdAt" ? formatDateWithSecondsStr(value as string) : (
+                          key === "cenazeFonu" ? (value === 1 ? "Evet" : "Hayır") : value
+                        )}
+                      </p>
+                    ) : null
+                  )}
+                </div>            
+              )}
             </div>
-  
-            {openId === membre.id && (
-              <div style={styles.membreDetails}>
-                {Object.entries(membre).map(([key, value]) =>
-                  value && key !== "id" ? (
-                    <p key={key}>
-                      <strong>{fieldLabels[key] || key} : </strong>
-                      {key === "createdAt" ? formatDateWithSecondsStr(value as string) : (
-                        key === "cenazeFonu" ? (value === 1 ? "Evet" : "Hayır") : value
-                      )}
-                    </p>
-                  ) : null
-                )}
-              </div>            
-            )}
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );  
-}  
+}
 
 const styles: { [key: string]: React.CSSProperties } = {
   container: {
