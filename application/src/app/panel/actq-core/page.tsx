@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { FaArrowLeft, FaUsers, FaUserPlus, FaMoneyBillWave, FaCashRegister, FaCreditCard, FaReceipt } from "react-icons/fa";
+import { FaArrowLeft, FaUsers, FaUserPlus, FaMoneyBillWave, FaCashRegister, FaCreditCard, FaPen } from "react-icons/fa";
 import { useMembre } from "../../hooks/MemberContext";
 import Unauthorized from '@/components/reusable/Unauthorized';
 
@@ -59,14 +59,14 @@ export default function AdminPanel() {
               {/* Carte pour les administrateurs et modérateurs */}
               {(isAdmin || isModerator) && (
                 <div style={styles.cardsContainer}>
-                  <div style={{ ...styles.card, backgroundColor: "#007BFF", borderWidth: 2 }} onClick={() => router.push("/soon")}>
-                    <FaReceipt size={38} color="#FFF" style={styles.icon} />
-                    <span style={styles.cardText}>Üye Aidatlari</span>
-                  </div>
-
                   <div style={{ ...styles.card, backgroundColor: "#007BFF", borderWidth: 2 }} onClick={() => router.push("/panel/payments/add")}>
                     <FaCreditCard size={38} color="#FFF" style={styles.icon} />
                     <span style={styles.cardText}>Ödeme Ekle</span>
+                  </div>
+
+                  <div style={{ ...styles.card, backgroundColor: "#007BFF", borderWidth: 2 }} onClick={() => router.push("/panel/payments/edit")}>
+                    <FaPen size={38} color="#FFF" style={styles.icon} />
+                    <span style={styles.cardText}>Son Eklediğim Ödemeler</span>
                   </div>
                 </div>
               )}

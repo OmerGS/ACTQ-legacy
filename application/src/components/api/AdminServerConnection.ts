@@ -202,6 +202,46 @@ class AdminServerConnection {
             console.log("Erreur lors de l'enregistrement des paiements : ", error);
         }
     }
+
+    public static async getRecentTransaction(receiverId: number): Promise<any> {
+        try {
+            const response = await axios.post(`${BACKEND_API.baseURL}/administration/recent-transactions`, {
+                receiverId: receiverId,
+            },
+            {
+                withCredentials: true,
+                headers: {
+                    'x-api-key': `${API_KEY.API_KEY}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+    
+            return response.data; 
+        } catch (error) {
+            console.error("Erreur lors de la récupération des paiements :", error);
+            throw error; 
+        }
+    }
+
+    public static async deletePayment(transactionId: string): Promise<any> {
+        try {
+            const response = await axios.post(`${BACKEND_API.baseURL}/administration/deletePayment`, {
+                transactionId: transactionId,
+            },
+            {
+                withCredentials: true,
+                headers: {
+                    'x-api-key': `${API_KEY.API_KEY}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+    
+            return response.data; 
+        } catch (error) {
+            console.error("Erreur lors de la récupération des paiements :", error);
+            throw error; 
+        }
+    }
 }    
 
 export default AdminServerConnection;
