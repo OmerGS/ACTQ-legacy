@@ -73,6 +73,7 @@ class AdminServerConnection {
                 telephone: formData.telephone,
                 barcode: formData.barcode,
                 aidatCategory: formData.aidatCategory,
+                cenazeFonu: formData.cenazeFonu,
             },
             {    
                 withCredentials: true,

@@ -19,6 +19,7 @@ export default function MembresPage() {
     telephone: "",
     barcode: generateBarcode(),
     aidatCategory: "Genç",
+    cenazeFonu: 0,
   });
 
   function generateBarcode() {
@@ -106,6 +107,14 @@ export default function MembresPage() {
             <option value="Genç">Genç</option>
             <option value="Normal">Normal</option>
             <option value="Emekli">Emekli</option>
+          </select>
+        </div>
+
+        <div style={styles.inputGroup}>
+          <label>Cenaze Fonu Üyesi :</label>
+          <select name="cenazeFonu" value={formData.cenazeFonu} onChange={handleChange} style={styles.input}>
+            <option value="1">Evet</option>
+            <option value="0">Hayır</option>
           </select>
         </div>
 
