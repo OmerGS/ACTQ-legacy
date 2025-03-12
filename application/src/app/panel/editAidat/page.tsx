@@ -94,7 +94,15 @@ export default function MembresPage() {
       <div style={styles.priceListContainer}>
         {aidatPrices.map((priceInfo, index) => (
           <div key={`${priceInfo.category}-${priceInfo.price}-${index}`} style={styles.priceItem}>
-            <p style={styles.priceCategory}>{priceInfo.category}</p>
+            <p style={styles.priceCategory}>
+              {priceInfo.category === "Genç"
+                ? "18-25"
+                : priceInfo.category === "Normal"
+                ? "26-60"
+                : priceInfo.category === "Emekli"
+                ? "Emekli"
+                : ""}
+            </p>
             <div style={styles.priceContainer}>
               <input
                 type="text"

@@ -7,6 +7,7 @@ import { Payment } from "@/components/interface/Payment";
 import Unauthorized from "@/components/reusable/Unauthorized";
 import { useRouter } from "next/navigation";
 import { FaArrowLeft, FaPen, FaTrash } from "react-icons/fa";
+import { FaXmark } from "react-icons/fa6";
 
 const formatDateWithSeconds = (dateString: Date) => {
   const date = new Date(dateString);
@@ -132,7 +133,7 @@ export default function MembresPage() {
           </button>
         ) : 
         <button style={styles.editButton} onClick={() => setIsEditing(!isEditing)}>
-            <FaPen size={18} style={{ marginRight: '8px' }} /> Vazgeç
+            <FaXmark size={18} style={{ marginRight: '8px' }} /> Vazgeç
           </button>
         }
         
