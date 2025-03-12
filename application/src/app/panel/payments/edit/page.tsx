@@ -44,7 +44,7 @@ export default function MembresPage() {
   }, [membre]);
     
 
-  if (!membre || membre?.specialRole !== "Administrator") {
+  if (!membre || membre?.specialRole !== "Administrator" && membre?.specialRole !== "Moderator") {
     return <Unauthorized />;
   }
 
@@ -105,7 +105,7 @@ export default function MembresPage() {
       {/* Affichage des totaux par raison */}
       <div style={styles.totalContainer}>
         <h2>Toplam ödemeler :</h2>
-        <p style={{ color: '#1111', fontSize: '14px', marginTop: '8px' }}>
+        <p style={{ color: '#000000', fontSize: '14px', marginTop: '8px' }}>
           Bu sayfa, sizin son 15 dakika içinde kaydettiğiniz ödemeleri içerir.
         </p>
         {Object.entries(totalByReason).length === 0 ? (

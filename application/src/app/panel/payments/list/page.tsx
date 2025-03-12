@@ -6,7 +6,7 @@ import AdminServerConnection from "@/components/api/AdminServerConnection";
 import { Payment } from "@/components/interface/Payment";
 import Unauthorized from "@/components/reusable/Unauthorized";
 import { useRouter } from "next/navigation";
-import { FaArrowLeft } from "react-icons/fa";
+import { FaArrowLeft, FaPen, FaTrash } from "react-icons/fa";
 
 const formatDateWithSeconds = (dateString: Date) => {
   const date = new Date(dateString);
@@ -22,7 +22,6 @@ const formatDateWithSeconds = (dateString: Date) => {
 }
 
 export default function MembresPage() {
-  // Récupérer la date actuelle pour initialiser les mois et années
   const currentDate = new Date();
   const currentMonth = String(currentDate.getMonth() + 1).padStart(2, "0");
   const currentYear = currentDate.getFullYear().toString();
@@ -31,6 +30,7 @@ export default function MembresPage() {
   const [filteredPayments, setFilteredPayments] = useState<Payment[]>([]);
   const [selectedMonth, setSelectedMonth] = useState<string>(currentMonth);
   const [selectedYear, setSelectedYear] = useState<string>(currentYear);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
   const { membre } = useMembre();
   const router = useRouter();
 
@@ -86,11 +86,57 @@ export default function MembresPage() {
   // Calculer les totaux pour le mois et l'année sélectionnés
   const totalByReason = calculateTotalByReason(filteredPayments);
 
+  const handleDeletePayment = async (transactionId: string) => {
+      const confirmDelete = window.confirm("Bu ödemeyi silmek istediğinizden emin misiniz?");
+      
+      if (confirmDelete) {
+        const updatedPayments = filteredPayments.filter(
+          (payment) => payment.transactionId !== transactionId
+        );
+        setFilteredPayments(updatedPayments);
+    
+        try {
+          const response = await AdminServerConnection.deletePayment(transactionId);
+          if (response.success) {
+            alert(response.message);
+          } else {
+            setFilteredPayments((prevPayments) => [
+              ...prevPayments,
+              ...updatedPayments.filter((payment) => payment.transactionId === transactionId),
+            ]);
+            alert("Silme işlemi başarısız oldu. Lütfen tekrar deneyin.");
+          }
+        } catch (error) {
+          console.error("Ödeme silinirken hata oluştu:", error);
+    
+          setFilteredPayments((prevPayments) => [
+            ...prevPayments,
+            ...updatedPayments.filter((payment) => payment.transactionId === transactionId),
+          ]);
+    
+          alert("Sunucu hatası. Lütfen tekrar deneyin.");
+        }
+      }
+    };  
+
   return (
     <div style={styles.formContainer}>
-      <button style={styles.backButton} onClick={() => router.back()}>
-        <FaArrowLeft size={18} style={styles.backIcon} /> Geri
-      </button>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <button style={styles.backButton} onClick={() => router.back()}>
+          <FaArrowLeft size={18} style={styles.backIcon} /> Geri
+        </button>
+
+        { isEditing === false ? (
+          <button style={styles.editButton} onClick={() => setIsEditing(!isEditing)}>
+            <FaPen size={18} style={{ marginRight: '8px' }} /> Düzenle
+          </button>
+        ) : 
+        <button style={styles.editButton} onClick={() => setIsEditing(!isEditing)}>
+            <FaPen size={18} style={{ marginRight: '8px' }} /> Vazgeç
+          </button>
+        }
+        
+      </div>
       <h1 style={styles.formTitle}>Ödemeler</h1>
 
       {/* Formulaire de sélection du mois et de l'année */}
@@ -160,6 +206,15 @@ export default function MembresPage() {
                   <p><strong>Tarih :</strong> {formatDateWithSeconds(payment.date)}</p>
                   <p><strong>Ödeme Şekli :</strong> {payment.paymentMethod}</p>
                   <p><strong>Onaylayan :</strong> {payment.receiverPrenom} {payment.receiverNom}</p>
+                  
+                  {isEditing === true ? (
+                    <button
+                    style={styles.deleteButton}
+                    onClick={() => handleDeletePayment(payment.transactionId)}
+                    >
+                    <FaTrash size={18}/>
+                  </button>
+                  ) : null }
                 </div>
               );
             })
@@ -180,6 +235,21 @@ const styles: { [key: string]: React.CSSProperties } = {
     textAlign: "center",
     fontFamily: "'Nunito', sans-serif",
     fontSize: "1rem",
+  },
+  editButton: {
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+    backgroundColor: "#007BFF",
+    color: "white",
+    border: "none",
+    padding: "10px 15px",
+    borderRadius: "8px",
+    cursor: "pointer",
+    fontSize: "16px",
+    fontWeight: "bold",
+    marginBottom: "15px",
+    transition: "background-color 0.2s ease",
   },
   formTitle: {
     fontSize: "2rem",
@@ -228,6 +298,18 @@ const styles: { [key: string]: React.CSSProperties } = {
     fontSize: "1rem",
     transition: "box-shadow 0.2s ease-in-out, background-color 0.2s ease",
   },
+  deleteButton: {
+    display: 'flex',
+    alignItems: 'center',
+    backgroundColor: '#ff4d4d',
+    color: 'white',
+    border: 'none',
+    borderRadius: '8px',
+    padding: '10px 10px',
+    fontSize: '16px',
+    cursor: 'pointer',
+    transition: 'all 0.3s ease',
+  },
   backButton: {
     display: "flex",
     alignItems: "center",
@@ -252,9 +334,9 @@ const paymentReasonStyles: { [key: string]: React.CSSProperties } = {
     color: "#721c24",
   },
   "Cenaze Fonu": {
-    backgroundColor: "#b8e1dc",
-    borderColor: "#7dbfbb",
-    color: "#0c5460",
+    backgroundColor: "#55ca7c",
+    borderColor: "#00654d",
+    color: "#fff",
   },
   "Bağış": {
     backgroundColor: "#d1ecf1",

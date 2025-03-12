@@ -49,7 +49,7 @@ export default function AdminPanel() {
                     <span style={styles.cardText}>Aidat Fiyati Düzenle</span>
                   </div>
 
-                  <div style={{ ...styles.card, backgroundColor: "#CFA920", borderWidth: 2 }} onClick={() => router.push("/panel/payments/list")}>
+                  <div style={{ ...styles.card, backgroundColor: "#007BFF", borderWidth: 2 }} onClick={() => router.push("/panel/payments/list")}>
                     <FaCashRegister size={38} color="#FFF" style={styles.icon} />
                     <span style={styles.cardText}>Ödemeler</span>
                   </div>
@@ -146,7 +146,6 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     gap: "15px",
-    marginTop: "20px",
   } as React.CSSProperties,
   card: {
     display: "flex",

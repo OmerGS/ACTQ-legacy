@@ -87,7 +87,7 @@ export default function PaymentForm() {
     }
   };
 
-  if (!membre || membre?.specialRole !== "Administrator") {
+  if (!membre || membre?.specialRole !== "Administrator" && membre?.specialRole !== "Moderator") {
     return <Unauthorized />;
   }
 
