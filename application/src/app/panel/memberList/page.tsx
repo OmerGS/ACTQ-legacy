@@ -5,7 +5,7 @@ import { useMembre } from "@/app/hooks/MemberContext";
 import AdminServerConnection from "@/components/api/AdminServerConnection";
 import { Membre } from "@/components/interface/Membre";
 import Unauthorized from "@/components/reusable/Unauthorized";
-import { FaArrowLeft } from "react-icons/fa";
+import { FaArrowLeft, FaUser, FaClipboardList, FaHandsHelping } from "react-icons/fa";
 import { useRouter } from 'next/navigation';
 
 const formatDate = (dateString: string) => {
@@ -29,6 +29,7 @@ const fieldLabels: Record<string, string> = {
   dateNaissance: "Doğum Tarihi",
   adresseFr: "Fransız Adresi",
   adresseTr: "Türk Adresi",
+  cenazeFonu: "Cenaze Fonuna Kayıtlı"
 };
 
 export default function MembresPage() {
@@ -39,6 +40,11 @@ export default function MembresPage() {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const { membre } = useMembre();
   const router = useRouter();
+  const [selectedAidatCategory, setSelectedAidatCategory] = useState("");
+  const [selectedStatut, setSelectedStatut] = useState("");
+  const [selectedCenazeFonu, setSelectedCenazeFonu] = useState("");
+  const [totalFiltered, setTotalFiltered] = useState<number>();
+
 
   useEffect(() => {
     async function fetchMembres() {
@@ -56,17 +62,33 @@ export default function MembresPage() {
 
   useEffect(() => {
     const query = searchQuery.toLowerCase();
+  
     setFilteredMembres(
-      membres.filter(
-        ({ nom, prenom, email, telephone, barcode }) =>
+      membres.filter(({ nom, prenom, email, telephone, barcode, aidatCategory, statut, cenazeFonu }) => {
+        const matchesSearch =
           nom?.toLowerCase().includes(query) ||
           prenom?.toLowerCase().includes(query) ||
           email?.toLowerCase().includes(query) ||
           telephone?.toLowerCase().includes(query) ||
-          barcode?.toLowerCase().includes(query)
-      )
+          barcode?.toLowerCase().includes(query);
+  
+        const matchesAidatCategory = selectedAidatCategory ? aidatCategory === selectedAidatCategory : true;
+        const matchesStatut = selectedStatut ? statut === selectedStatut : true;
+        
+        const matchesCenazeFonu = selectedCenazeFonu
+          ? (selectedCenazeFonu === "Evet" && cenazeFonu === 1) || (selectedCenazeFonu === "Hayır" && cenazeFonu === 0)
+          : true;
+  
+        return matchesSearch && matchesAidatCategory && matchesStatut && matchesCenazeFonu;
+      })
     );
-  }, [searchQuery, membres]);
+  
+  }, [searchQuery, membres, selectedAidatCategory, selectedStatut, selectedCenazeFonu]);  
+
+  useEffect(() => {
+    setTotalFiltered(filteredMembres.length);
+  }, [filteredMembres]);
+  
 
   const toggleOpen = (id: number) => {
     if (editingMembre && editingMembre.id === id) {
@@ -113,9 +135,12 @@ export default function MembresPage() {
 
   return (
     <div style={styles.container}>
-      <button style={styles.backButton} onClick={() => router.back()}>
-        <FaArrowLeft size={18} style={styles.backIcon} /> Geri
-      </button>
+      <div style={styles.backButtonContainer}>
+        <button style={styles.backButton} onClick={() => router.back()}>
+          <FaArrowLeft size={18} style={styles.backIcon} /> Geri
+        </button>
+      </div>
+      
       <h2 style={styles.title}>Liste des Membres</h2>
   
       <input
@@ -125,6 +150,54 @@ export default function MembresPage() {
         onChange={(e) => setSearchQuery(e.target.value)}
         style={styles.searchBar}
       />
+
+
+      <div style={styles.filters}>
+        <div style={styles.filterItem}>
+          <FaClipboardList style={styles.icon} />
+          <select
+            style={styles.filterSelect}
+            value={selectedAidatCategory}
+            onChange={(e) => setSelectedAidatCategory(e.target.value)}
+          >
+            <option value="">Aidat Kategorisi: Tümü</option>
+            <option value="Genç">Genç</option>
+            <option value="Normal">Normal</option>
+            <option value="Emekli">Emekli</option>
+          </select>
+        </div>
+
+        <div style={styles.filterItem}>
+          <FaUser style={styles.icon} />
+          <select
+            style={styles.filterSelect}
+            value={selectedStatut}
+            onChange={(e) => setSelectedStatut(e.target.value)}
+          >
+            <option value="">Üyelik Durumu: Tümü</option>
+            <option value="Aktif">Aktif</option>
+            <option value="Donduruldu">Donduruldu</option>
+            <option value="Düştü">Düştü</option>
+          </select>
+        </div>
+
+        <div style={styles.filterItem}>
+          <FaHandsHelping style={styles.icon} />
+          <select
+            style={styles.filterSelect}
+            value={selectedCenazeFonu}
+            onChange={(e) => setSelectedCenazeFonu(e.target.value)}
+          >
+            <option value="">Cenaze Fonu: Tümü</option>
+            <option value="Evet">Evet</option>
+            <option value="Hayır">Hayır</option>
+          </select>
+        </div>
+      </div>
+
+      <p style={styles.totalFilteredText}>
+        Toplam : {totalFiltered} üye
+      </p>
   
       <div style={styles.membreList}>
         {filteredMembres.map((membre) => (
@@ -145,10 +218,11 @@ export default function MembresPage() {
             {openId === membre.id && (
               <div style={styles.membreDetails}>
                 {Object.entries(membre).map(([key, value]) =>
-                  value && key !== "password" && key !== "salt" && key !== "specialRole" ?  (
+                  value && key !== "password" && key !== "salt" && key !== "specialRole" ? (
                     <p key={key}>
                       <strong>{fieldLabels[key] || key} : </strong>
-                      {key === "dateNaissance" ? formatDate(value as string) : value}
+                      {key === "dateNaissance" ? formatDate(value as string) : null}
+                      {key === "cenazeFonu" ? (value === 1 ? "Evet" : "Hayır") : value}
                     </p>
                   ) : null
                 )}
@@ -213,6 +287,25 @@ export default function MembresPage() {
                   );
                 }
 
+                if (key === "cenazeFonu") {
+                  return (
+                    <div key={key}>
+                      <label>{label} : </label>
+                      <select
+                        style={{
+                          ...styles.inputField,
+                        }}
+                        name={key}
+                        value={value}
+                        onChange={handleChange}
+                      >
+                        <option value="1">Evet</option>
+                        <option value="0">Hayır</option>
+                      </select>
+                    </div>
+                  );
+                }
+
                 return (
                   <div key={key}>
                     <label>{label} : </label>
@@ -255,6 +348,12 @@ const styles: { [key: string]: React.CSSProperties } = {
     alignItems: "center",
     boxSizing: "border-box",
   },
+  backButtonContainer: {
+    width: "100%",
+    display: "flex",
+    justifyContent: "flex-start",
+    padding: "10px",
+  },
   backButton: {
     display: "flex",
     alignItems: "center",
@@ -269,7 +368,55 @@ const styles: { [key: string]: React.CSSProperties } = {
     fontWeight: "bold",
     marginBottom: "15px",
     transition: "background-color 0.2s ease",
-  } as React.CSSProperties,
+  },
+  totalFilteredText: {
+    padding: "12px 20px",
+    backgroundColor: "#FFFFFF",
+    color: "#333333",
+    borderRadius: "10px",
+    border: "1px solid #E0E0E0",
+    fontSize: "18px",
+    fontWeight: "500",
+    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.05)",
+    marginBottom: "20px",
+    display: "inline-block",
+    textAlign: "center",
+    transition: "all 0.3s ease",
+  },
+  filters: {
+    display: "flex",
+    flexWrap: "wrap",
+    justifyContent: "center",
+    gap: "10px",
+    marginBottom: "10px",
+  },
+  filterItem: {
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+    backgroundColor: "#FFF",
+    padding: "10px",
+    borderRadius: "10px",
+    boxShadow: "0 3px 8px rgba(0, 0, 0, 0.1)",
+    border: "2px solid #211bd5",
+    transition: "box-shadow 0.3s ease",
+    width: "100%", 
+    maxWidth: "250px",
+  },
+  icon: {
+    fontSize: "16px",
+    color: "#211bd5",
+  },
+  filterSelect: {
+    flex: 1,
+    padding: "8px",
+    fontSize: "13px",
+    border: "none",
+    backgroundColor: "transparent",
+    cursor: "pointer",
+    outline: "none",
+    minWidth: "140px",
+  },
   inputField: {
     width: "100%",
     maxWidth: "100%",  
@@ -433,3 +580,22 @@ const styles: { [key: string]: React.CSSProperties } = {
     borderColor: "#28a745",
   },
 };
+
+const mediaQuery = `
+  @media (max-width: 600px) {
+    .filters {
+      flex-direction: column;
+      align-items: center;
+    }
+    .filterItem {
+      width: 90%;
+    }
+    .filterSelect {
+      font-size: 12px;
+    }
+  }
+`;
+
+const styleTag = document.createElement("style");
+styleTag.innerHTML = mediaQuery;
+document.head.appendChild(styleTag);

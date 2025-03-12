@@ -40,6 +40,7 @@ class AdminServerConnection {
                 adresseFr: membre.adresseFr,
                 adresseTr: membre.adresseTr,
                 aidatCategory: membre.aidatCategory,
+                cenazeFonu: membre.cenazeFonu,
             },
             {    
                 withCredentials: true,

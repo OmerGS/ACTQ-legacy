@@ -14,4 +14,5 @@ export interface Membre {
   adresseTr: string;
   specialRole: string;
   aidatCategory: string;
+  cenazeFonu: number;
 }
