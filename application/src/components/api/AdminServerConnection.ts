@@ -28,6 +28,23 @@ class AdminServerConnection {
         }
     }
 
+    public static async getRecentMember(): Promise<any> {
+        try {
+            const response = await axios.get(`${BACKEND_API.baseURL}/administration/fetchRecentMembre`, {
+                withCredentials: true,
+                headers: {
+                    'x-api-key': `${API_KEY.API_KEY}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+    
+            return response.data; 
+        } catch (error) {
+            console.error("Erreur lors de la récupération des membres :", error);
+            throw error; 
+        }
+    }
+
     public static async updateMember(membre: Membre): Promise<void> {
         try {
             const response = await axios.post(`${BACKEND_API.baseURL}/administration/updateMembre`, {

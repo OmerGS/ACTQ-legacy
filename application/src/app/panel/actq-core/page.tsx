@@ -34,22 +34,22 @@ export default function AdminPanel() {
               {/* Carte pour les administrateurs uniquement */}
               {isAdmin && (
                 <div style={styles.cardsContainer}>
-                  <div style={{ ...styles.card, backgroundColor: "#E30A17", borderWidth: 2 }} onClick={() => router.push("/panel/memberList")}>
+                  <div style={{ ...styles.card, backgroundColor: "#E30A17", borderWidth: 3, borderColor: "#C02917" }} onClick={() => router.push("/panel/uye/list")}>
                     <FaUsers size={38} color="#FFF" style={styles.icon} />
                     <span style={styles.cardText}>Üye Listesi</span>
                   </div>
 
-                  <div style={{ ...styles.card, backgroundColor: "#E30A17", borderWidth: 2 }} onClick={() => router.push("/panel/addMember")}>
+                  <div style={{ ...styles.card, backgroundColor: "#F24A33", borderWidth: 3, borderColor: "#D1352B" }} onClick={() => router.push("/panel/uye/add")}>
                     <FaUserPlus size={38} color="#FFF" style={styles.icon} />
                     <span style={styles.cardText}>Üye Ekle</span>
                   </div>
 
-                  <div style={{ ...styles.card, backgroundColor: "#CFA920", borderWidth: 2 }} onClick={() => router.push("/panel/editAidat")}>
+                  <div style={{ ...styles.card, backgroundColor: "#FBB13C", borderWidth: 3, borderColor: "#D48A2B" }} onClick={() => router.push("/panel/editAidat")}>
                     <FaMoneyBillWave size={38} color="#FFF" style={styles.icon} />
-                    <span style={styles.cardText}>Aidat Fiyati Düzenle</span>
+                    <span style={styles.cardText}>Aidat Fiyatı Düzenle</span>
                   </div>
 
-                  <div style={{ ...styles.card, backgroundColor: "#007BFF", borderWidth: 2 }} onClick={() => router.push("/panel/payments/list")}>
+                  <div style={{ ...styles.card, backgroundColor: "#0066CC", borderWidth: 3, borderColor: "#004A99" }} onClick={() => router.push("/panel/payments/list")}>
                     <FaCashRegister size={38} color="#FFF" style={styles.icon} />
                     <span style={styles.cardText}>Ödemeler</span>
                   </div>
@@ -59,14 +59,19 @@ export default function AdminPanel() {
               {/* Carte pour les administrateurs et modérateurs */}
               {(isAdmin || isModerator) && (
                 <div style={styles.cardsContainer}>
-                  <div style={{ ...styles.card, backgroundColor: "#007BFF", borderWidth: 2 }} onClick={() => router.push("/panel/payments/add")}>
+                  <div style={{ ...styles.card, backgroundColor: "#0056B3", borderWidth: 3, borderColor: "#004194" }} onClick={() => router.push("/panel/payments/add")}>
                     <FaCreditCard size={38} color="#FFF" style={styles.icon} />
                     <span style={styles.cardText}>Ödeme Ekle</span>
                   </div>
 
-                  <div style={{ ...styles.card, backgroundColor: "#007BFF", borderWidth: 2 }} onClick={() => router.push("/panel/payments/edit")}>
+                  <div style={{ ...styles.card, backgroundColor: "#005B8C", borderWidth: 3, borderColor: "#004C77" }} onClick={() => router.push("/panel/payments/edit")}>
                     <FaPen size={38} color="#FFF" style={styles.icon} />
                     <span style={styles.cardText}>Son Eklediğim Ödemeler</span>
+                  </div>
+
+                  <div style={{ ...styles.card, backgroundColor: "#005B8C", borderWidth: 3, borderColor: "#004C77" }} onClick={() => router.push("/panel/uye/new")}>
+                    <FaPen size={38} color="#FFF" style={styles.icon} />
+                    <span style={styles.cardText}>Son Eklenen Üyeler</span>
                   </div>
                 </div>
               )}
@@ -101,7 +106,7 @@ const styles = {
     display: "flex",
     alignItems: "center",
     gap: "8px",
-    backgroundColor: "#007BFF",
+    backgroundColor: "#D9534F",
     color: "white",
     border: "none",
     padding: "10px 15px",
@@ -158,7 +163,7 @@ const styles = {
     color: "#FFF",
     fontSize: "18px",
     fontWeight: "bold",
-    border: "2px solid #ddd",
+    border: "2px solid #111",
     cursor: "pointer",
     transition: "transform 0.2s ease, box-shadow 0.2s ease",
     boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",

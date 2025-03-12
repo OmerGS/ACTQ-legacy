@@ -95,22 +95,26 @@ export default function MembresPage() {
         {aidatPrices.map((priceInfo, index) => (
           <div key={`${priceInfo.category}-${priceInfo.price}-${index}`} style={styles.priceItem}>
             <p style={styles.priceCategory}>
-              {priceInfo.category === "Genç"
-                ? "18-25"
-                : priceInfo.category === "Normal"
-                ? "26-60"
-                : priceInfo.category === "Emekli"
-                ? "Emekli"
-                : ""}
-            </p>
+            {priceInfo.category === "Genç"
+              ? "18 - 25"
+              : priceInfo.category === "Normal"
+              ? "26 ve Üstü"
+              : priceInfo.category === "Emekli"
+              ? "Emekli"
+              : ""}
+          </p>
+
             <div style={styles.priceContainer}>
-              <input
-                type="text"
-                value={editingPrice[priceInfo.category] || priceInfo.price}
-                onChange={(e) => setEditingPrice({ ...editingPrice, [priceInfo.category]: e.target.value })}
-                style={styles.priceInput}
-              />
-              <span style={styles.euroSymbol}>€</span>
+              <div style={{marginBottom: "15px"}}>
+                <input
+                  type="text"
+                  value={editingPrice[priceInfo.category] || priceInfo.price}
+                  onChange={(e) => setEditingPrice({ ...editingPrice, [priceInfo.category]: e.target.value })}
+                  style={styles.priceInput}
+                />
+                <span style={styles.euroSymbol}>€</span>
+              </div>
+
               <button
                 onClick={() => handleUpdatePrice(priceInfo.category)}
                 style={styles.updateButton}
@@ -179,7 +183,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     backgroundColor: "#f9f9f9",
     borderRadius: "8px",
     padding: "12px",
-    display: "flex",
+    display: "column",
     justifyContent: "space-between",
     alignItems: "center",
     boxShadow: "0 2px 4px rgba(0, 0, 0, 0.05)",
@@ -190,9 +194,10 @@ const styles: { [key: string]: React.CSSProperties } = {
     fontWeight: "500",
   },
   priceContainer: {
-    display: "flex",
-    alignItems: "center",
-  },
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },  
   priceInput: {
     fontSize: "1.2rem",
     color: "#D9534F",

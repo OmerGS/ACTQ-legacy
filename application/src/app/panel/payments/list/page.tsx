@@ -84,7 +84,6 @@ export default function MembresPage() {
   };
 
 
-  // Calculer les totaux pour le mois et l'année sélectionnés
   const totalByReason = calculateTotalByReason(filteredPayments);
 
   const handleDeletePayment = async (transactionId: string) => {
@@ -200,7 +199,7 @@ export default function MembresPage() {
               const reasonStyle = paymentReasonStyles[payment.reason];
               return (
                 <div key={payment.id} style={{ ...styles.paymentItem, ...reasonStyle }}>
-                  <p><strong>Neden :</strong> {payment.reason}</p>
+                  <p><strong>{payment.reason}</strong></p>
                   <p><strong>Üye :</strong> {payment.memberPrenom} {payment.memberNom}</p>
                   <p><strong>Fatura N° :</strong> {payment.transactionId}</p>
                   <p><strong>Tutar :</strong> {payment.amount} €</p>
@@ -336,8 +335,8 @@ const paymentReasonStyles: { [key: string]: React.CSSProperties } = {
   },
   "Cenaze Fonu": {
     backgroundColor: "#55ca7c",
-    borderColor: "#00654d",
-    color: "#fff",
+    borderColor: "#00674a",
+    color: "#004d30",
   },
   "Bağış": {
     backgroundColor: "#d1ecf1",

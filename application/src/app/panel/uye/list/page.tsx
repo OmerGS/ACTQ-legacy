@@ -141,7 +141,7 @@ export default function MembresPage() {
         </button>
       </div>
       
-      <h2 style={styles.title}>Liste des Membres</h2>
+      <h2 style={styles.title}>Üye Listesi</h2>
   
       <input
         type="text"
@@ -153,8 +153,8 @@ export default function MembresPage() {
 
 
       <div style={styles.filters}>
-        <div style={styles.filterItem}>
-          <FaClipboardList style={styles.icon} />
+        <div style={{...styles.filterItem, backgroundColor: '#D9E8FF', borderColor: '#4D90FE'}}>
+          <FaClipboardList style={{...styles.icon, color: '#4D90FE'}} />
           <select
             style={styles.filterSelect}
             value={selectedAidatCategory}
@@ -167,8 +167,8 @@ export default function MembresPage() {
           </select>
         </div>
 
-        <div style={styles.filterItem}>
-          <FaUser style={styles.icon} />
+        <div style={{...styles.filterItem, backgroundColor: '#D9E8FF', borderColor: '#4D90FE'}}>
+          <FaUser style={{...styles.icon, color: '#4D90FE'}} />
           <select
             style={styles.filterSelect}
             value={selectedStatut}
@@ -181,8 +181,8 @@ export default function MembresPage() {
           </select>
         </div>
 
-        <div style={styles.filterItem}>
-          <FaHandsHelping style={styles.icon} />
+        <div style={{...styles.filterItem, backgroundColor: '#D4F1D7', borderColor: '#38C172'}}>
+          <FaHandsHelping style={{...styles.icon, color: '#38C172'}} />
           <select
             style={styles.filterSelect}
             value={selectedCenazeFonu}
@@ -194,6 +194,7 @@ export default function MembresPage() {
           </select>
         </div>
       </div>
+
 
       <p style={styles.totalFilteredText}>
         Toplam : {totalFiltered} üye
@@ -221,8 +222,9 @@ export default function MembresPage() {
                   value && key !== "password" && key !== "salt" && key !== "specialRole" ? (
                     <p key={key}>
                       <strong>{fieldLabels[key] || key} : </strong>
-                      {key === "dateNaissance" ? formatDate(value as string) : null}
-                      {key === "cenazeFonu" ? (value === 1 ? "Evet" : "Hayır") : value}
+                      {key === "dateNaissance" ? formatDate(value as string) : (
+                        key === "cenazeFonu" ? (value === 1 ? "Evet" : "Hayır") : value
+                      )}
                     </p>
                   ) : null
                 )}
@@ -235,7 +237,7 @@ export default function MembresPage() {
                 >
                   Düzenle
                 </button>
-              </div>
+              </div>            
             )}
   
             {/* Affiche le formulaire d'édition sous le membre sélectionné */}
