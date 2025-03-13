@@ -2,8 +2,8 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation'; 
-import patchnotesData from '../../../public/assets/json/patchnote.json';
-import { useMembre } from '../hooks/MemberContext';
+import patchnotesData from '../../../../public/assets/json/patchnote.json';
+import { useMembre } from '../../hooks/MemberContext';
 import Unauthorized from '@/components/reusable/Unauthorized';
 
 interface PatchNote {

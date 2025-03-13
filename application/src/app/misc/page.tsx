@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/reusable/Navbar";
 import { useMembre } from "../hooks/MemberContext";
-import { FaUsersCog, FaUsers, FaBullhorn, FaClipboardList, FaUserSecret } from "react-icons/fa";
+import { FaBuilding, FaUsers, FaFolder, FaClipboardList, FaUserSecret, FaWifi, FaBalanceScale } from "react-icons/fa";
 import { useEffect } from "react";
 import Unauthorized from '@/components/reusable/Unauthorized';
 
@@ -31,36 +31,47 @@ export default function Misc() {
       <div style={styles.gridContainer}>
 
         <button style={{ ...styles.widget, borderColor: "#FF6347", borderWidth: 2, borderStyle: "solid", }} 
-              onClick={async () => { router.push('/conseil-administration'); }}
+              onClick={async () => { router.push('/misc/dernegimiz/hub'); }}
         >
-          <FaUsersCog size={38} style={{ ...styles.icon, color: "#FF6347" }} />
-          <p style={styles.widgetText}>Yönetim Kurulu</p>
+          <FaBuilding  size={38} style={{ ...styles.icon, color: "#FF6347" }} />
+          <p style={styles.widgetText}>Derneğimiz</p>
         </button>
 
-
         <button style={{ ...styles.widget, borderColor: "#4CAF50", borderWidth: 2, borderStyle: "solid", }} 
-                onClick={async () => { router.push('/sosyal-medya')}}
+                onClick={async () => { router.push('/misc/sosyal-medya')}}
         >
           <FaUsers size={38} style={{ ...styles.icon, color: "#4CAF50" }} />
           <p style={styles.widgetText}>Sosyal Medyalar</p>
         </button>
 
-
         <button style={{ ...styles.widget, borderColor: "#FFC107", borderWidth: 2, borderStyle: "solid", }}
                 onClick={async () => { router.push('/soon') }}
         >
-          <FaBullhorn size={38} style={{ ...styles.icon, color: "#FFC107" }} />
-          <p style={styles.widgetText}>Duyuru ve Haber</p>
+          <FaFolder size={38} style={{ ...styles.icon, color: "#FFC107" }} />
+          <p style={styles.widgetText}>Dökümanlar</p>
         </button>
 
 
         <button style={{ ...styles.widget, borderColor: "#B317D3", borderWidth: 2, borderStyle: "solid", }}
-                onClick={async () => { router.push('/guncellemeler')}}
+                onClick={async () => { router.push('/misc/guncellemeler')}}
         >
           <FaClipboardList size={38} style={{ ...styles.icon, color: "#B317D3" }} />
           <p style={styles.widgetText}>Güncellemeler</p>
         </button>
 
+        <button style={{ ...styles.widget, borderColor: "#00C2D1", borderWidth: 2, borderStyle: "solid", }}
+                onClick={async () => { router.push('/soon')}}
+        >
+          <FaWifi size={38} style={{ ...styles.icon, color: "#00C2D1" }} />
+          <p style={styles.widgetText}>Bagli Cihazlar</p>
+        </button> 
+
+        <button style={{ ...styles.widget, borderColor: "#1E3A8A", borderWidth: 2, borderStyle: "solid", }}
+                onClick={async () => { router.push('/soon')}}
+        >
+          <FaBalanceScale size={38} style={{ ...styles.icon, color: "#1E3A8A" }} />
+          <p style={styles.widgetText}>Yasal Bilgiler</p>
+        </button> 
 
         {(membre.specialRole === "Administrator" || membre.specialRole === "Moderator") && (
           <button style={{ ...styles.widget, borderColor: "#1E2A47", borderWidth: 2, borderStyle: "solid", }}
