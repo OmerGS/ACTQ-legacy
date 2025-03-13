@@ -7,6 +7,7 @@ import { Membre } from "@/components/interface/Membre";
 import Unauthorized from "@/components/reusable/Unauthorized";
 import { FaArrowLeft, FaUser, FaClipboardList, FaHandsHelping } from "react-icons/fa";
 import { useRouter } from 'next/navigation';
+import { formatDateWithSeconds, formatDateWithSecondsStr } from "@/components/littleComponents/FormatDate";
 
 const formatDate = (dateString: string) => {
   const date = new Date(dateString);
@@ -29,7 +30,9 @@ const fieldLabels: Record<string, string> = {
   dateNaissance: "Doğum Tarihi",
   adresseFr: "Fransız Adresi",
   adresseTr: "Türk Adresi",
-  cenazeFonu: "Cenaze Fonuna Kayıtlı"
+  cenazeFonu: "Cenaze Fonuna Kayıtlı",
+  createdAt: "Giriş Tarihi",
+  updatedAt: "Son Düzenleme",
 };
 
 export default function MembresPage() {
@@ -222,9 +225,13 @@ export default function MembresPage() {
                   value && key !== "password" && key !== "salt" && key !== "specialRole" ? (
                     <p key={key}>
                       <strong>{fieldLabels[key] || key} : </strong>
-                      {key === "dateNaissance" ? formatDate(value as string) : (
-                        key === "cenazeFonu" ? (value === 1 ? "Evet" : "Hayır") : value
-                      )}
+                      {
+                        key === "dateNaissance" ? formatDate(value as string) :
+                        key === "cenazeFonu" ? (value === 1 ? "Evet" : "Hayır") :
+                        key === "createdAt" ? formatDateWithSecondsStr(value as string) :
+                        key === "updatedAt" ? formatDateWithSecondsStr(value as string) :
+                        value
+                      }
                     </p>
                   ) : null
                 )}
@@ -248,6 +255,23 @@ export default function MembresPage() {
                 if (key === "password" || key === "specialRole" || key === "dateNaissance" || key === "barcode" || key === "id"  || key === "salt" || value === null) return null;
 
                 const label = fieldLabels[key] || key; 
+
+                if (key === "createdAt" || key === "updatedAt") {
+                  return (
+                    <div key={key}>
+                      <label>{label} : </label>
+                      <input
+                        style={{
+                          ...styles.inputField,
+                        }}
+                        type="text"
+                        name={key}
+                        value={formatDateWithSecondsStr(String(value))}
+                        readOnly
+                      />
+                    </div>
+                  );
+                }
 
                 if (key === "aidatCategory") {
                   return (
