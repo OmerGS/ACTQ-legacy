@@ -2,6 +2,7 @@ import axios from 'axios';
 import BACKEND_API from '@/properties/BACKEND_API';
 import API_KEY from '@/properties/API_KEY';
 import { Membre } from '../interface/Membre';
+import { CACHE_ONE_YEAR } from 'next/dist/lib/constants';
 
 /**
  * API class for interacting with the application's database.
@@ -131,6 +132,44 @@ class AdminServerConnection {
             throw error; 
         }
     }
+
+    public static async fetchMemberAidat(year: number): Promise<any> {
+        try {
+            const response = await axios.post(`${BACKEND_API.baseURL}/administration/fetchMemberAidat`, {
+                year: year,
+            },
+            {
+                withCredentials: true,
+                headers: {
+                    'x-api-key': `${API_KEY.API_KEY}`,
+                    'Content-Type': 'application/json',
+                }}
+            );
+    
+            return response.data; 
+        } catch (error) {
+            console.error("Erreur lors de la récupération des prix :", error);
+            throw error; 
+        }
+    }
+
+    public static async fetchAvailableYears(): Promise<number[]> {
+        try {
+            const response = await axios.get(`${BACKEND_API.baseURL}/administration/fetchAvailableYears`, {
+                withCredentials: true,
+                headers: {
+                    'x-api-key': `${API_KEY.API_KEY}`,
+                    'Content-Type': 'application/json',
+                }
+            });
+    
+            return response.data;
+        } catch (error) {
+            console.error("Erreur lors de la récupération des années disponibles :", error);
+            throw error;
+        }
+    }
+    
 
     /*
     public static async addNewAidatCategory(category: any, price: any): Promise<any> {

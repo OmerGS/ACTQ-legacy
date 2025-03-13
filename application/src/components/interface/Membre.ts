@@ -15,4 +15,6 @@ export interface Membre {
   specialRole: string;
   aidatCategory: string;
   cenazeFonu: number;
+  amountDue: string;
+  amountPaid: string;
 }
