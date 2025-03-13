@@ -10,6 +10,11 @@ export interface Membre {
   salt: string;
   statusSpecial: string;
   statut: string;
-  adresseFr: number;
-  adresseTr: number;
+  adresseFr: string;
+  adresseTr: string;
+  specialRole: string;
+  aidatCategory: string;
+  cenazeFonu: number;
+  amountDue: string;
+  amountPaid: string;
 }

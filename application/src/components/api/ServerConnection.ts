@@ -1,6 +1,7 @@
 import axios from 'axios';
 import BACKEND_API from '@/properties/BACKEND_API';
 import API_KEY from '@/properties/API_KEY';
+import PaymentType from '../enum/PaymentType';
 
 /**
  * API class for interacting with the application's database.
@@ -49,21 +50,34 @@ class ServerConnection {
 
     public static async checkVerificationCode(phoneNumber: string, code: string): Promise<any> {
         try {
-            const response = await axios.post (`${BACKEND_API.baseURL}/verificationcode/check-phone`, {
-                telephone: phoneNumber,
-                code: code,
-            },
-            {
-                headers: {
-                  'x-api-key': `${API_KEY.API_KEY}`,
-                  'Content-Type': 'application/json',
+            const response = await axios.post(`${BACKEND_API.baseURL}/verificationcode/check-phone`, {
+                    telephone: phoneNumber,
+                    code: code,
                 },
-            });
-
+                {
+                    withCredentials: true,
+                    headers: {
+                        'x-api-key': `${API_KEY.API_KEY}`,
+                        'Content-Type': 'application/json',
+                    },
+                });
+    
             return response.data.success;
         } catch (error) {
             console.error("Erreur lors de l'envoi du code de vérification :", error);
-            throw error; 
+            throw error;
+        }
+    }
+
+    public static async logout(): Promise<any> {
+        try {
+            const response = await axios.post(`${BACKEND_API.baseURL}/auth/logout`, {}, {
+              withCredentials: true
+            });
+      
+            console.log(response.data);
+        } catch (error) {
+            console.error('Erreur lors de la suppression du token', error);
         }
     }
 
@@ -173,6 +187,7 @@ class ServerConnection {
                 dateNaissance: dateNaissance,
             },
             {
+                withCredentials: true,
                 headers: {
                   'x-api-key': `${API_KEY.API_KEY}`,
                   'Content-Type': 'application/json',
@@ -212,6 +227,7 @@ class ServerConnection {
                 password: password,
             },
             {
+                withCredentials: true,
                 headers: {
                     'x-api-key': `${API_KEY.API_KEY}`,
                     'Content-Type': 'application/json',
@@ -240,6 +256,48 @@ class ServerConnection {
             return response.data;
         } catch (error) {
             console.error("Erreur lors de la recuperation du sel :", error);
+            throw error;
+        }
+    }
+
+    public static async getFilteredTransaction(barcode: string, year: number) : Promise<any> {
+        try {
+            const response = await axios.post(`${BACKEND_API.baseURL}/membre/transaction/filter`, {
+                barcode: barcode,
+                year: year,
+            },
+            {
+                headers: 
+                {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            console.log(response);
+            return response.data;
+        } catch (error) {
+            console.error("Erreur lors de la recuperation des paiements.");
+            throw error;
+        }
+    }
+
+    public static async getAidatInformationForMember(barcode: string, year: number) : Promise<any> {
+        try {
+            const response = await axios.post(`${BACKEND_API.baseURL}/membre/aidat/history`, {
+                barcode: barcode,
+                year: year,
+            },
+            {
+                headers: 
+                {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            console.log(response);
+            return response.data;
+        } catch (error) {
+            console.error("Erreur lors de la recuperation des paiements.");
             throw error;
         }
     }

@@ -1,5 +1,6 @@
 import React from "react";
 import ServiceWorker from "@/components/reusable/ServiceWorker";
+import { MembreProvider } from "@/app/hooks/MemberContext";
 
 export const metadata = {
   title: "ACTQ",
@@ -24,8 +25,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="apple-touch-icon" sizes="192x192" href="/icons/icon-192x192.png" />
       </head>
       <body style={{ margin: 0, padding: 0, width: "100%", height: "100%", boxSizing: "border-box" }}>
+        <MembreProvider>
         {children}
         <ServiceWorker />
+        </MembreProvider>
       </body>
     </html>
   );

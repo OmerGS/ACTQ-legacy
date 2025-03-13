@@ -2,18 +2,19 @@
 
 import { useEffect, useState } from "react";
 import Navbar from "@/components/reusable/Navbar";
-import { FaUsersCog, FaUser, FaHandHoldingUsd } from "react-icons/fa";
+import { FaUser, FaHandHoldingUsd, FaCreditCard } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import useAuth from "../hooks/useAuth";
-import Spinner from "@/components/reusable/Spinner";
+import { useMembre } from "../hooks/MemberContext";
+import Unauthorized from '@/components/reusable/Unauthorized';
 
 export default function Home() {
   const router = useRouter();
+  const { membre } = useMembre();
   const isAuthenticated = useAuth();
-  const [membre, setMembre] = useState<any>(null);
-  const [loading, setLoading] = useState<boolean>(true);
   const [flash, setFlash] = useState(false);
   const [countdown, setCountdown] = useState<string>("");
+
 
   const injectKeyframes = () => {
     const style = document.createElement("style");
@@ -38,95 +39,90 @@ export default function Home() {
 
   useEffect(() => {
     injectKeyframes();
-
-    if (isAuthenticated) {
-      const fetchedMembre = localStorage.getItem("user");
-      if (fetchedMembre) {
-        const membreObj = JSON.parse(fetchedMembre);
-        setMembre(membreObj.member);
-      }
-      setLoading(false);
-    }
-
+  
     const updateCountdown = () => {
-      //const now = new Date("2025-07-32T00:00:00");
       const now = new Date();
       const currentYear = now.getFullYear();
       let targetDate = new Date(`${currentYear}-07-31T00:00:00`);
-      
+  
       if (now > targetDate) {
         targetDate = new Date(`${currentYear + 1}-07-31T00:00:00`);
       }
-
+  
       const timeDiff = targetDate.getTime() - now.getTime();
-      
+  
       if (timeDiff <= 0) {
         setCountdown("00:00:00:00");
         return;
       }
-
+  
       const days = Math.floor(timeDiff / (1000 * 3600 * 24));
       const hours = Math.floor((timeDiff % (1000 * 3600 * 24)) / (1000 * 3600));
       const minutes = Math.floor((timeDiff % (1000 * 3600)) / (1000 * 60));
       const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
-
+  
       setCountdown(`${days}j ${hours}h ${minutes}m ${seconds}s`);
-
+  
       if (days <= 14) {
         setFlash(true);
       } else {
         setFlash(false);
       }
     };
-
+  
+    updateCountdown();
+  
     const interval = setInterval(updateCountdown, 1000);
-
+  
     return () => clearInterval(interval);
-  }, [isAuthenticated]);
-
-  if (loading) {
-    return <Spinner />;
-  }
+  }, []); 
+  
 
   return (
     <div style={styles.pageContainer}>
       <div style={styles.appContainer}>
-        <p style={styles.welcomeText}>
-          Merhaba <span style={styles.highlight}>{membre.prenom} {membre.nom}</span>
-        </p>
+        {membre ? (
+          <>
+            <p style={styles.welcomeText}>
+              Merhaba <span style={styles.highlight}>{membre.prenom} {membre.nom}</span>
+            </p>
+  
+            <div style={styles.countdownContainer}>
+              <p style={styles.countdownText}>Aidat son ödeme tarihine kalan süre</p>
+              <p style={flash ? styles.countdownValueFlash : styles.countdownValue}>
+                {countdown}
+              </p>
+            </div>
 
-        {/* Add Son aidat ödeme tarihi and the countdown */}
-        <div style={styles.countdownContainer}>
-          <p style={styles.countdownText}>Aidat son ödeme tarihine kalan süre</p>
-          <p style={flash ? styles.countdownValueFlash : styles.countdownValue}>
-            {countdown}
-          </p>
-        </div>
+            <div style={styles.logoBackground}></div>
 
-        <div style={styles.cardsContainer}>
-          <div style={styles.card} onClick={() => router.push("/conseil-administration")}>
-            <FaUsersCog size={38} color="#4682B4" style={styles.icon} />
-            <span style={styles.cardText}>Yönetim Kurulu</span>
-          </div>
-          <div style={styles.card} onClick={() => router.push("/uyeligim")}>
-            <FaUser size={38} color="#8A2BE2" style={styles.icon} />
-            <span style={styles.cardText}>Dernek Üyeliğim</span>
-          </div>
-          <div style={styles.card} onClick={() => router.push("/")}>
-            <FaHandHoldingUsd size={38} color="#FFD700" style={styles.icon} />
-            <span style={styles.cardText}>Cenaze Fonu Üyeliğim</span>
-          </div>
-        </div>
+            <div style={styles.cardsContainer}>
+            <div style={{...styles.card, borderColor: "#E30A17", borderWidth: 2, }} onClick={() => router.push("/uyeligim")} >
+              <FaUser size={38} color="#E30A17" style={styles.icon} />
+              <span style={styles.cardText}>Dernek Üyeliğim</span>
+            </div>
+              <div style={{...styles.card, borderColor: "#32CD32", borderWidth: 2, }} onClick={() => router.push("/soon")}>
+                <FaHandHoldingUsd size={38} color="#32CD32" style={styles.icon} />
+                <span style={styles.cardText}>Cenaze Fonu Üyeliğim</span>
+              </div>
+              <div style={{...styles.card, borderColor: "#007BFF", borderWidth: 2, }} onClick={() => router.push("/soon")}>
+                <FaCreditCard size={38} color="#007BFF" style={styles.icon} />
+                <span style={styles.cardText}>Ödeme Işlemleri</span>
+              </div>
+            </div>
+  
+            <Navbar />
+          </>
+        ) : (
+          <Unauthorized></Unauthorized>
+        )}
       </div>
-
-      <Navbar />
     </div>
   );
-}
+}  
 
 const styles = {
   pageContainer: {
-    backgroundColor: "#ffffff",
     minHeight: "100vh",
     display: "flex",
     flexDirection: "column",
@@ -135,6 +131,21 @@ const styles = {
     padding: "20px",
     fontFamily: "'Nunito', sans-serif",
   } as React.CSSProperties,
+  logoBackground: {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: "500px", 
+    height: "500px",
+    backgroundImage: "url('/assets/logo/actq.png')",
+    backgroundSize: "contain",
+    backgroundRepeat: "no-repeat",
+    backgroundPosition: "center",
+    opacity: 0.2,
+    zIndex: -1, 
+  } as React.CSSProperties,
+  
   appContainer: {
     width: "100%",
     maxWidth: "400px",
@@ -184,18 +195,30 @@ const styles = {
   },
   countdownContainer: {
     width: "100%",
-    maxWidth: "350px",
-    padding: "5px",
-    borderRadius: "12px",
-    backgroundColor: "#f4f4f4",
-    boxShadow: "2px 2px 8px rgba(102, 102, 102, 0.1)", 
-    margin: "0 auto",
+    maxWidth: "400px",
+    padding: "20px 30px",
+    borderRadius: "18px",
+    background: "rgba(255, 255, 255, 0.15)",
+    backdropFilter: "blur(12px)",
+    WebkitBackdropFilter: "blur(12px)",
+    border: "2px solid rgba(255, 255, 255, 0.3)",
+    boxShadow: "0 8px 25px rgba(0, 0, 0, 0.15)",
+    margin: "20px auto",
     display: "flex",
-    flexDirection: "column", 
-    alignItems: "center", 
+    flexDirection: "column",
+    alignItems: "center",
     justifyContent: "center",
+    textAlign: "center",
     boxSizing: "border-box",
-  } as React.CSSProperties,   
+    position: "relative",
+    overflow: "hidden",
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: "1.5rem",
+    letterSpacing: "1px",
+    transition: "transform 0.2s ease, box-shadow 0.3s ease",
+    animation: "pulse 3s infinite",
+  } as React.CSSProperties,
   countdownText: {
     fontSize: "16px",
     color: "#333",

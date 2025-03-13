@@ -1,12 +1,8 @@
 use actq;
 SELECT * FROM Membre;
 
-SELECT * From Membre WHERE id = 269;
+DELETE From Membre WHERE id = 269;
 SELECT * FROM Membre WHERE id = 111;
-
-UPDATE Membre
-SET adresseTr = "Türkiye"
-WHERE id = 111;
 
 SELECT * FROM Payment;
 

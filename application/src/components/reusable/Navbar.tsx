@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { FaHome, FaIdCard , FaUserCircle } from "react-icons/fa";
+import { FaHome, FaIdCard , FaUserCircle, FaThList  } from "react-icons/fa";
 import { JSX } from "react";
 
 export default function Navbar() {
@@ -13,6 +13,7 @@ export default function Navbar() {
       <NavItem href="/home" icon={<FaHome />} active={pathname === "/home"} />
       <NavItem href="/card" icon={<FaIdCard />} active={pathname === "/card"} />
       <NavItem href="/settings" icon={<FaUserCircle />} active={pathname === "/settings"} />
+      <NavItem href="/misc" icon={<FaThList  />} active={pathname === "/misc"} />
    </div>
   );
 }

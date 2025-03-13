@@ -1,69 +1,51 @@
-"use client";
+"use client"
 
-import { useEffect, useState } from "react";
-import { useRouter, usePathname } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { FaRegSun, FaRegMoon } from "react-icons/fa";
 import { motion } from "framer-motion";
-import { Membre } from "@/components/interface/Membre";
+import { useMembre } from "@/app/hooks/MemberContext";
 import Spinner from "@/components/reusable/Spinner";
 
 export default function Home() {
   const router = useRouter();
-  const pathname = usePathname();
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [isUserConnected, setIsUserConnected] = useState(false);
-  const [showInstallPrompt, setShowInstallPrompt] = useState(false);
-  const [membre, setMembre] = useState<Membre | null>(null);
+  const { membre, setMembre } = useMembre();
   const [loading, setLoading] = useState(true);
+  const [showInstallPrompt, setShowInstallPrompt] = useState(false);
+
 
   useEffect(() => {
-    const fetchedMembre = localStorage.getItem("user");
-
-    if (fetchedMembre) {
-      const membreObj = JSON.parse(fetchedMembre);
-
-      if (membreObj.member && membreObj.member.dateNaissance) {
-        const dateNaissance = new Date(membreObj.member.dateNaissance);
-        dateNaissance.setDate(dateNaissance.getDate() + 1);
-        const formattedDateNaissance = dateNaissance.toISOString().split('T')[0];
-        membreObj.member.dateNaissance = formattedDateNaissance;
-      }
-
-      if (membre?.email !== membreObj.member?.email) {
-        setMembre(membreObj.member);
-      }
-    }
-
-    if (membre?.email != null && pathname !== "/home") {
-      setIsUserConnected(true);
-      router.replace("/home");
-    } else {
-      setIsUserConnected(false);
-    }
-
-    // Simule le temps de chargement
     const userPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
     setIsDarkMode(userPrefersDark);
 
-    const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
-    const isStandalone = window.matchMedia("(display-mode: standalone)").matches;
+    setLoading(false);
 
-    if (isIOS && !isStandalone) {
+    if (membre) {
+      router.push("/home");
+    } else {
+      console.log("non connecté");
+    }
+  }, [membre, router]);
+
+  useEffect(() => {
+    const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    const isStandalone = window.matchMedia("(display-mode: standalone)").matches || (window.navigator as any).standalone;
+  
+    if (isIos && isSafari && !isStandalone) {
       setShowInstallPrompt(true);
     }
-
-    // Après la vérification, on change l'état du loading
-    setLoading(false);
-  }, [router, membre, pathname]);
-
-  const buttonLabels = { 
-    firstTime: "Kayıt Ol", 
-    login: "Giriş Yap", 
-    install: "Ana Ekrana Ekle" 
+  }, []);
+ 
+  const buttonLabels = {
+    firstTime: "Kayıt Ol",
+    login: "Giriş Yap",
+    install: "Ana Ekrana Ekle"
   };
 
   if (loading) {
-    return <Spinner />; // Afficher le spinner tant que le chargement est en cours
+    return <Spinner />;
   }
 
   return (
