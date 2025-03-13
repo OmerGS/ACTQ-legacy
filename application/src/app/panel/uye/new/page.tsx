@@ -350,22 +350,3 @@ const styles: { [key: string]: React.CSSProperties } = {
     borderColor: "#28a745",
   },
 };
-
-const mediaQuery = `
-  @media (max-width: 600px) {
-    .filters {
-      flex-direction: column;
-      align-items: center;
-    }
-    .filterItem {
-      width: 90%;
-    }
-    .filterSelect {
-      font-size: 12px;
-    }
-  }
-`;
-
-const styleTag = document.createElement("style");
-styleTag.innerHTML = mediaQuery;
-document.head.appendChild(styleTag);
