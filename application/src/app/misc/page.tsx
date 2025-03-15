@@ -45,7 +45,7 @@ export default function Misc() {
         </button>
 
         <button style={{ ...styles.widget, borderColor: "#FFC107", borderWidth: 2, borderStyle: "solid", }}
-                onClick={async () => { router.push('/soon') }}
+                onClick={async () => { router.push('/misc/document') }}
         >
           <FaFolder size={38} style={{ ...styles.icon, color: "#FFC107" }} />
           <p style={styles.widgetText}>Dökümanlar</p>
@@ -60,10 +60,10 @@ export default function Misc() {
         </button>
 
         <button style={{ ...styles.widget, borderColor: "#00C2D1", borderWidth: 2, borderStyle: "solid", }}
-                onClick={async () => { router.push('/soon')}}
+                onClick={async () => { router.push('/misc/connected-device')}}
         >
           <FaWifi size={38} style={{ ...styles.icon, color: "#00C2D1" }} />
-          <p style={styles.widgetText}>Bagli Cihazlar</p>
+          <p style={styles.widgetText}>Bağlı Cihazlar</p>
         </button> 
 
         <button style={{ ...styles.widget, borderColor: "#1E3A8A", borderWidth: 2, borderStyle: "solid", }}

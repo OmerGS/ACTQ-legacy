@@ -301,6 +301,54 @@ class ServerConnection {
             throw error;
         }
     }
+
+    public static async getConnectedDevice(barcode: string) : Promise<any> {
+        try {
+
+            console.log(barcode);
+            
+            const response = await axios.post(`${BACKEND_API.baseURL}/membre/connected-device`, {
+                barcode: barcode,
+            },
+            {
+                withCredentials: true,
+                headers: 
+                {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            console.log(response);
+            return response.data;
+        } catch (error) {
+            console.error("Erreur lors de la recuperation des paiements.");
+            throw error;
+        }
+    }
+
+    public static async deleteConnectedDevice(deviceId: number) : Promise<any> {
+        try {
+
+            console.log(deviceId);
+            
+            const response = await axios.post(`${BACKEND_API.baseURL}/auth/delete-device`, {
+                deviceId: deviceId,
+            },
+            {
+                withCredentials: true,
+                headers: 
+                {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            console.log(response);
+            return response.data;
+        } catch (error) {
+            console.error("Erreur lors de la recuperation des paiements.");
+            throw error;
+        }
+    }
 }
 
 export default ServerConnection;
