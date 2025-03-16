@@ -3,55 +3,73 @@
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/reusable/Navbar";
 import { useMembre } from "../../hooks/MemberContext";
-import { FaArrowLeft, FaBalanceScale, FaUsers } from "react-icons/fa";
+import { FaArrowLeft, FaFilePdf } from "react-icons/fa";
 import { useEffect } from "react";
 import Unauthorized from '@/components/reusable/Unauthorized';
 
-export default function Document() {
+export default function Documents() {
   const router = useRouter();
   const { membre } = useMembre();
 
   useEffect(() => {
-    document.body.style.backgroundColor = "#f9f9f9"; 
+    document.body.style.backgroundColor = "#F4F6F8";
     document.body.style.color = "#333";
   }, []);
 
   if (!membre) {
-    return (
-      <Unauthorized></Unauthorized>
-    )
+    return <Unauthorized />;
   }
 
+  const pdfFiles = [
+    { name: "Üye Formu", path: "/assets/pdf/Üye_Formu.pdf" },
+  ];
+
+  const downloadPdf = async (pdfUrl: string, name: string) => {
+    try {
+      const response = await fetch(pdfUrl);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = name;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Erreur lors du téléchargement du PDF", error);
+    }
+  };
+
   return (
-    
     <div style={styles.pageContainer}>
-        <div style={styles.buttonContainer}>
-                <button
-                  style={styles.backButton}
-                  onClick={() => router.back()}
-                >
-                  <FaArrowLeft size={18} /> Geri
-                </button>
-              </div>
-
-      <h1 style={styles.title}>Dokümanler</h1>
-
-      {/* Grille des widgets */}
-      <div style={styles.gridContainer}>
-
-        <button style={{ ...styles.widget, borderColor: "#FF6347", borderWidth: 2, borderStyle: "solid", }} 
-              onClick={async () => { router.push('/soon'); }}
-        >
-          <FaUsers  size={38} style={{ ...styles.icon, color: "#FF6347" }} />
-          <p style={styles.widgetText}>Üye Formu</p>
+      <div style={styles.backButtonContainer}>
+        <button style={styles.backButton} onClick={() => router.back()}>
+            <FaArrowLeft size={18} style={styles.backIcon} /> Geri
         </button>
+    </div>
+    
+      <h1 style={styles.title}>Dökümanlar</h1>
 
-        <button style={{ ...styles.widget, borderColor: "#4CAF50", borderWidth: 2, borderStyle: "solid", }} 
-                onClick={async () => { router.push('/soon')}}
-        >
-          <FaBalanceScale size={38} style={{ ...styles.icon, color: "#4CAF50" }} />
-          <p style={styles.widgetText}>Tüzük</p>
-        </button> 
+      {/* Grille des documents */}
+      <div style={styles.gridContainer}>
+        {pdfFiles.length > 0 ? (
+          pdfFiles.map((file, index) => (
+            <div key={index} style={styles.widgetContainer}>
+              <button
+                style={styles.widget}
+                onClick={() => downloadPdf(file.path, file.name)}
+              >
+                <FaFilePdf size={38} style={styles.icon} />
+                <p style={styles.widgetText}>{file.name}</p>
+              </button>
+            </div>
+          ))
+        ) : (
+          <p>Hiçbir doküman bulunmamaktadır.</p>
+        )}
       </div>
 
       <Navbar />
@@ -61,7 +79,7 @@ export default function Document() {
 
 const styles = {
   pageContainer: {
-    backgroundColor: "#f9f9f9",
+    backgroundColor: "#F4F6F8",
     color: "#333",
     minHeight: "100vh",
     display: "flex",
@@ -69,63 +87,75 @@ const styles = {
     justifyContent: "flex-start",
     marginBottom: "100px",
     alignItems: "center",
-    padding: "20px",
-    fontFamily: "'Nunito', sans-serif",
+    padding: "40px",
+    fontFamily: "'Roboto', sans-serif",
     boxSizing: "border-box",
     textAlign: "center",
   } as React.CSSProperties,
-  buttonContainer: {
+  backButtonContainer: {
     display: "flex",
-    justifyContent: "flex-start",
-    width: "100%",
+    justifyContent: "space-between",
+    alignItems: "center",
+    width: "100%", 
   },
   backButton: {
+    cursor: "pointer",
+    background: "#FF6F61",
+    border: "none",
+    color: "white",
+    padding: "5px 15px",
+    height: "40px",
+    borderRadius: "5px",
+    fontSize: "14px",
     display: "flex",
     alignItems: "center",
-    gap: "10px",
-    backgroundColor: "#FF4B5C",
-    color: "white",
-    border: "none",
-    padding: "12px 18px",
-    borderRadius: "8px",
-    cursor: "pointer",
-    fontSize: "18px",
-    fontWeight: "bold",
-    marginBottom: "20px",
-    transition: "background-color 0.3s ease",
+    justifyContent: "center",
+    transition: "background-color 0.3s",
+    boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
+  },
+  backIcon: {
+    marginRight: "8px",
   },
   title: {
-    fontSize: "24px",
-    fontWeight: "bold",
-    color: "#222",
-    marginBottom: "20px",
+    fontSize: "28px",
+    fontWeight: "600",
+    color: "#2C3E50",
+    marginBottom: "30px",
   },
   gridContainer: {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
-    gap: "15px",
+    gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+    gap: "20px",
     width: "100%",
     maxWidth: "600px",
   },
+  widgetContainer: {
+    display: "flex",
+    justifyContent: "center",
+  },
   widget: {
     backgroundColor: "#ffffff",
-    padding: "15px",
-    borderRadius: "12px",
-    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+    padding: "20px",
+    borderRadius: "8px",
+    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
     textAlign: "center",
-    border: "none",
+    border: "1px solid #DADFE1",
     cursor: "pointer",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
+    transition: "all 0.3s ease",
+    outline: "none",
   } as React.CSSProperties,
   icon: {
-    marginBottom: "10px",
+    color: "#4E5B6E",
+    marginBottom: "15px",
   },
   widgetText: {
     fontSize: "16px",
-    fontWeight: "bold",
-    color: "#222",
-  },
+    fontWeight: "500",
+    color: "#34495E",
+    textTransform: "uppercase",
+  } as React.CSSProperties,
 };

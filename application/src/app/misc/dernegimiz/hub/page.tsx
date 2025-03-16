@@ -20,7 +20,7 @@ const articlesContent = [
     id: 1,
     title: "2025-2027 Yönetim Kurulu",
     description: "Yönetim Kurulu",
-    link: "/dernegimiz/conseil-administration",
+    link: "/misc/dernegimiz/conseil-administration",
     icon: <FaRegLightbulb size={24} />,
     borderColor: "#0FF0FF",
   }
@@ -182,16 +182,15 @@ export default function AssociationPage() {
 
       <div style={articlesContainerStyle}>
         {articlesContent.map((item) => (
-          <a
+          <div
             key={item.id}
-            href={item.link}
             style={{ ...articleCardStyle(item.borderColor), ...articleCardHoverStyle }}
           >
             <div style={articleIconStyle}>{item.icon}</div>
             <h3 style={articleTitleStyle}>{item.title}</h3>
             <p style={articleDescriptionStyle}>{item.description}</p>
-            <div style={articleButtonStyle}>Sayfaya Git</div>
-          </a>
+            <button onClick={() => router.push(item.link)} style={articleButtonStyle}>Sayfaya Git</button>
+          </div>
         ))}
       </div>
     </div>
