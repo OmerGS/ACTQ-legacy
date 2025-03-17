@@ -31,14 +31,14 @@ export default function Misc() {
       <div style={styles.gridContainer}>
 
         <button style={{ ...styles.widget, borderColor: "#FF6347", borderWidth: 2, borderStyle: "solid", }} 
-              onClick={async () => { router.push('/misc/dernegimiz/hub'); }}
+              onClick={async () => { router.push('/misc/about'); }}
         >
           <FaBuilding  size={38} style={{ ...styles.icon, color: "#FF6347" }} />
           <p style={styles.widgetText}>Derneğimiz</p>
         </button>
 
         <button style={{ ...styles.widget, borderColor: "#4CAF50", borderWidth: 2, borderStyle: "solid", }} 
-                onClick={async () => { router.push('/misc/sosyal-medya')}}
+                onClick={async () => { router.push('/misc/social-network')}}
         >
           <FaUsers size={38} style={{ ...styles.icon, color: "#4CAF50" }} />
           <p style={styles.widgetText}>Sosyal Medyalar</p>
@@ -53,7 +53,7 @@ export default function Misc() {
 
 
         <button style={{ ...styles.widget, borderColor: "#B317D3", borderWidth: 2, borderStyle: "solid", }}
-                onClick={async () => { router.push('/misc/guncellemeler')}}
+                onClick={async () => { router.push('/misc/update')}}
         >
           <FaClipboardList size={38} style={{ ...styles.icon, color: "#B317D3" }} />
           <p style={styles.widgetText}>Güncellemeler</p>

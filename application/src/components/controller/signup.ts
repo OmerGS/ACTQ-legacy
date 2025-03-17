@@ -56,7 +56,7 @@ export async function handleCheckCode(phoneNumber: string, code: string, router:
 
     // A ce stade, l'utilisateur est validé et le cookie JWT est déjà dans les cookies du navigateur.
     // Pas besoin de récupérer le membre ici via une autre requête, car le serveur peut renvoyer l'utilisateur avec /me ou via le cookie
-    router.push("/first");
+    router.push("/auth/setup");
 
     return true;
 }

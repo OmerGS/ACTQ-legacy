@@ -130,8 +130,8 @@ export default function Signup() {
               width: "100%",
               maxWidth: "320px",
               borderRadius: "20px",
-              border: "1px solid rgba(0, 0, 0, 0.1)",  // Légère bordure
-              background: "rgba(255, 255, 255, 0.7)",  // Fond semi-transparent
+              border: "1px solid rgba(0, 0, 0, 0.1)",
+              background: "rgba(255, 255, 255, 0.7)",
               marginBottom: "30px",
               boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
             }}
@@ -152,7 +152,7 @@ export default function Signup() {
             whileTap={{ scale: 0.95 }}
             style={{
               padding: "15px 40px",
-              background: "linear-gradient(135deg, #ececec, #dcdcdc)", // Dégradé moderne
+              background: "linear-gradient(135deg, #ececec, #dcdcdc)",
               color: "#333",
               border: "none",
               borderRadius: "12px",
