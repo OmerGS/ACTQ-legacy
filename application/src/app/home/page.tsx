@@ -105,7 +105,7 @@ export default function Home() {
                 <FaHandHoldingUsd size={38} color="#32CD32" style={styles.icon} />
                 <span style={styles.cardText}>Cenaze Fonu Üyeliğim</span>
               </div>
-              <div style={{...styles.card, borderColor: "#007BFF", borderWidth: 2, }} onClick={() => router.push("/soon")}>
+              <div style={{...styles.card, borderColor: "#007BFF", borderWidth: 2, }} onClick={() => router.push("/payments")}>
                 <FaCreditCard size={38} color="#007BFF" style={styles.icon} />
                 <span style={styles.cardText}>Ödeme Işlemleri</span>
               </div>
