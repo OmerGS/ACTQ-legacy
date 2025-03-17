@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { FaArrowLeft } from 'react-icons/fa';
+import { FaArrowLeft, FaCheckCircle, FaClipboard } from 'react-icons/fa';
 import Spinner from '@/components/reusable/Spinner';
 import { useMembre } from "../hooks/MemberContext";
 import useAuth from '../hooks/useAuth';
@@ -20,8 +20,21 @@ const Uyeligim = () => {
   const isAuthenticated = useAuth();
   const currentYear = new Date().getFullYear();
   const [selectedYear, setSelectedYear] = useState<number>(currentYear);
+  const [copied, setCopied] = useState(false);
 
-  useEffect(() => {
+
+  const handleCopy = () => {
+    if (membre?.barcode) {
+      navigator.clipboard.writeText(membre.barcode)
+        .then(() => {
+          setCopied(true);
+          setTimeout(() => setCopied(false), 2000);
+        })
+        .catch((err) => console.error("Erreur de copie :", err));
+    }
+  };
+
+    useEffect(() => {
     if (isAuthenticated && membre) {
       if (membre.dateNaissance) {
         const dateNaissance = new Date(membre.dateNaissance);
@@ -247,8 +260,15 @@ const Uyeligim = () => {
               <div className="widget-item">
                 <strong>Doğum Tarihi :</strong> {membre?.dateNaissance ? formatDate(membre?.dateNaissance) : ""}
               </div>
-              <div className="widget-item">
-                <strong>Üye Numarası :</strong> {membre?.barcode}
+              <div className="widget-item" style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+                <strong>Üye Numarası :</strong>
+                <span 
+                  onClick={handleCopy} 
+                  style={{ cursor: "pointer", color: "#007bff", textDecoration: "underline" }}
+                >
+                  {membre?.barcode}
+                </span>
+                {copied && <FaCheckCircle className="check-icon" />}
               </div>
             </div>
           </div>
@@ -266,6 +286,29 @@ const Uyeligim = () => {
             grid-template-columns: 1fr; /* Par défaut : 1 colonne (mobile) */
             gap: 15px;
             margin-top: 20px;
+          }
+
+          .check-icon {
+            color: green;
+            font-size: 28px;
+            margin-left: 10px;
+            animation: checkAnimation 1s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
+            transform-origin: center center;
+          }
+
+          @keyframes checkAnimation {
+            0% {
+              transform: scale(0) rotate(30deg);
+              opacity: 0;
+            }
+            60% {
+              transform: scale(1.1) rotate(-10deg);
+              opacity: 1;
+            }
+            100% {
+              transform: scale(1) rotate(0deg);
+              opacity: 1;
+            }
           }
 
           .year-selector {
