@@ -3,7 +3,8 @@
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/reusable/Navbar";
 import { useMembre } from "../../hooks/MemberContext";
-import { FaArrowLeft, FaFilePdf } from "react-icons/fa";
+import { FaArrowLeft, FaRegFile } from "react-icons/fa";
+import { FaBuildingColumns } from "react-icons/fa6";
 import { useEffect } from "react";
 import Unauthorized from '@/components/reusable/Unauthorized';
 
@@ -12,7 +13,7 @@ export default function Documents() {
   const { membre } = useMembre();
 
   useEffect(() => {
-    document.body.style.backgroundColor = "#F4F6F8";
+    document.body.style.backgroundColor = "#f9f9f9";
     document.body.style.color = "#333";
   }, []);
 
@@ -21,7 +22,22 @@ export default function Documents() {
   }
 
   const pdfFiles = [
-    { name: "Üye Formu", path: "/assets/pdf/Üye_Formu.pdf" },
+    { 
+      name: "Üye Formu", 
+      path: "/assets/pdf/Üye_Formu.pdf", 
+      icon: <FaRegFile size={38} style={{ color: "#FF6347" }} />,
+      addedDate: "2025-03-16",
+      type: "PDF",
+      borderColor: "#FF6347"
+    },
+    { 
+      name: "Tüzük", 
+      path: "/assets/pdf/Tüzük.pdf", 
+      icon: <FaBuildingColumns size={38} style={{ color: "#454ADE" }} />,
+      addedDate: "2025-03-10", 
+      type: "PDF",
+      borderColor: "#454ADE"
+    },
   ];
 
   const downloadPdf = async (pdfUrl: string, name: string) => {
@@ -45,30 +61,34 @@ export default function Documents() {
 
   return (
     <div style={styles.pageContainer}>
-      <div style={styles.backButtonContainer}>
-        <button style={styles.backButton} onClick={() => router.back()}>
-            <FaArrowLeft size={18} style={styles.backIcon} /> Geri
+      <div style={styles.header}>
+        <button onClick={() => router.back()} style={styles.backButton}>
+          <FaArrowLeft size={18} /> Geri
         </button>
-    </div>
-    
-      <h1 style={styles.title}>Dökümanlar</h1>
+      </div>
+      <h1 style={styles.title}>Belgeler</h1>
 
-      {/* Grille des documents */}
+      {/* Grille des widgets */}
       <div style={styles.gridContainer}>
         {pdfFiles.length > 0 ? (
           pdfFiles.map((file, index) => (
-            <div key={index} style={styles.widgetContainer}>
-              <button
-                style={styles.widget}
-                onClick={() => downloadPdf(file.path, file.name)}
-              >
-                <FaFilePdf size={38} style={styles.icon} />
-                <p style={styles.widgetText}>{file.name}</p>
-              </button>
-            </div>
+            <button
+              key={index}
+              style={{
+                ...styles.widget,
+                borderColor: file.borderColor,
+                borderWidth: 2,
+                borderStyle: "solid",
+              }}
+              onClick={() => downloadPdf(file.path, file.name)}
+            >
+              {file.icon} {/* Icône dynamique */}
+              <p style={styles.widgetText}>{file.name} - <span style={{ fontStyle: "italic", color: "#7F8C8D" }}>{file.type}</span></p>
+              <p style={styles.dateText}>Eklenme Tarihi: {file.addedDate}</p>
+            </button>
           ))
         ) : (
-          <p>Hiçbir doküman bulunmamaktadır.</p>
+          <p style={styles.noDocumentsText}>Hiçbir doküman bulunmamaktadır.</p>
         )}
       </div>
 
@@ -79,7 +99,7 @@ export default function Documents() {
 
 const styles = {
   pageContainer: {
-    backgroundColor: "#F4F6F8",
+    backgroundColor: "#f9f9f9",
     color: "#333",
     minHeight: "100vh",
     display: "flex",
@@ -87,75 +107,81 @@ const styles = {
     justifyContent: "flex-start",
     marginBottom: "100px",
     alignItems: "center",
-    padding: "40px",
-    fontFamily: "'Roboto', sans-serif",
+    padding: "20px",
+    fontFamily: "'Nunito', sans-serif",
     boxSizing: "border-box",
     textAlign: "center",
   } as React.CSSProperties,
-  backButtonContainer: {
+  header: {
     display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    width: "100%", 
+    justifyContent: "flex-start",
+    width: "100%",
+    marginBottom: "20px",
   },
   backButton: {
-    cursor: "pointer",
-    background: "#FF6F61",
+    backgroundColor: "#FF6347",
+    color: "#fff",
+    fontSize: "16px",
+    padding: "10px 15px",
     border: "none",
-    color: "white",
-    padding: "5px 15px",
-    height: "40px",
     borderRadius: "5px",
-    fontSize: "14px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    transition: "background-color 0.3s",
-    boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
+    cursor: "pointer",
+    transition: "background-color 0.3s ease",
   },
-  backIcon: {
-    marginRight: "8px",
+  backButtonHover: {
+    backgroundColor: "#FF4500",
   },
   title: {
-    fontSize: "28px",
+    fontSize: "26px",
     fontWeight: "600",
-    color: "#2C3E50",
-    marginBottom: "30px",
+    color: "#222",
+    marginBottom: "20px",
   },
   gridContainer: {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
     gap: "20px",
     width: "100%",
-    maxWidth: "600px",
-  },
-  widgetContainer: {
-    display: "flex",
-    justifyContent: "center",
+    maxWidth: "700px",
+    marginTop: "20px",
   },
   widget: {
     backgroundColor: "#ffffff",
     padding: "20px",
-    borderRadius: "8px",
-    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+    borderRadius: "15px",
+    boxShadow: "0 10px 15px rgba(0, 0, 0, 0.1)",
     textAlign: "center",
-    border: "1px solid #DADFE1",
+    border: "2px solid transparent",
     cursor: "pointer",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    transition: "all 0.3s ease",
-    outline: "none",
+    transition: "transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease",
   } as React.CSSProperties,
+  widgetHover: {
+    transform: "scale(1.05)",
+    boxShadow: "0 12px 20px rgba(0, 0, 0, 0.2)",
+    borderColor: "#FF6347",
+  },
   icon: {
-    color: "#4E5B6E",
-    marginBottom: "15px",
+    marginBottom: "12px",
+    transition: "transform 0.3s ease",
   },
   widgetText: {
-    fontSize: "16px",
+    fontSize: "18px", 
     fontWeight: "500",
-    color: "#34495E",
-    textTransform: "uppercase",
-  } as React.CSSProperties,
+    color: "#333",
+    transition: "color 0.3s ease",
+  },
+  dateText: {
+    fontSize: "14px",
+    color: "#7F8C8D",
+    marginTop: "5px",
+  },
+  noDocumentsText: {
+    fontSize: "18px",
+    color: "#7F8C8D",
+    marginTop: "30px",
+  },
 };

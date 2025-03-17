@@ -48,7 +48,7 @@ export default function Misc() {
                 onClick={async () => { router.push('/misc/document') }}
         >
           <FaFolder size={38} style={{ ...styles.icon, color: "#FFC107" }} />
-          <p style={styles.widgetText}>Dökümanlar</p>
+          <p style={styles.widgetText}>Belgeler</p>
         </button>
 
 
@@ -67,7 +67,7 @@ export default function Misc() {
         </button> 
 
         <button style={{ ...styles.widget, borderColor: "#1E3A8A", borderWidth: 2, borderStyle: "solid", }}
-                onClick={async () => { router.push('/soon')}}
+                onClick={async () => { router.push('/misc/legal')}}
         >
           <FaBalanceScale size={38} style={{ ...styles.icon, color: "#1E3A8A" }} />
           <p style={styles.widgetText}>Yasal Bilgiler</p>
