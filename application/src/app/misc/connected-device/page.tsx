@@ -3,11 +3,12 @@
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/reusable/Navbar";
 import { useMembre } from "../../hooks/MemberContext";
-import { FaArrowLeft, FaDesktop, FaMobileAlt, FaTrash } from "react-icons/fa";
+import { FaArrowLeft, FaDesktop, FaMobileAlt, FaPen, FaTrash } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import Unauthorized from '@/components/reusable/Unauthorized';
 import { ConnectedDevice } from "@/components/interface/ConnectedDevice";
 import ServerConnection from "@/components/api/ServerConnection";
+import { FaXmark } from "react-icons/fa6";
 
 // Fonction pour analyser l'User-Agent
 const getDeviceDetails = (userAgent: string) => {
@@ -87,9 +88,16 @@ export default function Document() {
         <button style={styles.backButton} onClick={() => router.back()}>
           <FaArrowLeft size={18} /> Geri
         </button>
-        <button style={styles.editButton} onClick={() => setEditMode(!editMode)}>
-          Düzenle
-        </button>
+
+        { editMode === false ? (
+          <button style={styles.editButton} onClick={() => setEditMode(!editMode)}>
+            <FaPen size={18} style={{ marginRight: '8px' }} /> Düzenle
+          </button>
+        ) : 
+          <button style={styles.editButton} onClick={() => setEditMode(!editMode)}>
+            <FaXmark size={18} style={{ marginRight: '8px' }} /> Vazgeç
+          </button>
+        }
       </div>
 
       <h1 style={styles.title}>Bağlı Cihazlar</h1>
@@ -122,7 +130,7 @@ export default function Document() {
                     (Güvenlik sebeplerden dolayı bu tarihten sonra yeniden giriş yapmanız gerekecek.)
                   </span>
                 </p>
-                <p style={styles.widgetText}>Son aktif: {new Date(device.created_at).toLocaleString()}</p>
+                <p style={styles.widgetText}>Son aktif: {new Date(device.last_login).toLocaleString()}</p>
                 <p style={styles.widgetText}>Cihaz: {os}</p>
                 <p style={styles.widgetText}>Tarayıcı: {browser}</p>
               </div>
