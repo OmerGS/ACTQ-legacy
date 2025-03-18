@@ -25,19 +25,38 @@ export default function Card() {
     setCardBackground(randomBackground);
   }, []);
 
-  useEffect(() => {
-    if (membre && membre.barcode && barcodeRef.current) {
-      JsBarcode(barcodeRef.current, membre.barcode, {
-        format: "CODE39",
-        displayValue: true, 
-        lineColor: "#fff",
-        width: 3,
-        height: 80,
-        background: "transparent",
-      });
-    }
+    useEffect(() => {
+      if (membre && membre.barcode && barcodeRef.current) {
+        const validEAN13 = isValidEAN13(membre.barcode);
+        JsBarcode(barcodeRef.current, membre.barcode, {
+          format: "EAN13",
+          displayValue: true, 
+          lineColor: "#fff",
+          width: 3,
+          height: 80,
+          background: "transparent",
+        });
+      }
   }, [membre]);
 
+
+    function isValidEAN13(barcode: string) {
+      if (barcode.length !== 13) {
+        throw new Error("EAN-13 barcode must be 13 digits long.");
+      }
+
+      let sum = 0;
+      for (let i = 0; i < 12; i++) {
+        let digit = parseInt(barcode[i]);
+        sum += (i % 2 === 0) ? digit : digit * 3;
+      }
+
+      let checksum = (10 - (sum % 10)) % 10;
+
+      return checksum === parseInt(barcode[12]);
+    }
+
+  
   const handleBack = () => {
     window.history.back();
   };
