@@ -17,6 +17,8 @@ export default function PaymentForm() {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [selectedMember, setSelectedMember] = useState<Membre | null>(null);
   const [aidatInformations, setAidatInformations] = useState<any[]>([]);
+  const [cenazeFonuInfo, setcenazeFonuInfo] = useState<any[]>([]);
+
 
 
 
@@ -87,6 +89,18 @@ export default function PaymentForm() {
     }
   };
 
+  const fetchCenazeFonuInfo = async (barcode: string) => {
+    try {
+      const result = await ServerConnection.getCenazeFonuInformationForMember(
+        barcode, 
+        formData.year
+      );
+      setcenazeFonuInfo(result.data);
+    } catch (error) {
+      console.error("Error fetching Aidat info", error);
+    }
+  };
+
   if (!membre || membre?.specialRole !== "Administrator" && membre?.specialRole !== "Moderator") {
     return <Unauthorized />;
   }
@@ -131,6 +145,7 @@ export default function PaymentForm() {
                     setFormData({ ...formData, memberId: member.id });
                     setSearchTerm(`${member.prenom} ${member.nom}`);
                     fetchAidatInfo(member.barcode);
+                    fetchCenazeFonuInfo(member.barcode)
                   }}
                   style={styles.suggestionItem}
                 >
@@ -155,6 +170,9 @@ export default function PaymentForm() {
           />
 
           <p style={styles.aidatInfo}>Aidat Borcu : {aidatInformations[0]?.amountDue - aidatInformations[0]?.amountPaid}€</p>
+          <p style={styles.aidatInfo}>
+            Cenaze Fonu Borcu : {cenazeFonuInfo && cenazeFonuInfo[0] ? cenazeFonuInfo[0]?.amountDue - cenazeFonuInfo[0]?.amountPaid + "€" : "0€"}
+          </p>
 
           <button
             type="button"
@@ -296,6 +314,7 @@ const styles = {
   aidatInfo: {
     fontSize: "16px",
     color: "#333",
+    marginBottom: "-8px",
   },
   resetButton: {
     backgroundColor: "#ff5733",

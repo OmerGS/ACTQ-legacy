@@ -302,6 +302,27 @@ class ServerConnection {
         }
     }
 
+    public static async getCenazeFonuInformationForMember(barcode: string, year: number) : Promise<any> {
+        try {
+            const response = await axios.post(`${BACKEND_API.baseURL}/membre/cenaze-fonu/history`, {
+                barcode: barcode,
+                year: year,
+            },
+            {
+                headers: 
+                {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            console.log(response);
+            return response.data;
+        } catch (error) {
+            console.error("Erreur lors de la recuperation des paiements.");
+            throw error;
+        }
+    }
+
     public static async getConnectedDevice(barcode: string) : Promise<any> {
         try {
 
