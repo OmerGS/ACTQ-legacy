@@ -25,36 +25,37 @@ export default function Card() {
     setCardBackground(randomBackground);
   }, []);
 
-    useEffect(() => {
-      if (membre && membre.barcode && barcodeRef.current) {
-        const validEAN13 = isValidEAN13(membre.barcode);
-        JsBarcode(barcodeRef.current, membre.barcode, {
-          format: "EAN13",
-          displayValue: true, 
-          lineColor: "#fff",
-          width: 3,
-          height: 80,
-          background: "transparent",
-        });
-      }
+  useEffect(() => {
+    if (membre && membre.barcode && barcodeRef.current) {
+      JsBarcode(barcodeRef.current, convertToUPC(membre.barcode), {
+        format: "EAN13",
+        displayValue: true, 
+        lineColor: "#fff",
+        width: 3,
+        height: 80,
+        background: "transparent",
+      });
+    }
   }, [membre]);
 
-
-    function isValidEAN13(barcode: string) {
-      if (barcode.length !== 13) {
-        throw new Error("EAN-13 barcode must be 13 digits long.");
-      }
-
-      let sum = 0;
-      for (let i = 0; i < 12; i++) {
-        let digit = parseInt(barcode[i]);
-        sum += (i % 2 === 0) ? digit : digit * 3;
-      }
-
-      let checksum = (10 - (sum % 10)) % 10;
-
-      return checksum === parseInt(barcode[12]);
+  function convertToUPC(barcode: any) {
+    // If barcode is EAN-13 (13 digits), remove the last digit (checksum)
+    if (barcode.length === 13) {
+      return barcode.substring(0, 12);  // Remove last digit to get a 12-digit UPC
     }
+    
+    // If barcode is shorter than 12 digits (e.g., 10 digits), pad with leading zeros
+    if (barcode.length === 10) {
+      return barcode.padStart(12, '0');  // Pad with leading zeros
+    }
+    
+    // If the barcode is already 12 digits, it's a valid UPC
+    if (barcode.length === 12) {
+      return barcode;  // Return as is
+    }
+    
+    throw new Error("Invalid barcode length. It should be 10, 12, or 13 digits.");
+  }
 
   
   const handleBack = () => {
