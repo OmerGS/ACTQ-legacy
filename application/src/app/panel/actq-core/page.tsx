@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { FaArrowLeft, FaUsers, FaUserPlus, FaCloudUploadAlt, FaCashRegister, FaCreditCard, FaPen, FaClock, FaMoneyBill } from "react-icons/fa";
+import { FaArrowLeft, FaUsers, FaUserPlus, FaCloudUploadAlt, FaCashRegister, FaCreditCard, FaPen, FaClock, FaMoneyBill, FaEuroSign, FaCalendar } from "react-icons/fa";
 import { useMembre } from "../../hooks/MemberContext";
 import Unauthorized from '@/components/reusable/Unauthorized';
 import { motion } from "framer-motion";
@@ -89,7 +89,18 @@ export default function AdminPanel() {
                   </motion.div>
 
                   <motion.div
-                    style={{ ...styles.card, backgroundColor: "#d1c700", borderWidth: 3, borderColor: "#D48A2B" }}
+                    style={{ ...styles.card, backgroundColor: "#DDAB5A", borderWidth: 3, borderColor: "#D48A2B" }}
+                    onClick={() => router.push("/panel/generate")}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 1.45 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <FaCalendar size={38} color="#FFF" style={styles.icon} />
+                    <span style={styles.cardText}>Yeni Yıl Fiyatları</span>
+                  </motion.div>
+
+                  <motion.div
+                    style={{ ...styles.card, backgroundColor: "#d1c700", borderWidth: 3, borderColor: "#DDAB5A" }}
                     onClick={() => router.push("/panel/uye/aidat")}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 1.45 }}
@@ -97,6 +108,17 @@ export default function AdminPanel() {
                   >
                     <FaMoneyBill size={38} color="#FFF" style={styles.icon} />
                     <span style={styles.cardText}>Aidatlar</span>
+                  </motion.div>
+
+                  <motion.div
+                    style={{ ...styles.card, backgroundColor: "#9ECD52", borderWidth: 3, borderColor: "#4CAF50" }}
+                    onClick={() => router.push("/panel/uye/funeral-found")}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 1.45 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <FaEuroSign size={38} color="#FFF" style={styles.icon} />
+                    <span style={styles.cardText}>Cenaze Fonu</span>
                   </motion.div>
 
                   <motion.div
