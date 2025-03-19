@@ -27,8 +27,8 @@ export default function Card() {
 
   useEffect(() => {
     if (membre && membre.barcode && barcodeRef.current) {
-      JsBarcode(barcodeRef.current, convertToUPC(membre.barcode), {
-        format: "EAN13",
+      JsBarcode(barcodeRef.current, membre.barcode, {
+        format: "CODE128",
         displayValue: true, 
         lineColor: "#fff",
         width: 3,
@@ -37,26 +37,6 @@ export default function Card() {
       });
     }
   }, [membre]);
-
-  function convertToUPC(barcode: any) {
-    // If barcode is EAN-13 (13 digits), remove the last digit (checksum)
-    if (barcode.length === 13) {
-      return barcode.substring(0, 12);  // Remove last digit to get a 12-digit UPC
-    }
-    
-    // If barcode is shorter than 12 digits (e.g., 10 digits), pad with leading zeros
-    if (barcode.length === 10) {
-      return barcode.padStart(12, '0');  // Pad with leading zeros
-    }
-    
-    // If the barcode is already 12 digits, it's a valid UPC
-    if (barcode.length === 12) {
-      return barcode;  // Return as is
-    }
-    
-    throw new Error("Invalid barcode length. It should be 10, 12, or 13 digits.");
-  }
-
   
   const handleBack = () => {
     window.history.back();
