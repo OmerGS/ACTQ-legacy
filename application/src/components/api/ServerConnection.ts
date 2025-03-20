@@ -370,6 +370,26 @@ class ServerConnection {
             throw error;
         }
     }
+
+    public static async membrePaidAllAidat(barcode: string) : Promise<any> {
+        try {            
+            const response = await axios.post(`${BACKEND_API.baseURL}/membre/totallyPaidAidat`, {
+                barcode: barcode,
+            },
+            {
+                withCredentials: true,
+                headers: 
+                {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            return response.data;
+        } catch (error) {
+            console.error("Erreur lors de la recuperation des totally paid aidat.");
+            throw error;
+        }
+    }
 }
 
 export default ServerConnection;

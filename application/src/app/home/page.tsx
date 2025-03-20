@@ -7,6 +7,9 @@ import { useRouter } from "next/navigation";
 import useAuth from "../hooks/useAuth";
 import { useMembre } from "../hooks/MemberContext";
 import Unauthorized from '@/components/reusable/Unauthorized';
+import ServerConnection from "@/components/api/ServerConnection";
+import Confetti from 'react-confetti';
+import { motion } from "framer-motion";
 
 export default function Home() {
   const router = useRouter();
@@ -14,7 +17,13 @@ export default function Home() {
   const isAuthenticated = useAuth();
   const [flash, setFlash] = useState(false);
   const [countdown, setCountdown] = useState<string>("");
+  const [importantMessage, setImportantMessage] = useState<string>("");
+  const [isPaid, setIsPaid] = useState<boolean>(false);
+  const [isInTop, setIsInTop] = useState<boolean>(false);
+  const [isConfettiVisible, setIsConfettiVisible] = useState(false);
+  const [numPieces, setNumPieces] = useState(500);
 
+  const randomRange = (min: number, max: number) => Math.random() * (max - min) + min;
 
   const injectKeyframes = () => {
     const style = document.createElement("style");
@@ -38,79 +47,154 @@ export default function Home() {
   };
 
   useEffect(() => {
-    injectKeyframes();
-  
-    const updateCountdown = () => {
-      const now = new Date();
-      const currentYear = now.getFullYear();
-      let targetDate = new Date(`${currentYear}-07-31T00:00:00`);
-  
-      if (now > targetDate) {
-        targetDate = new Date(`${currentYear + 1}-07-31T00:00:00`);
+    const fetchData = async () => {
+      injectKeyframes();
+
+      if (membre) {
+        try {
+          
+          const response = await ServerConnection.membrePaidAllAidat(membre.barcode);
+          const confettiShown = sessionStorage.getItem("confettiShown");
+
+            if (response.isPaid) {
+              setIsPaid(true);
+            } else {
+              setIsPaid(false);
+            }
+
+            if (response.isInTop) {
+              setIsInTop(true);
+
+              sessionStorage.setItem("confettiShown", "true");
+              if (!confettiShown) {
+                setIsConfettiVisible(true);
+              }
+            }
+
+            setTimeout(() => {
+              setNumPieces(0); 
+            }, 4500);
+
+            setTimeout(() => {
+              setIsConfettiVisible(false);
+            }, 6500);
+
+        } catch (error) {
+          console.error("Erreur lors de la vérification du paiement :", error);
+          setIsPaid(false);
+        }
       }
-  
-      const timeDiff = targetDate.getTime() - now.getTime();
-  
-      if (timeDiff <= 0) {
-        setCountdown("00:00:00:00");
-        return;
-      }
-  
-      const days = Math.floor(timeDiff / (1000 * 3600 * 24));
-      const hours = Math.floor((timeDiff % (1000 * 3600 * 24)) / (1000 * 3600));
-      const minutes = Math.floor((timeDiff % (1000 * 3600)) / (1000 * 60));
-      const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
-  
-      setCountdown(`${days}j ${hours}h ${minutes}m ${seconds}s`);
-  
-      if (days <= 14) {
-        setFlash(true);
-      } else {
-        setFlash(false);
+
+      if (!isPaid) {
+        const updateCountdown = () => {
+          const now = new Date();
+          //const now = new Date("2025-08-01T00:00:00");
+
+          const currentYear = now.getFullYear();
+          let targetDate = new Date(`${currentYear}-07-31T23:59:59`);
+        
+          if (now > targetDate) {
+            setCountdown("00:00:00:00");
+            setImportantMessage("Geç kaldınız ! Üyelik ve cenaze fonundan düşeceksiniz !!!")
+            setFlash(true);
+            return;
+          }
+        
+          const timeDiff = targetDate.getTime() - now.getTime();
+        
+          const days = Math.floor(timeDiff / (1000 * 3600 * 24));
+          const hours = Math.floor((timeDiff % (1000 * 3600 * 24)) / (1000 * 3600));
+          const minutes = Math.floor((timeDiff % (1000 * 3600)) / (1000 * 60));
+          const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+        
+          setCountdown(`${days}j ${hours}h ${minutes}m ${seconds}s`);
+        
+          setFlash(days <= 14);
+        };
+        
+        updateCountdown();
+        const interval = setInterval(updateCountdown, 1000);
+        return () => clearInterval(interval);        
       }
     };
-  
-    updateCountdown();
-  
-    const interval = setInterval(updateCountdown, 1000);
-  
-    return () => clearInterval(interval);
-  }, []); 
-  
+
+    fetchData();
+  }, [membre, isPaid]);
 
   return (
     <div style={styles.pageContainer}>
       <div style={styles.appContainer}>
         {membre ? (
           <>
+            {isConfettiVisible && (
+              <Confetti
+                width={window.innerWidth}
+                height={window.innerHeight}
+                numberOfPieces={numPieces}
+                recycle={false} 
+                gravity={randomRange(0.1, 0.4)}
+                wind={randomRange(0.01, 0.12)} 
+              />
+            )}
+
             <p style={styles.welcomeText}>
               Merhaba <span style={styles.highlight}>{membre.prenom} {membre.nom}</span>
             </p>
-  
-            <div style={styles.countdownContainer}>
-              <p style={styles.countdownText}>Aidat son ödeme tarihine kalan süre</p>
-              <p style={flash ? styles.countdownValueFlash : styles.countdownValue}>
-                {countdown}
-              </p>
-            </div>
+
+            {isInTop ? (
+              <div style={styles.countdownContainer}>
+                <p style={styles.countdownText}>Tebrikler !<br></br>Aidatınızı ödeyen ilk üyelerdensiniz !🎉</p>
+              </div>
+            ) : isPaid ? (
+              <div style={styles.countdownContainer}>
+                <p style={styles.countdownText}>Bu yıl için tüm aidatınızı ödediniz.</p>
+              </div>
+            ) : (
+              <div style={styles.countdownContainer}>
+                <p style={styles.countdownText}>Aidat son ödeme tarihine kalan süre</p>
+                <p style={flash ? styles.countdownValueFlash : styles.countdownValue}>
+                  {countdown}
+                  <br></br>
+                  {importantMessage}
+                </p>
+              </div>
+            )}
 
             <div style={styles.logoBackground}></div>
 
             <div style={styles.cardsContainer}>
-            <div style={{...styles.card, borderColor: "#E30A17", borderWidth: 2, }} onClick={() => router.push("/uyeligim")} >
-              <FaUser size={38} color="#E30A17" style={styles.icon} />
-              <span style={styles.cardText}>Dernek Üyeliğim</span>
-            </div>
-              <div style={{...styles.card, borderColor: "#32CD32", borderWidth: 2, }} onClick={() => router.push("/funeral-found")}>
-                <FaHandHoldingUsd size={38} color="#32CD32" style={styles.icon} />
+              <motion.div style={{...styles.card, backgroundColor: "#C62828", borderColor: "#B71C1C", borderWidth: 2 }} 
+                onClick={() => router.push("/uyeligim")}
+                whileHover={{ scale: 0.95 }}
+                whileTap={{ scale: 0.70 }}
+                transition={{ duration: 0.2 }}
+              >
+                <FaUser size={38} color="#FFF" style={styles.icon} />
+                <span style={styles.cardText}>Dernek Üyeliğim</span>
+              </motion.div>
+
+              <motion.div style={{...styles.card, backgroundColor: "#388E3C", borderColor: "#2C6B2F", borderWidth: 2 }} 
+                onClick={() => router.push("/funeral-found")}
+                whileHover={{ scale: 0.95 }}
+                whileTap={{ scale: 0.70 }}
+                transition={{ duration: 0.2 }}
+              >
+                <FaHandHoldingUsd size={38} color="#FFF" style={styles.icon} />
                 <span style={styles.cardText}>Cenaze Fonu Üyeliğim</span>
-              </div>
-              <div style={{...styles.card, borderColor: "#007BFF", borderWidth: 2, }} onClick={() => router.push("/payments")}>
-                <FaCreditCard size={38} color="#007BFF" style={styles.icon} />
+              </motion.div>
+
+              <motion.div style={{...styles.card, backgroundColor: "#0277BD", borderColor: "#01579B", borderWidth: 2 }} 
+                onClick={() => router.push("/payments")}
+                whileHover={{ scale: 0.95 }}
+                whileTap={{ scale: 0.70 }}
+                transition={{ duration: 0.2 }}
+              >
+                <FaCreditCard size={38} color="#FFF" style={styles.icon} />
                 <span style={styles.cardText}>Ödeme Işlemleri</span>
-              </div>
+              </motion.div>
             </div>
-  
+
+
             <Navbar />
           </>
         ) : (
@@ -119,7 +203,7 @@ export default function Home() {
       </div>
     </div>
   );
-}  
+}
 
 const styles = {
   pageContainer: {
@@ -189,6 +273,7 @@ const styles = {
     flex: 1,
     textAlign: "center",
     fontSize: "20px",
+    color: "#FFF",
   } as React.CSSProperties,
   icon: {
     marginRight: "10px",
