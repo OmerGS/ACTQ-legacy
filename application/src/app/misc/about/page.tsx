@@ -1,29 +1,18 @@
 "use client";
 
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
-import "swiper/css/autoplay";
-import { Autoplay } from "swiper/modules";
-import { FaArrowLeft, FaRegLightbulb } from "react-icons/fa";
+import { FaArrowLeft } from "react-icons/fa";
 import React from "react";
 import { useRouter } from "next/navigation";
 
-const marketContent = [
-  {
-    id: 1,
-    img: "/assets/images/dernek/img1.PNG",
-  },
-];
-
-const articlesContent = [
+const newsArticles = [
   {
     id: 1,
     title: "2025-2027 Yönetim Kurulu",
-    description: "Yönetim Kurulu",
-    link: "/misc/dernegimiz/conseil-administration",
-    icon: <FaRegLightbulb size={24} />,
-    borderColor: "#0FF0FF",
-  }
+    description: "Découvrez les membres et les responsabilités du conseil d'administration pour les années 2025-2027.",
+    link: "/misc/about/conseil-administration",
+    image: "/assets/images/dernek/stock_yonetim.png",
+    borderColor: "#ff5c5c",
+  },
 ];
 
 const containerStyle = {
@@ -31,97 +20,91 @@ const containerStyle = {
   flexDirection: "column",
   alignItems: "center",
   justifyContent: "center",
-  padding: "20px",
-  backgroundColor: "#f7f7f7",
+  padding: "15px",
+  background: "linear-gradient(to bottom right,rgb(255, 255, 255),rgb(255, 235, 235))",
   minHeight: "100vh",
-  fontFamily: "'Inter', sans-serif",
+  fontFamily: "'San Francisco', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif",
   color: "#333",
-  background: "linear-gradient(135deg, rgba(255,255,255,1) 0%, rgba(240,240,240,1) 100%)",
 } as React.CSSProperties;
 
 const titleStyle = {
-  fontSize: "30px",
-  fontWeight: "800",
-  color: "#2D2D2D",
+  fontSize: "28px",
+  fontWeight: "600",
+  color: "#2c3e50",
   marginBottom: "20px",
   textAlign: "center",
-} as React.CSSProperties;
-
-const carouselContainerStyle = {
-  width: "100%",
-  maxWidth: "650px",
-  borderRadius: "12px",
-  overflow: "hidden",
-  boxShadow: "0px 6px 15px rgba(0, 0, 0, 0.1)",
-  marginBottom: "30px",
-};
-
-const carouselImageStyle = {
-  width: "100%",
-  height: "240px",
-  objectFit: "cover",
-  borderRadius: "12px",
+  letterSpacing: "0.5px",
+  lineHeight: "1.2",
 } as React.CSSProperties;
 
 const articlesContainerStyle = {
-  display: "grid",
-  gridTemplateColumns: "1fr",
-  gap: "20px",
-  width: "100%",
-  maxWidth: "650px",
-  paddingBottom: "50px",
-};
-
-const articleCardStyle = (borderColor: any) => ({
   display: "flex",
   flexDirection: "column",
-  backgroundColor: "#ffffff",
-  padding: "18px",
-  borderRadius: "15px",
-  boxShadow: "0px 6px 15px rgba(0, 0, 0, 0.12)",
+  gap: "15px",
+  width: "100%",
+  maxWidth: "500px",
+} as React.CSSProperties;
+
+const articleCardStyle = (borderColor: string) => ({
+  display: "flex",
+  flexDirection: "column",
+  backgroundColor: "#fff",
+  padding: "15px",
+  borderRadius: "12px",
+  boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)",
   transition: "transform 0.3s ease, box-shadow 0.3s ease",
   cursor: "pointer",
   textDecoration: "none",
+  borderLeft: `5px solid ${borderColor}`,
   overflow: "hidden",
-  backdropFilter: "blur(5px)",
-  border: `4px solid ${borderColor}`,
+  alignItems: "flex-start",
+  position: "relative",
+  width: "90%",
 }) as React.CSSProperties;
 
 const articleCardHoverStyle = {
   transform: "translateY(-5px)",
-  boxShadow: "0px 10px 25px rgba(0, 0, 0, 0.2)",
+  boxShadow: "0 6px 20px rgba(0, 0, 0, 0.1)",
 };
+
+const articleImageStyle = {
+  width: "100%",
+  height: "200px",
+  objectFit: "cover",
+  borderRadius: "10px",
+  marginBottom: "12px",
+} as React.CSSProperties;
 
 const articleTitleStyle = {
   fontSize: "20px",
-  fontWeight: "700",
-  color: "#2D2D2D",
-  marginBottom: "12px",
+  fontWeight: "600",
+  color: "#2c3e50",
+  marginBottom: "8px",
 };
 
 const articleDescriptionStyle = {
   fontSize: "14px",
-  color: "#666",
-  marginBottom: "18px",
+  color: "#7f8c8d",
+  marginBottom: "15px",
+  lineHeight: "1.4",
   flex: 1,
 };
 
-const articleButtonStyle = {
-  backgroundColor: "#007BFF",
+const articleButtonStyle = (borderColor: string) => ({
+  backgroundColor: borderColor,
   color: "#fff",
   padding: "10px 20px",
-  borderRadius: "25px",
+  borderRadius: "30px",
   textDecoration: "none",
   fontWeight: "600",
   textAlign: "center",
-  transition: "background-color 0.3s ease",
+  transition: "background-color 0.3s ease, transform 0.2s ease",
   display: "inline-block",
-} as React.CSSProperties;
-
-const articleIconStyle = {
-  marginBottom: "12px",
-  color: "#555",
-};
+  border: "none",
+  outline: "none",
+  boxShadow: "none",
+  cursor: "pointer",
+}) as React.CSSProperties;
 
 const buttonContainer = {
   display: "flex",
@@ -133,19 +116,24 @@ const backButton = {
   display: "flex",
   alignItems: "center",
   gap: "10px",
-  backgroundColor: "#FF4B5C",
+  backgroundColor: "#ff5c5c",
   color: "white",
   border: "none",
   padding: "12px 18px",
-  borderRadius: "8px",
+  borderRadius: "25px",
   cursor: "pointer",
   fontSize: "18px",
-  fontWeight: "bold",
-  marginBottom: "20px",
+  fontWeight: "500",
   transition: "background-color 0.3s ease",
-};
+  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.2)",
+  position: "absolute", // Position absolue
+  top: "10px",          // Positionné à 10px du haut de la page
+  left: "10px",         // Positionné à 10px du côté gauche de la page
+  zIndex: 10,           // S'assurer qu'il soit au-dessus d'autres éléments
+} as React.CSSProperties;
 
-export default function AssociationPage() {
+
+export default function NewsPage() {
   const router = useRouter();
 
   return (
@@ -159,37 +147,29 @@ export default function AssociationPage() {
         </button>
       </div>
 
-
-      <h1 style={titleStyle}>Hakkımızda</h1>
-
-      <div style={carouselContainerStyle}>
-        <Swiper
-          modules={[Autoplay]}
-          autoplay={{ delay: 4000 }}
-          loop={true}
-          spaceBetween={10}
-          slidesPerView={1}
-        >
-          {marketContent.map((item) => (
-            <SwiperSlide key={item.id}>
-              <a style={{ position: "relative", display: "block" }}>
-                <img src={item.img} style={carouselImageStyle} />
-              </a>
-            </SwiperSlide>
-          ))}
-        </Swiper>
-      </div>
+      <h1 style={titleStyle}>Derneğimiz Hakkında</h1>
 
       <div style={articlesContainerStyle}>
-        {articlesContent.map((item) => (
+        {newsArticles.map((item) => (
           <div
             key={item.id}
-            style={{ ...articleCardStyle(item.borderColor), ...articleCardHoverStyle }}
+            style={{
+              ...articleCardStyle(item.borderColor),
+              ...articleCardHoverStyle,
+            }}
+            onClick={() => router.push(item.link)}
           >
-            <div style={articleIconStyle}>{item.icon}</div>
+            <img src={item.image} alt={item.title} style={articleImageStyle} />
             <h3 style={articleTitleStyle}>{item.title}</h3>
             <p style={articleDescriptionStyle}>{item.description}</p>
-            <button onClick={() => router.push(item.link)} style={articleButtonStyle}>Sayfaya Git</button>
+            <button
+              style={{
+                ...articleButtonStyle(item.borderColor),
+              }}
+              onClick={() => router.push(item.link)}
+            >
+              Oku
+          </button>
           </div>
         ))}
       </div>
