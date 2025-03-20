@@ -8,7 +8,7 @@ const newsArticles = [
   {
     id: 1,
     title: "2025-2027 Yönetim Kurulu",
-    description: "Découvrez les membres et les responsabilités du conseil d'administration pour les années 2025-2027.",
+    description: "2025-2027 Yönetim Kurulunda bulunan üyeler.",
     link: "/misc/about/conseil-administration",
     image: "/assets/images/dernek/stock_yonetim.png",
     borderColor: "#ff5c5c",
