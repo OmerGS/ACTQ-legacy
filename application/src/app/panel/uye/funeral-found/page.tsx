@@ -86,7 +86,7 @@ export default function MembresPage() {
         let yPosition = marginTop + lineHeightTitle;
     
         doc.setFontSize(16);
-        doc.text(`${normalizeText(selectedYear + " Aidat Listesi")}`, 20, yPosition);
+        doc.text(`${normalizeText(selectedYear + " Cenaze Fonu Listesi")}`, 20, yPosition);
         yPosition += lineHeightTitle;
     
         doc.setFontSize(12);

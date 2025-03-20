@@ -79,7 +79,7 @@ export default function PaymentForm() {
 
   const fetchAidatInfo = async (barcode: string) => {
     try {
-      const result = await ServerConnection.getAidatInformationForMember(
+      const result = await AdminServerConnection.getAidatInformationForMember(
         barcode, 
         formData.year
       );
@@ -91,7 +91,7 @@ export default function PaymentForm() {
 
   const fetchCenazeFonuInfo = async (barcode: string) => {
     try {
-      const result = await ServerConnection.getCenazeFonuInformationForMember(
+      const result = await AdminServerConnection.getCenazeFonuInformationForMember(
         barcode, 
         formData.year
       );

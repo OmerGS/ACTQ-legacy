@@ -58,7 +58,7 @@ const Uyeligim = () => {
       }
   
       try {
-        const response = await ServerConnection.getFilteredTransaction(membre.barcode, selectedYear);
+        const response = await ServerConnection.getFilteredTransaction(selectedYear);
 
         if (response.success) {
           setTransactions(response.transactions || []);

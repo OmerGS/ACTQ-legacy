@@ -247,6 +247,50 @@ class AdminServerConnection {
         }
     }
 
+    public static async getAidatInformationForMember(barcode: string, year: number) : Promise<any> {
+        try {
+            const response = await axios.post(`${BACKEND_API.baseURL}/administration/aidat/history`, {
+                barcode: barcode,
+                year: year,
+            },
+            {
+                withCredentials: true,
+                headers: 
+                {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            console.log(response);
+            return response.data;
+        } catch (error) {
+            console.error("Erreur lors de la recuperation des paiements.");
+            throw error;
+        }
+    }
+
+    public static async getCenazeFonuInformationForMember(barcode: string, year: number) : Promise<any> {
+        try {
+            const response = await axios.post(`${BACKEND_API.baseURL}/administration/cenaze-fonu/history`, {
+                barcode: barcode,
+                year: year,
+            },
+            {
+                withCredentials: true,
+                headers: 
+                {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            console.log(response);
+            return response.data;
+        } catch (error) {
+            console.error("Erreur lors de la recuperation des paiements.");
+            throw error;
+        }
+    }
+
     /*
     public static async addNewAidatCategory(category: any, price: any): Promise<any> {
         try {
