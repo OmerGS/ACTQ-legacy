@@ -126,10 +126,10 @@ const backButton = {
   fontWeight: "500",
   transition: "background-color 0.3s ease",
   boxShadow: "0 2px 8px rgba(0, 0, 0, 0.2)",
-  position: "absolute", // Position absolue
-  top: "10px",          // Positionné à 10px du haut de la page
-  left: "10px",         // Positionné à 10px du côté gauche de la page
-  zIndex: 10,           // S'assurer qu'il soit au-dessus d'autres éléments
+  position: "absolute",
+  top: "10px",
+  left: "10px",
+  zIndex: 10,
 } as React.CSSProperties;
 
 

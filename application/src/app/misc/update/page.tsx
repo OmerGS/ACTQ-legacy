@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import patchnotesData from '../../../../public/assets/json/patchnote.json';
 import { useMembre } from '../../hooks/MemberContext';
 import Unauthorized from '@/components/reusable/Unauthorized';
+import { FaArrowLeft } from 'react-icons/fa';
 
 interface PatchNote {
   date: string;
@@ -36,7 +37,7 @@ const PatchNotesPage = () => {
   return (
     <div style={styles.container}>
       {/* Bouton de retour */}
-      <button onClick={handleBack} style={styles.backButton}>← GERI</button>
+      <button onClick={handleBack} style={styles.backButton}><FaArrowLeft size={18}/> GERI</button>
       
       <h1 style={styles.title}>Güncellemeler</h1>
       {patchnotes.map((patch, index) => (
@@ -94,26 +95,30 @@ const styles = {
     padding: "20px",
   } as React.CSSProperties,
   backButton: {
-    marginTop: "10px",
-    marginBottom: "10px",
-    padding: "10px 20px",
-    backgroundColor: "#3498db",
-    border: "2px solid #3498db",  
-    fontSize: "16px",
-    color: "rgb(255, 255, 255)",
-    fontWeight: "bold",
-    cursor: "pointer",
-    borderRadius: "50px",
-    transition: "all 0.3s ease",
     display: "flex",
     alignItems: "center",
+    gap: "10px",
+    backgroundColor: "#ff5c5c",
+    color: "white",
+    border: "none",
+    padding: "12px 18px",
+    borderRadius: "5px",
+    cursor: "pointer",
+    fontSize: "18px",
+    fontWeight: "500",
+    transition: "background-color 0.3s ease",
+    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.2)",
+    position: "absolute",
+    top: "10px",
+    left: "10px",
+    zIndex: 10,
   } as React.CSSProperties,
   title: {
     textAlign: "center",
     fontSize: "36px",
     fontWeight: "700",
     color: "#34495e",
-    marginBottom: "40px",
+    marginTop: "60px",
     letterSpacing: "1px",
   } as React.CSSProperties,
   patchContainer: {

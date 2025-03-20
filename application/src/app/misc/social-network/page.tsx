@@ -1,10 +1,11 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaInstagram, FaYoutube, FaFacebook, FaArrowLeft } from "react-icons/fa";
 
 export default function SosyalMedya() {
-  const [isHovered, setIsHovered] = useState(false);
+  const router = useRouter();
 
   const handleBack = () => {
     window.history.back();
@@ -19,17 +20,8 @@ export default function SosyalMedya() {
 
   return (
     <div style={styles.container}>
-      <button
-        onClick={handleBack}
-        style={{
-          ...styles.backButton,
-          backgroundColor: isHovered ? "#000" : "transparent",
-          color: isHovered ? "white" : "#000",
-        }}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-      >
-      <FaArrowLeft size={18} />
+      <button onClick={() => router.back()} style={styles.backButton}>
+                <FaArrowLeft size={18} /> Geri
       </button>
 
       <h1 style={styles.title}>Sosyal Medyalarımız</h1>
@@ -122,20 +114,22 @@ const styles: { [key: string]: React.CSSProperties } = {
     marginTop: "8px",
   },
   backButton: {
-    backgroundColor: "transparent",
-    border: "2px solid rgb(0, 0, 0)",
-    padding: "12px 20px",
-    fontSize: "18px",
-    fontWeight: "bold",
-    cursor: "pointer",
-    borderRadius: "50px",
-    transition: "all 0.3s ease",
     display: "flex",
     alignItems: "center",
-    marginBottom: "20px",
+    gap: "10px",
+    backgroundColor: "#ff5c5c",
+    color: "white",
+    border: "none",
+    padding: "12px 18px",
+    borderRadius: "5px",
+    cursor: "pointer",
+    fontSize: "18px",
+    fontWeight: "500",
+    transition: "background-color 0.3s ease",
+    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.2)",
     position: "absolute",
-    top: "20px",
-    left: "20px",
+    top: "10px",
+    left: "10px",
     zIndex: 10,
   },
 };

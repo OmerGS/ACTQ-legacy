@@ -1,7 +1,32 @@
+"use client";
+
+import { useRouter } from 'next/navigation'; 
 import React from 'react';
+import { FaArrowLeft } from 'react-icons/fa';
 
 const MentionsLegales = () => {
+  const router = useRouter();  
+
   const styles = {
+    backButton: {
+      display: "flex",
+      alignItems: "center",
+      gap: "10px",
+      backgroundColor: "#ff5c5c",
+      color: "white",
+      border: "none",
+      padding: "12px 18px",
+      borderRadius: "5px",
+      cursor: "pointer",
+      fontSize: "18px",
+      fontWeight: "500",
+      transition: "background-color 0.3s ease",
+      boxShadow: "0 2px 8px rgba(0, 0, 0, 0.2)",
+      position: "absolute",
+      top: "10px",
+      left: "10px",
+      zIndex: 10,
+    } as React.CSSProperties,
     container: {
       fontFamily: 'Roboto, sans-serif',
       backgroundColor: '#f8f9fa',
@@ -20,7 +45,7 @@ const MentionsLegales = () => {
       textAlign: 'center',
       fontSize: '28px',
       fontWeight: '700',
-      marginBottom: '20px',
+      marginTop: '60px',
       color: '#2c3e50',
     } as React.CSSProperties,
     section: {
@@ -94,8 +119,14 @@ const MentionsLegales = () => {
     },
   };
 
+  const handleBack = () => {
+    router.back();
+  };
+
   return (
     <div style={styles.container}>
+        <button onClick={handleBack} style={styles.backButton}><FaArrowLeft size={18}/> GERI</button>
+      
       <div style={styles.content}>
         <h1 style={styles.header}>Mentions Légales</h1>
 
