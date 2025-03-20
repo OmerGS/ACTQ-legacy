@@ -2,12 +2,13 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { FaArrowLeft, FaCheckCircle, FaClipboard } from 'react-icons/fa';
+import { FaArrowLeft, FaCheckCircle, FaClipboard, FaFile, FaFileDownload } from 'react-icons/fa';
 import Spinner from '@/components/reusable/Spinner';
 import { useMembre } from "../hooks/MemberContext";
 import useAuth from '../hooks/useAuth';
 import ServerConnection from '@/components/api/ServerConnection';
 import Unauthorized from '@/components/reusable/Unauthorized';
+import { generateMakbuz } from '@/components/controller/Makbuz';
 
 const Uyeligim = () => {
   const router = useRouter();
@@ -143,6 +144,11 @@ const Uyeligim = () => {
     return <Spinner />;
   }
 
+  const handleMakbuzGenerate = () => {
+    if(!membre) return;
+    generateMakbuz(membre?.barcode);
+  }
+
   return (
     <div>
       { !membre ? (
@@ -150,9 +156,18 @@ const Uyeligim = () => {
       ) : (
         <div className="page-container">
         {/* Retour Button */}
-        <button onClick={() => router.back()} className="back-button">
-          <FaArrowLeft /> Geri
-        </button>
+        <div className="backButtonContainer">
+          <button className="back-button" onClick={() => router.back()}>
+            <FaArrowLeft size={18} className="backIcon" /> Geri
+          </button>
+
+          {/* Bouton d'exportation en PDF */}
+          <button onClick={() => handleMakbuzGenerate()} className="export-button">
+            <FaFile size={18} style={{ marginRight: 8 }} /> e-Makbuz
+          </button>
+        </div>
+
+
 
         {/* Conteneur Principal */}
         <div className="main-container">
@@ -285,6 +300,66 @@ const Uyeligim = () => {
             margin-top: 20px;
           }
 
+          .export-button {
+            background-color: #ff6f61;
+            border: 2px solid #ff6f61;
+            padding: 12px 20px;
+            font-size: 16px;
+            color: #ffffff;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 10;
+          }
+
+          .export-button:hover {
+              background-color:rgb(208, 0, 0);
+          }
+
+          .backButtonContainer {
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;  /* L'un à gauche, l'autre à droite */
+            align-items: center;
+            width: 100%; 
+          }
+
+          .back-button {
+            background-color: transparent;
+            border: 2px solid #ff6f61;
+            padding: 12px 20px;
+            font-size: 18px;
+            color: #ff6f61;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+          }
+
+          .back-button:hover {
+            background-color: #ff6f61;
+            color: white;
+          }
+
+          .back-button svg {
+            margin-right: 8px;
+          }
+
+
           .check-icon {
             color: green;
             font-size: 28px;
@@ -402,35 +477,6 @@ const Uyeligim = () => {
             align-items: center;
             padding: 20px;
             position: relative;
-          }
-
-          /* Bouton Retour */
-          .back-button {
-            background-color: transparent;
-            border: 2px solid #ff6f61;
-            padding: 12px 20px;
-            font-size: 18px;
-            color: #ff6f61;
-            font-weight: bold;
-            cursor: pointer;
-            border-radius: 50px;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            z-index: 10;
-          }
-
-          .back-button:hover {
-            background-color: #ff6f61;
-            color: white;
-          }
-
-          .back-button svg {
-            margin-right: 8px;
           }
 
           /* Conteneur Principal avec Alignement */
