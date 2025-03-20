@@ -222,17 +222,14 @@ const Uyeligim = () => {
             ) : (
               <div className="transactions-list">
                 {transactions.slice().reverse().map((transaction, index) => (
-                  <div key={index} className="transaction-widget">
+                  <div
+                    key={index}
+                    className="transaction-widget"
+                    style={paymentReasonStyles[transaction.reason] || {}}
+                  >
                     <h4>{transaction.reason}</h4>
                     <div className="widget-item">
                       <strong>Fatura N° :</strong> {transaction.transactionId}
-                    </div>
-                    <div className="widget-item">
-                      {transaction.makbuzId && (
-                        <>
-                          <strong>Makbuz N° :</strong> {transaction.makbuzId}
-                        </>
-                      )}
                     </div>
                     <div className="widget-item">
                       <strong>Ödeme Şekli :</strong> {transaction.paymentMethod}
@@ -514,6 +511,29 @@ const Uyeligim = () => {
         `}</style>
       </div>
   );
+};
+
+const paymentReasonStyles: { [key: string]: React.CSSProperties } = {
+  "Aidat": {
+    backgroundColor: "#f5c6cb",
+    borderColor: "#f1a7b1",
+    color: "#721c24",
+  },
+  "Cenaze Fonu": {
+    backgroundColor: "#55ca7c",
+    borderColor: "#00674a",
+    color: "#004d30",
+  },
+  "Bağış": {
+    backgroundColor: "#d1ecf1",
+    borderColor: "#a3d0e8",
+    color: "#0c5460",
+  },
+  "Diğer": {
+    backgroundColor: "#ffe8a1",
+    borderColor: "#e6c49f",
+    color: "#856404",
+  },
 };
 
 export default Uyeligim;
