@@ -1,16 +1,17 @@
-"use client"
+"use client";
 
-import { useEffect } from "react";
-import { FaInstagram, FaYoutube, FaFacebook } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import { FaInstagram, FaYoutube, FaFacebook, FaArrowLeft } from "react-icons/fa";
 
 export default function SosyalMedya() {
+  const [isHovered, setIsHovered] = useState(false);
+
   const handleBack = () => {
     window.history.back();
   };
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
-
     return () => {
       document.body.style.overflow = "auto";
     };
@@ -18,11 +19,20 @@ export default function SosyalMedya() {
 
   return (
     <div style={styles.container}>
-      <button onClick={handleBack} style={styles.backButton}>
-        ← GERI
+      <button
+        onClick={handleBack}
+        style={{
+          ...styles.backButton,
+          backgroundColor: isHovered ? "#000" : "transparent",
+          color: isHovered ? "white" : "#000",
+        }}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+      <FaArrowLeft size={18} />
       </button>
 
-      <h1 style={styles.title}>Sosyal Mecralarımız</h1>
+      <h1 style={styles.title}>Sosyal Medyalarımız</h1>
       <p style={styles.subtitle}>
         En son haberler, etkinlikler ve içerikler için bize katılın!
       </p>
@@ -31,6 +41,7 @@ export default function SosyalMedya() {
         <a
           href="https://instagram.com/ACTQ.Quimper"
           target="_blank"
+          rel="noopener noreferrer"
           style={{ ...styles.socialButton, backgroundColor: "#E1306C" }}
         >
           <FaInstagram size={40} />
@@ -39,6 +50,7 @@ export default function SosyalMedya() {
         <a
           href="https://youtube.com/@ACTQ.Quimper"
           target="_blank"
+          rel="noopener noreferrer"
           style={{ ...styles.socialButton, backgroundColor: "#FF0000" }}
         >
           <FaYoutube size={40} />
@@ -47,6 +59,7 @@ export default function SosyalMedya() {
         <a
           href="https://facebook.com/ACTQ.Quimper"
           target="_blank"
+          rel="noopener noreferrer"
           style={{ ...styles.socialButton, backgroundColor: "#1877F2" }}
         >
           <FaFacebook size={40} />
@@ -57,9 +70,9 @@ export default function SosyalMedya() {
   );
 }
 
-const styles = {
+const styles: { [key: string]: React.CSSProperties } = {
   container: {
-    background: "linear-gradient(to right, #FFDEE9, #B5FFFC)",
+    background: "linear-gradient(to right,rgb(255, 188, 241),rgb(192, 236, 255))",
     color: "#333",
     minHeight: "100vh",
     display: "flex",
@@ -70,25 +83,25 @@ const styles = {
     padding: "60px 20px",
     fontFamily: "'Arial', sans-serif",
     overflow: "hidden",
-  } as React.CSSProperties,
+  },
   title: {
     fontSize: "40px",
     fontWeight: "bold",
     color: "#222",
     marginBottom: "10px",
     textShadow: "2px 2px 10px rgba(0, 0, 0, 0.2)",
-  } as React.CSSProperties,
+  },
   subtitle: {
     fontSize: "18px",
     color: "#444",
     marginBottom: "30px",
-  } as React.CSSProperties,
+  },
   socialContainer: {
     display: "flex",
     gap: "20px",
     flexWrap: "wrap",
     justifyContent: "center",
-  } as React.CSSProperties,
+  },
   socialButton: {
     display: "flex",
     flexDirection: "column",
@@ -102,18 +115,17 @@ const styles = {
     textDecoration: "none",
     transition: "transform 0.3s ease, box-shadow 0.3s ease",
     boxShadow: "0 6px 15px rgba(0, 0, 0, 0.2)",
-  } as React.CSSProperties,
+  },
   widgetText: {
     fontSize: "14px",
     fontWeight: "bold",
     marginTop: "8px",
-  } as React.CSSProperties,
+  },
   backButton: {
-    backgroundColor: "rgba(28, 28, 28, 0.5)",
-    border: "2px solid rgb(28, 28, 28)",  
+    backgroundColor: "transparent",
+    border: "2px solid rgb(0, 0, 0)",
     padding: "12px 20px",
-    fontSize: "16px",
-    color: "rgb(255, 255, 255)",
+    fontSize: "18px",
     fontWeight: "bold",
     cursor: "pointer",
     borderRadius: "50px",
@@ -124,6 +136,6 @@ const styles = {
     position: "absolute",
     top: "20px",
     left: "20px",
-    zIndex: 10,  
-  } as React.CSSProperties,
+    zIndex: 10,
+  },
 };
