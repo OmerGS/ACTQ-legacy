@@ -10,6 +10,7 @@ import API_KEY from '@/properties/API_KEY';
  * which verifies API keys before interacting with the database.
  */
 class ServerConnection {
+
     public static async sendVerificationCode(phoneNumber: string): Promise<any> {
         try {
             const response = await axios.post (`${BACKEND_API.baseURL}/verificationcode/ask-phone`, {
@@ -364,7 +365,7 @@ class ServerConnection {
 
     public static async getMakbuzInformation(barcode: string) : Promise<any> {
         try {            
-            const response = await axios.post(`${BACKEND_API.baseURL}/membre/encryptMakbuzInformation`, {
+            const response = await axios.post(`${BACKEND_API.baseURL}/makbuz/encryptMakbuzInformation`, {
             },
             {
                 withCredentials: true,

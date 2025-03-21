@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { FaArrowLeft, FaUsers, FaUserPlus, FaCloudUploadAlt, FaCashRegister, FaCreditCard, FaPen, FaClock, FaMoneyBill, FaEuroSign, FaCalendar } from "react-icons/fa";
+import { FaArrowLeft, FaUsers, FaUserPlus, FaCloudUploadAlt, FaCashRegister, FaCreditCard, FaPen, FaClock, FaMoneyBill, FaEuroSign, FaCalendar, FaCheckDouble, FaCheckCircle } from "react-icons/fa";
 import { useMembre } from "../../hooks/MemberContext";
 import Unauthorized from '@/components/reusable/Unauthorized';
 import { motion } from "framer-motion";
@@ -75,6 +75,17 @@ export default function AdminPanel() {
                   >
                     <FaUserPlus size={38} color="#FFF" style={styles.icon} />
                     <span style={styles.cardText}>Üye Ekle</span>
+                  </motion.div>
+
+                  <motion.div
+                    style={{ ...styles.card, backgroundColor: "#FF725F", borderWidth: 3, borderColor: "#D1352B" }}
+                    onClick={() => router.push("/panel/makbuz-check")}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 1.45 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <FaCheckCircle size={38} color="#FFF" style={styles.icon} />
+                    <span style={styles.cardText}>Makbuz Dogrula</span>
                   </motion.div>
 
                   <motion.div

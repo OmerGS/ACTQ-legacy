@@ -53,6 +53,19 @@ const safeParseFloat = (value: string | null | undefined): number => {
     return value ? parseFloat(value) : 0;
 };
 
+function formatDate(dateString: string) {
+    const date = new Date(dateString);
+    const months = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
+    const day = date.getDate();
+    const month = months[date.getMonth()];
+    const year = date.getFullYear();
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const seconds = date.getSeconds().toString().padStart(2, '0');
+
+    return `${day} ${month} ${year} ${hours}:${minutes}:${seconds}`;
+}
+
 export async function generateMakbuz(barcode: string) {
     const response = await ServerConnection.getMakbuzInformation(barcode);
     const databaseInformation = response.clearData;
@@ -74,19 +87,22 @@ export async function generateMakbuz(barcode: string) {
 
     const logoWidth = 25;
     const logoHeight = 25;
-    const titleWidth = doc.getStringUnitWidth(normalizeText(new Date().getFullYear() + " Makbuz")) * 16 / doc.internal.scaleFactor;
+    const currentYear = new Date(databaseInformation.currentDateTime).getFullYear();
+    const titleWidth = doc.getStringUnitWidth(normalizeText(currentYear + " Makbuz")) * 16 / doc.internal.scaleFactor;
     const titleXPosition = (doc.internal.pageSize.width - titleWidth) / 2;
 
     doc.addImage(logoBase64, "PNG", 10, marginTop, logoWidth, logoHeight);
 
     doc.setFont("Helvetica", "bold");
-    doc.setFontSize(16);  // Réduction de la taille de la police
+    doc.setFontSize(16);
     doc.text(normalizeText(new Date().getFullYear() + " Makbuz"), titleXPosition, marginTop + 30);
 
     yPosition = marginTop + logoHeight + 15;
 
     doc.setFontSize(12);
     doc.setFont("Helvetica", "normal");
+    doc.text(`Tarih: ${formatDate(databaseInformation.currentDateTime || "")}`, 20, yPosition);
+    yPosition += lineHeight;
     doc.text(`Soyisim: ${normalizeText(databaseInformation.nom || "")}`, 20, yPosition);
     yPosition += lineHeight;
     doc.text(`Isim: ${normalizeText(databaseInformation.prenom || "")}`, 20, yPosition);
@@ -99,7 +115,7 @@ export async function generateMakbuz(barcode: string) {
     doc.setFont("Helvetica", "bold");
     doc.text("AIDAT", 105, yPosition, { align: "center" });
     doc.setLineWidth(0.5);
-    doc.line(20, yPosition + 5, 190, yPosition + 5);  // Lignes plus petites
+    doc.line(20, yPosition + 5, 190, yPosition + 5);
     yPosition += lineHeight + 10;
     doc.setFontSize(12);
     doc.setFont("Helvetica", "normal");
