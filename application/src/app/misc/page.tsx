@@ -3,13 +3,18 @@
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/reusable/Navbar";
 import { useMembre } from "../hooks/MemberContext";
-import { FaBuilding, FaUsers, FaFolder, FaClipboardList, FaUserSecret, FaWifi, FaBalanceScale } from "react-icons/fa";
-import { useEffect } from "react";
+import { FaUsers, FaFolder, FaUserSecret, FaWifi, FaBalanceScale, FaPoll, FaSearch, FaBuilding } from "react-icons/fa";
+import React, { useEffect, useState } from "react";
 import Unauthorized from '@/components/reusable/Unauthorized';
+import { FaRankingStar } from "react-icons/fa6";
 
 export default function Misc() {
   const router = useRouter();
   const { membre } = useMembre();
+
+  // État pour la barre de recherche
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isFocused, setIsFocused] = useState(false);
 
   useEffect(() => {
     document.body.style.backgroundColor = "#f9f9f9"; 
@@ -22,65 +27,58 @@ export default function Misc() {
     )
   }
 
+  // Fonction pour filtrer les widgets
+  const filteredWidgets = [
+    { label: 'Dernegimiz', icon: <FaBuilding size={38} color="#ff4757"/>, route: '/misc/about', color: '#ff4757' },
+    { label: 'Anket', icon: <FaPoll size={38} color="#3F51B5"/>, route: '/soon', color: '#3F51B5' },
+    { label: 'Sosyal Medyalar', icon: <FaUsers size={38} color="#4CAF50"/>, route: '/misc/social-network', color: '#4CAF50' },
+    { label: 'Belgeler', icon: <FaFolder size={38} color="#FFC107"/>, route: '/misc/document', color: '#FFC107' },
+    { label: 'Yarişma', icon: <FaRankingStar size={38} color="#B317D3"/>, route: '/soon', color: '#B317D3' },
+    { label: 'Bağlı Cihazlar', icon: <FaWifi size={38} color="#00C2D1"/>, route: '/misc/connected-device', color: '#00C2D1' },
+    { label: 'Yasal Bilgiler', icon: <FaBalanceScale size={38} color="#00B894"/>, route: '/misc/legal', color: '#00B894' },
+
+    ...(membre.specialRole === "Administrator" || membre.specialRole === "Moderator" ? [
+      { label: 'Yönetici Paneli', icon: <FaUserSecret size={38} color="#1E2A47"/>, route: '/panel/actq-core', color: '#1E2A47' }
+    ] : [])
+  ].filter(widget => 
+    widget.label.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
-    
     <div style={styles.pageContainer}>
       <h1 style={styles.title}>Hizmetler</h1>
 
+      {/* Barre de recherche */}
+      <div 
+        style={{
+          ...styles.searchInputContainer,
+          borderColor: isFocused ? "#FF6347" : "#ccc", 
+        }}
+      >
+        <input 
+          type="text" 
+          placeholder="Kategoriyi Ara..." 
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)} 
+          onFocus={() => setIsFocused(true)} 
+          onBlur={() => setIsFocused(false)} 
+          style={styles.searchInput}
+        />
+        <FaSearch style={styles.searchIcon} />
+      </div>
+
       {/* Grille des widgets */}
       <div style={styles.gridContainer}>
-
-        <button style={{ ...styles.widget, borderColor: "#FF6347", borderWidth: 2, borderStyle: "solid", }} 
-              onClick={async () => { router.push('/misc/about'); }}
-        >
-          <FaBuilding  size={38} style={{ ...styles.icon, color: "#FF6347" }} />
-          <p style={styles.widgetText}>Derneğimiz</p>
-        </button>
-
-        <button style={{ ...styles.widget, borderColor: "#4CAF50", borderWidth: 2, borderStyle: "solid", }} 
-                onClick={async () => { router.push('/misc/social-network')}}
-        >
-          <FaUsers size={38} style={{ ...styles.icon, color: "#4CAF50" }} />
-          <p style={styles.widgetText}>Sosyal Medyalar</p>
-        </button>
-
-        <button style={{ ...styles.widget, borderColor: "#FFC107", borderWidth: 2, borderStyle: "solid", }}
-                onClick={async () => { router.push('/misc/document') }}
-        >
-          <FaFolder size={38} style={{ ...styles.icon, color: "#FFC107" }} />
-          <p style={styles.widgetText}>Belgeler</p>
-        </button>
-
-
-        <button style={{ ...styles.widget, borderColor: "#B317D3", borderWidth: 2, borderStyle: "solid", }}
-                onClick={async () => { router.push('/misc/update')}}
-        >
-          <FaClipboardList size={38} style={{ ...styles.icon, color: "#B317D3" }} />
-          <p style={styles.widgetText}>Güncellemeler</p>
-        </button>
-
-        <button style={{ ...styles.widget, borderColor: "#00C2D1", borderWidth: 2, borderStyle: "solid", }}
-                onClick={async () => { router.push('/misc/connected-device')}}
-        >
-          <FaWifi size={38} style={{ ...styles.icon, color: "#00C2D1" }} />
-          <p style={styles.widgetText}>Bağlı Cihazlar</p>
-        </button> 
-
-        <button style={{ ...styles.widget, borderColor: "#1E3A8A", borderWidth: 2, borderStyle: "solid", }}
-                onClick={async () => { router.push('/misc/legal')}}
-        >
-          <FaBalanceScale size={38} style={{ ...styles.icon, color: "#1E3A8A" }} />
-          <p style={styles.widgetText}>Yasal Bilgiler</p>
-        </button> 
-
-        {(membre.specialRole === "Administrator" || membre.specialRole === "Moderator") && (
-          <button style={{ ...styles.widget, borderColor: "#1E2A47", borderWidth: 2, borderStyle: "solid", }}
-                  onClick={async () => { router.push('/panel/actq-core')}}
+        {filteredWidgets.map((widget, index) => (
+          <button 
+            key={index}
+            style={{ ...styles.widget, borderColor: widget.color, borderWidth: 2, borderStyle: "solid" }} 
+            onClick={async () => { router.push(widget.route); }}
           >
-            <FaUserSecret size={38} style={{ ...styles.icon, color: "#1E2A47" }} />
-            <p style={styles.widgetText}>Yönetici Paneli</p>
+            {widget.icon}
+            <p style={styles.widgetText}>{widget.label}</p>
           </button>
-        )}
+        ))}
       </div>
 
       <Navbar />
@@ -109,6 +107,37 @@ const styles = {
     color: "#222",
     marginBottom: "20px",
   },
+  searchInputContainer: {
+    position: "relative",
+    width: "80%",
+    maxWidth: "500px",
+    marginBottom: "20px",
+    borderRadius: "12px",
+    backgroundColor: "#fff",
+    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+    padding: "5px 15px",
+  } as React.CSSProperties,
+  searchInput: {
+    padding: "10px 10px 10px 30px",
+    fontSize: "16px",
+    width: "100%",
+    border: "none",
+    outline: "none",
+    borderRadius: "8px",
+    transition: "border-color 0.3s ease",
+    boxSizing: "border-box",
+    color: "#333",
+  } as React.CSSProperties,
+  searchInputFocus: {
+    borderColor: "#FF6347",
+  },
+  searchIcon: {
+    position: "absolute",
+    top: "50%",
+    left: "15px",
+    transform: "translateY(-50%)",
+    color: "#999",
+  } as React.CSSProperties,
   gridContainer: {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
