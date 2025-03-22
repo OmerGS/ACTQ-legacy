@@ -12,37 +12,55 @@ export default function Misc() {
   const router = useRouter();
   const { membre } = useMembre();
 
-  // État pour la barre de recherche
   const [searchQuery, setSearchQuery] = useState("");
   const [isFocused, setIsFocused] = useState(false);
 
+  const [sortOrder, setSortOrder] = useState("default");
+
   useEffect(() => {
-    document.body.style.backgroundColor = "#f9f9f9"; 
+    document.body.style.backgroundColor = "#f9f9f9";
     document.body.style.color = "#333";
   }, []);
 
   if (!membre) {
-    return (
-      <Unauthorized></Unauthorized>
-    )
+    return <Unauthorized />;
   }
 
-  // Fonction pour filtrer les widgets
+  const sortWidgets = (widgets: any) => {
+    if (sortOrder === "asc") {
+      return widgets.sort((a: any, b: any) => a.label.localeCompare(b.label));
+    } else if (sortOrder === "desc") {
+      return widgets.sort((a: any, b: any) => b.label.localeCompare(a.label));
+    }
+    return widgets;
+  };
+
   const filteredWidgets = [
-    { label: 'Dernegimiz', icon: <FaBuilding size={38} color="#ff4757"/>, route: '/misc/about', color: '#ff4757' },
-    { label: 'Anket', icon: <FaPoll size={38} color="#3F51B5"/>, route: '/soon', color: '#3F51B5' },
-    { label: 'Sosyal Medyalar', icon: <FaUsers size={38} color="#4CAF50"/>, route: '/misc/social-network', color: '#4CAF50' },
-    { label: 'Belgeler', icon: <FaFolder size={38} color="#FFC107"/>, route: '/misc/document', color: '#FFC107' },
-    { label: 'Yarişma', icon: <FaRankingStar size={38} color="#B317D3"/>, route: '/soon', color: '#B317D3' },
-    { label: 'Bağlı Cihazlar', icon: <FaWifi size={38} color="#00C2D1"/>, route: '/misc/connected-device', color: '#00C2D1' },
-    { label: 'Yasal Bilgiler', icon: <FaBalanceScale size={38} color="#00B894"/>, route: '/misc/legal', color: '#00B894' },
+    { label: 'Dernegimiz', icon: <FaBuilding size={38} color="#ff4757" />, route: '/misc/about', color: '#ff4757' },
+    { label: 'Anket', icon: <FaPoll size={38} color="#3F51B5" />, route: '/soon', color: '#3F51B5' },
+    { label: 'Sosyal Medyalar', icon: <FaUsers size={38} color="#4CAF50" />, route: '/misc/social-network', color: '#4CAF50' },
+    { label: 'Belgeler', icon: <FaFolder size={38} color="#FFC107" />, route: '/misc/document', color: '#FFC107' },
+    { label: 'Yarişma', icon: <FaRankingStar size={38} color="#B317D3" />, route: '/soon', color: '#B317D3' },
+    { label: 'Bağlı Cihazlar', icon: <FaWifi size={38} color="#00C2D1" />, route: '/misc/connected-device', color: '#00C2D1' },
+    { label: 'Yasal Bilgiler', icon: <FaBalanceScale size={38} color="#00B894" />, route: '/misc/legal', color: '#00B894' },
 
     ...(membre.specialRole === "Administrator" || membre.specialRole === "Moderator" ? [
-      { label: 'Yönetici Paneli', icon: <FaUserSecret size={38} color="#1E2A47"/>, route: '/panel/actq-core', color: '#1E2A47' }
+      { label: 'Yönetici Paneli', icon: <FaUserSecret size={38} color="#1E2A47" />, route: '/panel/actq-core', color: '#1E2A47' }
     ] : [])
-  ].filter(widget => 
-    widget.label.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  ]
+  .filter(widget => widget.label.toLowerCase().includes(searchQuery.toLowerCase()));
+
+  const sortedWidgets = sortWidgets(filteredWidgets);
+
+  const toggleSortOrder = () => {
+    if (sortOrder === "default") {
+      setSortOrder("asc");
+    } else if (sortOrder === "asc") {
+      setSortOrder("desc");
+    } else {
+      setSortOrder("default");
+    }
+  };
 
   return (
     <div style={styles.pageContainer}>
@@ -66,10 +84,18 @@ export default function Misc() {
         />
         <FaSearch style={styles.searchIcon} />
       </div>
+      
+      {/*
+      <div style={{ marginBottom: "20px" }}>
+        <button style={styles.sortButton} onClick={toggleSortOrder}>
+          {sortOrder === "default" ? "Varsayılan" : sortOrder === "asc" ? "A-Z" : "Z-A"}
+        </button>
+      </div>
+      */ }
 
       {/* Grille des widgets */}
       <div style={styles.gridContainer}>
-        {filteredWidgets.map((widget, index) => (
+        {sortedWidgets.map((widget: any, index: any) => (
           <button 
             key={index}
             style={{ ...styles.widget, borderColor: widget.color, borderWidth: 2, borderStyle: "solid" }} 
@@ -87,6 +113,16 @@ export default function Misc() {
 }
 
 const styles = {
+  sortButton: {
+    backgroundColor: "#FF6347",
+    color: "white",
+    border: "none",
+    padding: "10px 20px",
+    fontSize: "16px",
+    borderRadius: "8px",
+    cursor: "pointer", 
+    transition: "background-color 0.3s, transform 0.2s",
+  },
   pageContainer: {
     backgroundColor: "#f9f9f9",
     color: "#333",
