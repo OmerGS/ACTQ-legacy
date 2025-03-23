@@ -328,7 +328,7 @@ const getValue = (value: any) => {
                             <span style={styles.resultValueDue}>{getValue(qrData.aidatDue)}€</span>
                         </div>
                         <div style={styles.resultItem}>
-                            <span style={styles.resultLabel}>"Ödenmiş Tutar:</span>
+                            <span style={styles.resultLabel}>Ödenmiş Tutar:</span>
                             <span style={styles.resultValue}>{getValue(qrData.aidatPaid)}€</span>
                         </div>
                         <div style={styles.resultItem}>
@@ -346,7 +346,7 @@ const getValue = (value: any) => {
                         </div>
 
                         <div style={styles.resultItem}>
-                            <span style={styles.resultLabel}>"Ödenmiş Tutar :</span>
+                            <span style={styles.resultLabel}>Ödenmiş Tutar :</span>
                             <span style={styles.resultValue}>{getValue(qrData.cenazePaid)}€</span>
                         </div>
                         
@@ -364,7 +364,7 @@ const getValue = (value: any) => {
                             <span style={styles.resultValue}>{(qrData.totalDue)}€</span>
                         </div>
                         <div style={styles.resultItem}>
-                            <span style={styles.resultLabel}>"Ödenmiş Tutar :</span>
+                            <span style={styles.resultLabel}>Ödenmiş Tutar :</span>
                             <span style={styles.resultValueDue}>{(qrData.totalPaid)}€</span>
                         </div>
                         <div style={styles.resultItem}>

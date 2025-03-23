@@ -1,14 +1,13 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import JsBarcode from "jsbarcode";
 import { useMembre } from "../hooks/MemberContext";
 import { useRouter } from 'next/navigation';
-import "@fontsource/libre-barcode-39";
-import "@fontsource/libre-barcode-39-text";
-import Unauthorized from "@/components/reusable/Unauthorized";
 
 export default function Card() {
   const [cardBackground, setCardBackground] = useState<string>("");
+  const barcodeRef = useRef<SVGSVGElement>(null);
   const router = useRouter();
   const { membre } = useMembre();
 
@@ -25,14 +24,47 @@ export default function Card() {
     const randomBackground = backgrounds[Math.floor(Math.random() * backgrounds.length)];
     setCardBackground(randomBackground);
   }, []);
-  
+
+  useEffect(() => {
+    if (membre && membre.barcode && barcodeRef.current) {
+      JsBarcode(barcodeRef.current, membre.barcode, {
+        format: "CODE39",
+        displayValue: true, 
+        lineColor: "#000",
+        width: 3,
+        height: 80,
+        background: "#fff",
+      });
+    }
+  }, [membre]);
+
   const handleBack = () => {
-    router.back();
+    window.history.back();
   };
 
   if (!membre) {
     return (
-      <Unauthorized></Unauthorized>
+      <div>
+        <p style={{ textAlign: "center", marginTop: "50px", fontSize: "24px", fontWeight: "bold" }}>
+          404 - İzinsiz giriş
+        </p>
+        <button
+          onClick={() => router.push("/")}
+          style={{
+            display: "block",
+            margin: "20px auto",
+            padding: "10px 20px",
+            fontSize: "16px",
+            cursor: "pointer",
+            backgroundColor: "#4682B4", 
+            color: "#fff", 
+            border: "none", 
+            borderRadius: "5px", 
+          }}
+        >
+          Ana ekrana geri dön
+        </button>
+      </div>
     );
   }
 
@@ -52,7 +84,7 @@ export default function Card() {
 
         {/* Code-barres */}
         <div style={styles.barcode}>
-          <p style={styles.barcodeText}>{`*${membre.barcode}*`}</p>
+          <svg ref={barcodeRef}></svg>
         </div>
 
         {/* Motif décoratif */}
@@ -63,17 +95,6 @@ export default function Card() {
 }
 
 const styles = {
-  barcodeText: {
-    fontFamily: "'Libre Barcode 39 Text', cursive",
-    fontSize: "60px",
-    color: "#000",
-    letterSpacing: "3px",
-    textAlign: "center",
-    backgroundColor: "#fff",
-    padding: "10px",
-    display: "inline-block",
-    borderRadius: "5px",
-  } as React.CSSProperties,  
   container: {
     backgroundSize: "cover",
     backgroundPosition: "center",
