@@ -133,7 +133,7 @@ export default function MembresPage() {
             {/* Affichage des totaux */}
             <div style={styles.totalContainer}>
                 <div style={styles.total}>
-                    Almamız Gereken Tutar: {formatAmount(totalAmountDue)}€
+                    Alınması Gereken Tutar: {formatAmount(totalAmountDue)}€
                 </div>
                 <div style={styles.total}>
                     Alınan Tutar: {formatAmount(totalAmountPaid)}€
