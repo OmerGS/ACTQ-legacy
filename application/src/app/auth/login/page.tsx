@@ -67,17 +67,15 @@ export default function Login() {
           }}
         />
 
-        <motion.p
-          style={styles.forgotPassword}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{
-            duration: 0.8,
-            ease: "easeOut", 
-          }}
-        >
-          Şifrenizi mi unuttunuz?
-        </motion.p>
+        <p style={styles.register}>
+          Şifrenizi mi unuttunuz?{" "}
+          <span
+            style={styles.registerLink}
+            onClick={() => router.push("/auth/forgotten-password")} 
+          >
+            Şifrenizi sıfırlayın
+          </span>
+        </p>
 
         <motion.button
           onClick={handleSubmit}
