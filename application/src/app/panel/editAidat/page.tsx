@@ -7,6 +7,7 @@ import { FaArrowLeft } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import AdminServerConnection from "@/components/api/AdminServerConnection";
 import Spinner from "@/components/reusable/Spinner";
+import { hasRole } from "@/components/enum/Role";
 
 export default function MembresPage() {
   const { membre } = useMembre();
@@ -79,7 +80,7 @@ export default function MembresPage() {
     return <Spinner></Spinner>;
   }
 
-  if (!membre || membre?.specialRole !== "Administrator") {
+  if (!membre || !hasRole(membre.specialRole, 'administration')) {
     return <Unauthorized />;
   }
 

@@ -1,7 +1,6 @@
 import axios from 'axios';
 import BACKEND_API from '@/properties/BACKEND_API';
 import API_KEY from '@/properties/API_KEY';
-import PaymentType from '../enum/PaymentType';
 
 /**
  * API class for interacting with the application's database.
@@ -11,26 +10,7 @@ import PaymentType from '../enum/PaymentType';
  * which verifies API keys before interacting with the database.
  */
 class ServerConnection {
-    public static async getMemberByIdentifier(identifier: string): Promise<any> {
-        try {
-            const response = await axios.post(`${BACKEND_API.baseURL}/membre/getMemberByIdentifier`, {
-                identifier: identifier,
-            },
-            {
-                headers: {
-                  'x-api-key': `${API_KEY.API_KEY}`,
-                  'Content-Type': 'application/json',
-                },
-            }
-            );
-    
-            return response.data; 
-        } catch (error) {
-            console.error("Erreur lors de la recherche de l'utilisateur :", error);
-            throw error; 
-        }
-    }
-    
+
     public static async sendVerificationCode(phoneNumber: string): Promise<any> {
         try {
             const response = await axios.post (`${BACKEND_API.baseURL}/verificationcode/ask-phone`, {
@@ -260,13 +240,13 @@ class ServerConnection {
         }
     }
 
-    public static async getFilteredTransaction(barcode: string, year: number) : Promise<any> {
+    public static async getFilteredTransaction(year: number) : Promise<any> {
         try {
             const response = await axios.post(`${BACKEND_API.baseURL}/membre/transaction/filter`, {
-                barcode: barcode,
                 year: year,
             },
             {
+                withCredentials: true,
                 headers: 
                 {
                     'Content-Type': 'application/json',
@@ -284,10 +264,10 @@ class ServerConnection {
     public static async getAidatInformationForMember(barcode: string, year: number) : Promise<any> {
         try {
             const response = await axios.post(`${BACKEND_API.baseURL}/membre/aidat/history`, {
-                barcode: barcode,
                 year: year,
             },
             {
+                withCredentials: true,
                 headers: 
                 {
                     'Content-Type': 'application/json',
@@ -298,6 +278,106 @@ class ServerConnection {
             return response.data;
         } catch (error) {
             console.error("Erreur lors de la recuperation des paiements.");
+            throw error;
+        }
+    }
+
+    public static async getCenazeFonuInformationForMember(barcode: string, year: number) : Promise<any> {
+        try {
+            const response = await axios.post(`${BACKEND_API.baseURL}/membre/cenaze-fonu/history`, {
+                year: year,
+            },
+            {
+                withCredentials: true,
+                headers: 
+                {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            console.log(response);
+            return response.data;
+        } catch (error) {
+            console.error("Erreur lors de la recuperation des paiements.");
+            throw error;
+        }
+    }
+
+    public static async getConnectedDevice(barcode: string) : Promise<any> {
+        try {            
+            const response = await axios.post(`${BACKEND_API.baseURL}/membre/connected-device`, {
+            },
+            {
+                withCredentials: true,
+                headers: 
+                {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            console.log(response);
+            return response.data;
+        } catch (error) {
+            console.error("Erreur lors de la recuperation des paiements.");
+            throw error;
+        }
+    }
+
+    public static async deleteConnectedDevice(deviceId: number) : Promise<any> {
+        try {            
+            const response = await axios.post(`${BACKEND_API.baseURL}/auth/delete-device`, {
+                deviceId: deviceId,
+            },
+            {
+                withCredentials: true,
+                headers: 
+                {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            console.log(response);
+            return response.data;
+        } catch (error) {
+            console.error("Erreur lors de la recuperation des paiements.");
+            throw error;
+        }
+    }
+
+    public static async membrePaidAllAidat(barcode: string) : Promise<any> {
+        try {            
+            const response = await axios.post(`${BACKEND_API.baseURL}/membre/totallyPaidAidat`, {
+            },
+            {
+                withCredentials: true,
+                headers: 
+                {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            return response.data;
+        } catch (error) {
+            console.error("Erreur lors de la recuperation des totally paid aidat.");
+            throw error;
+        }
+    }
+
+    public static async getMakbuzInformation(barcode: string) : Promise<any> {
+        try {            
+            const response = await axios.post(`${BACKEND_API.baseURL}/makbuz/encryptMakbuzInformation`, {
+            },
+            {
+                withCredentials: true,
+                headers: 
+                {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            return response.data;
+        } catch (error) {
+            console.error("Erreur lors de la recuperation des totally paid aidat.");
             throw error;
         }
     }

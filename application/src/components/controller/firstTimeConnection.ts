@@ -1,11 +1,6 @@
 import ServerConnection from "../api/ServerConnection";
 import { PasswordUtil } from "../util/password-util";
 
-export async function fetchMembreInfo(phone: string): Promise<boolean> {
-    const response = await ServerConnection.getMemberByIdentifier(phone);
-    return response;
-}
-
 export async function checkMail(email: string): Promise<boolean> {
     if(!email){
         alert("Lütfen bir e-posta adresi girin.");

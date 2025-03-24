@@ -2,12 +2,13 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { FaArrowLeft } from 'react-icons/fa';
+import { FaArrowLeft, FaCheckCircle, FaClipboard, FaFile, FaFileDownload } from 'react-icons/fa';
 import Spinner from '@/components/reusable/Spinner';
 import { useMembre } from "../hooks/MemberContext";
 import useAuth from '../hooks/useAuth';
 import ServerConnection from '@/components/api/ServerConnection';
 import Unauthorized from '@/components/reusable/Unauthorized';
+import { generateMakbuz } from '@/components/controller/Makbuz';
 
 const Uyeligim = () => {
   const router = useRouter();
@@ -20,8 +21,21 @@ const Uyeligim = () => {
   const isAuthenticated = useAuth();
   const currentYear = new Date().getFullYear();
   const [selectedYear, setSelectedYear] = useState<number>(currentYear);
+  const [copied, setCopied] = useState(false);
 
-  useEffect(() => {
+
+  const handleCopy = () => {
+    if (membre?.barcode) {
+      navigator.clipboard.writeText(membre.barcode)
+        .then(() => {
+          setCopied(true);
+          setTimeout(() => setCopied(false), 2000);
+        })
+        .catch((err) => console.error("Erreur de copie :", err));
+    }
+  };
+
+    useEffect(() => {
     if (isAuthenticated && membre) {
       if (membre.dateNaissance) {
         const dateNaissance = new Date(membre.dateNaissance);
@@ -44,7 +58,7 @@ const Uyeligim = () => {
       }
   
       try {
-        const response = await ServerConnection.getFilteredTransaction(membre.barcode, selectedYear);
+        const response = await ServerConnection.getFilteredTransaction(selectedYear);
 
         if (response.success) {
           setTransactions(response.transactions || []);
@@ -130,6 +144,11 @@ const Uyeligim = () => {
     return <Spinner />;
   }
 
+  const handleMakbuzGenerate = () => {
+    if(!membre) return;
+    generateMakbuz(membre?.barcode);
+  }
+
   return (
     <div>
       { !membre ? (
@@ -137,9 +156,18 @@ const Uyeligim = () => {
       ) : (
         <div className="page-container">
         {/* Retour Button */}
-        <button onClick={() => router.back()} className="back-button">
-          <FaArrowLeft /> Geri
-        </button>
+        <div className="backButtonContainer">
+          <button className="back-button" onClick={() => router.back()}>
+            <FaArrowLeft size={18} className="backIcon" /> Geri
+          </button>
+
+          {/* Bouton d'exportation en PDF */}
+          <button onClick={() => handleMakbuzGenerate()} className="export-button">
+            <FaFile size={18} style={{ marginRight: 8 }} /> e-Makbuz
+          </button>
+        </div>
+
+
 
         {/* Conteneur Principal */}
         <div className="main-container">
@@ -209,17 +237,14 @@ const Uyeligim = () => {
             ) : (
               <div className="transactions-list">
                 {transactions.slice().reverse().map((transaction, index) => (
-                  <div key={index} className="transaction-widget">
+                  <div
+                    key={index}
+                    className="transaction-widget"
+                    style={paymentReasonStyles[transaction.reason] || {}}
+                  >
                     <h4>{transaction.reason}</h4>
                     <div className="widget-item">
                       <strong>Fatura N° :</strong> {transaction.transactionId}
-                    </div>
-                    <div className="widget-item">
-                      {transaction.makbuzId && (
-                        <>
-                          <strong>Makbuz N° :</strong> {transaction.makbuzId}
-                        </>
-                      )}
                     </div>
                     <div className="widget-item">
                       <strong>Ödeme Şekli :</strong> {transaction.paymentMethod}
@@ -247,8 +272,15 @@ const Uyeligim = () => {
               <div className="widget-item">
                 <strong>Doğum Tarihi :</strong> {membre?.dateNaissance ? formatDate(membre?.dateNaissance) : ""}
               </div>
-              <div className="widget-item">
-                <strong>Üye Numarası :</strong> {membre?.barcode}
+              <div className="widget-item" style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+                <strong>Üye Numarası :</strong>
+                <span 
+                  onClick={handleCopy} 
+                  style={{ cursor: "pointer", color: "#007bff", textDecoration: "underline" }}
+                >
+                  {membre?.barcode}
+                </span>
+                {copied && <FaCheckCircle className="check-icon" />}
               </div>
             </div>
           </div>
@@ -266,6 +298,89 @@ const Uyeligim = () => {
             grid-template-columns: 1fr; /* Par défaut : 1 colonne (mobile) */
             gap: 15px;
             margin-top: 20px;
+          }
+
+          .export-button {
+            background-color: #ff6f61;
+            border: 2px solid #ff6f61;
+            padding: 12px 20px;
+            font-size: 16px;
+            color: #ffffff;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 10;
+          }
+
+          .export-button:hover {
+              background-color:rgb(208, 0, 0);
+          }
+
+          .backButtonContainer {
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;  /* L'un à gauche, l'autre à droite */
+            align-items: center;
+            width: 100%; 
+          }
+
+          .back-button {
+            background-color: transparent;
+            border: 2px solid #ff6f61;
+            padding: 12px 20px;
+            font-size: 18px;
+            color: #ff6f61;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+          }
+
+          .back-button:hover {
+            background-color: #ff6f61;
+            color: white;
+          }
+
+          .back-button svg {
+            margin-right: 8px;
+          }
+
+
+          .check-icon {
+            color: green;
+            font-size: 28px;
+            margin-left: 10px;
+            animation: checkAnimation 1s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
+            transform-origin: center center;
+          }
+
+          @keyframes checkAnimation {
+            0% {
+              transform: scale(0) rotate(30deg);
+              opacity: 0;
+            }
+            60% {
+              transform: scale(1.1) rotate(-10deg);
+              opacity: 1;
+            }
+            100% {
+              transform: scale(1) rotate(0deg);
+              opacity: 1;
+            }
           }
 
           .year-selector {
@@ -364,35 +479,6 @@ const Uyeligim = () => {
             position: relative;
           }
 
-          /* Bouton Retour */
-          .back-button {
-            background-color: transparent;
-            border: 2px solid #ff6f61;
-            padding: 12px 20px;
-            font-size: 18px;
-            color: #ff6f61;
-            font-weight: bold;
-            cursor: pointer;
-            border-radius: 50px;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            z-index: 10;
-          }
-
-          .back-button:hover {
-            background-color: #ff6f61;
-            color: white;
-          }
-
-          .back-button svg {
-            margin-right: 8px;
-          }
-
           /* Conteneur Principal avec Alignement */
           .main-container {
             width: 100%;
@@ -471,6 +557,29 @@ const Uyeligim = () => {
         `}</style>
       </div>
   );
+};
+
+const paymentReasonStyles: { [key: string]: React.CSSProperties } = {
+  "Aidat": {
+    backgroundColor: "#f5c6cb",
+    borderColor: "#f1a7b1",
+    color: "#721c24",
+  },
+  "Cenaze Fonu": {
+    backgroundColor: "#55ca7c",
+    borderColor: "#00674a",
+    color: "#004d30",
+  },
+  "Bağış": {
+    backgroundColor: "#d1ecf1",
+    borderColor: "#a3d0e8",
+    color: "#0c5460",
+  },
+  "Diğer": {
+    backgroundColor: "#ffe8a1",
+    borderColor: "#e6c49f",
+    color: "#856404",
+  },
 };
 
 export default Uyeligim;

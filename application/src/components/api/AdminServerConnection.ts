@@ -2,7 +2,6 @@ import axios from 'axios';
 import BACKEND_API from '@/properties/BACKEND_API';
 import API_KEY from '@/properties/API_KEY';
 import { Membre } from '../interface/Membre';
-import { CACHE_ONE_YEAR } from 'next/dist/lib/constants';
 
 /**
  * API class for interacting with the application's database.
@@ -170,6 +169,127 @@ class AdminServerConnection {
         }
     }
     
+    public static async fetchMemberCenazeFonu(year: number): Promise<any> {
+        try {
+            const response = await axios.post(`${BACKEND_API.baseURL}/administration/fetchMemberCenazeFonu`, {
+                year: year,
+            },
+            {
+                withCredentials: true,
+                headers: {
+                    'x-api-key': `${API_KEY.API_KEY}`,
+                    'Content-Type': 'application/json',
+                }}
+            );
+    
+            return response.data; 
+        } catch (error) {
+            console.error("Erreur lors de la récupération des prix :", error);
+            throw error; 
+        }
+    }
+
+    public static async fetchAvailableYearsForCenazeFonu(): Promise<number[]> {
+        try {
+            const response = await axios.get(`${BACKEND_API.baseURL}/administration/fetchAvailableYearsForCenazeFonu`, {
+                withCredentials: true,
+                headers: {
+                    'x-api-key': `${API_KEY.API_KEY}`,
+                    'Content-Type': 'application/json',
+                }
+            });
+    
+            return response.data;
+        } catch (error) {
+            console.error("Erreur lors de la récupération des années disponibles :", error);
+            throw error;
+        }
+    }
+
+    public static async generateAidat(year: number): Promise<any> {
+        try {
+            const response = await axios.post(`${BACKEND_API.baseURL}/administration/generate/aidat`, {
+                year: year,
+            },
+            {
+                withCredentials: true,
+                headers: {
+                    'x-api-key': `${API_KEY.API_KEY}`,
+                    'Content-Type': 'application/json',
+                }}
+            );
+    
+            return response.data; 
+        } catch (error) {
+            console.error("Erreur lors de la récupération des prix :", error);
+            throw error; 
+        }
+    }
+
+    public static async generateCenazeFonu(year: number, price: number): Promise<any> {
+        try {
+            const response = await axios.post(`${BACKEND_API.baseURL}/administration/generate/cenaze-fonu`, {
+                year: year,
+                price: price,
+            },
+            {
+                withCredentials: true,
+                headers: {
+                    'x-api-key': `${API_KEY.API_KEY}`,
+                    'Content-Type': 'application/json',
+                }}
+            );
+    
+            return response.data; 
+        } catch (error) {
+            console.error("Erreur lors de la récupération des prix :", error);
+            throw error; 
+        }
+    }
+
+    public static async getAidatInformationForMember(barcode: string, year: number) : Promise<any> {
+        try {
+            const response = await axios.post(`${BACKEND_API.baseURL}/administration/aidat/history`, {
+                barcode: barcode,
+                year: year,
+            },
+            {
+                withCredentials: true,
+                headers: 
+                {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            console.log(response);
+            return response.data;
+        } catch (error) {
+            console.error("Erreur lors de la recuperation des paiements.");
+            throw error;
+        }
+    }
+
+    public static async getCenazeFonuInformationForMember(barcode: string, year: number) : Promise<any> {
+        try {
+            const response = await axios.post(`${BACKEND_API.baseURL}/administration/cenaze-fonu/history`, {
+                barcode: barcode,
+                year: year,
+            },
+            {
+                withCredentials: true,
+                headers: 
+                {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            console.log(response);
+            return response.data;
+        } catch (error) {
+            console.error("Erreur lors de la recuperation des paiements.");
+            throw error;
+        }
+    }
 
     /*
     public static async addNewAidatCategory(category: any, price: any): Promise<any> {
@@ -195,7 +315,6 @@ class AdminServerConnection {
     */
 
     public static async editAidatPrice(category: any, price: any): Promise<any> {
-        console.log(category, price);
         try {
             const response = await axios.post(`${BACKEND_API.baseURL}/administration/editAidatPrice`, {
                 category: category,
@@ -257,7 +376,7 @@ class AdminServerConnection {
 
             return response.data;
         } catch (error) {
-            console.log("Erreur lors de l'enregistrement des paiements : ", error);
+            console.error("Erreur lors de l'enregistrement des paiements : ", error);
         }
     }
 
@@ -298,6 +417,26 @@ class AdminServerConnection {
         } catch (error) {
             console.error("Erreur lors de la récupération des paiements :", error);
             throw error; 
+        }
+    }
+
+    public static async decryptMakbuzInformation(encryptedData: string) : Promise<any> {
+        try {            
+            const response = await axios.post(`${BACKEND_API.baseURL}/makbuz/decryptMakbuzInformation`, {
+                encryptedData: encryptedData,
+            },
+            {
+                withCredentials: true,
+                headers: 
+                {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            return response.data;
+        } catch (error) {
+            console.error("Erreur lors de la recuperation des totally paid aidat.");
+            throw error;
         }
     }
 }    

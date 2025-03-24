@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 import AdminServerConnection from "@/components/api/AdminServerConnection";
+import { hasRole } from "@/components/enum/Role";
 
 export default function MembresPage() {
   const { membre } = useMembre();
@@ -53,7 +54,7 @@ export default function MembresPage() {
     await AdminServerConnection.addMember(formData);
   }
 
-  if (!membre || membre?.specialRole !== "Administrator") {
+  if (!membre || !hasRole(membre.specialRole, 'administration')) {
     return <Unauthorized />;
   }
 

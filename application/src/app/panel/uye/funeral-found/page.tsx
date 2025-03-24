@@ -21,11 +21,10 @@ export default function MembresPage() {
     useEffect(() => {
         async function fetchYears() {
             try {
-                const years = await AdminServerConnection.fetchAvailableYears();
+                const years = await AdminServerConnection.fetchAvailableYearsForCenazeFonu();
                 setAvailableYears(years);
                 setSelectedYear(years[0]);
             } catch (error) {
-                console.error("Erreur lors du chargement des années :", error);
             }
         }
 
@@ -36,11 +35,10 @@ export default function MembresPage() {
         async function fetchMembres() {
             if (!selectedYear) return;
             try {
-                const data = await AdminServerConnection.fetchMemberAidat(selectedYear);
+                const data = await AdminServerConnection.fetchMemberCenazeFonu(selectedYear);
                 setMembres(data);
                 setFilteredMembres(data);
             } catch (error) {
-                console.error("Erreur lors du chargement des membres :", error);
             }
         }
 
@@ -51,7 +49,7 @@ export default function MembresPage() {
     const totalAmountDue = filteredMembres.reduce((total, membre) => total + parseFloat(membre.amountDue), 0);
 
     const formatAmount = (amount: number) => {
-        return amount.toFixed(2).replace(/\s/g, '').replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1'); // Formatage avec 2 décimales sans espaces
+        return amount.toFixed(2).replace(/\s/g, '').replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1');
     };
     
     
@@ -89,7 +87,7 @@ export default function MembresPage() {
         let yPosition = marginTop + lineHeightTitle;
     
         doc.setFontSize(16);
-        doc.text(`${normalizeText(selectedYear + " Aidat Listesi")}`, 20, yPosition);
+        doc.text(`${normalizeText(selectedYear + " Cenaze Fonu Listesi")}`, 20, yPosition);
         yPosition += lineHeightTitle;
     
         doc.setFontSize(12);
@@ -115,7 +113,7 @@ export default function MembresPage() {
             yPosition += lineHeight;
         });
     
-        doc.save(`${selectedYear}_Aidat_Listesi.pdf`);
+        doc.save(`${selectedYear}_Cenaze_Fonu_Listesi.pdf`);
     };
 
     return (
@@ -131,12 +129,12 @@ export default function MembresPage() {
                 </button>
             </div>
 
-            <h2 style={styles.title}>Aidat Listesi</h2>
+            <h2 style={styles.title}>Cenaze Fonu Listesi</h2>
 
             {/* Affichage des totaux */}
             <div style={styles.totalContainer}>
                 <div style={styles.total}>
-                    Almamız Gereken Tutar: {formatAmount(totalAmountDue)}€
+                    Alınması Gereken Tutar: {formatAmount(totalAmountDue)}€
                 </div>
                 <div style={styles.total}>
                     Alınan Tutar: {formatAmount(totalAmountPaid)}€
@@ -197,7 +195,7 @@ const styles = {
     },
     backButton: {
         cursor: "pointer",
-        background: "#FF6F61",
+        background: "#32cd32",
         border: "none",
         color: "white",
         padding: "5px 15px",
@@ -211,7 +209,7 @@ const styles = {
         boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
     },
     exportButton: {
-        backgroundColor: "#FF7043",
+        backgroundColor: "#32cd32",
         color: "white",
         padding: "8px 15px",
         height: "40px",
@@ -232,7 +230,7 @@ const styles = {
         fontWeight: "bold",
         marginBottom: "20px",
         textAlign: "center",
-        color: "#FF6F61",
+        color: "#32cd32",
     } as React.CSSProperties,
     totalContainer: {
         marginBottom: "20px",
@@ -240,7 +238,7 @@ const styles = {
         flexDirection: "column",
         alignItems: "flex-start",
         gap: "10px",
-        backgroundColor: "#FF6F61",
+        backgroundColor: "#32cd32",
         padding: "15px",
         borderRadius: "8px",
         boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",

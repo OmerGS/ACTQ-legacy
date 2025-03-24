@@ -8,6 +8,7 @@ import Unauthorized from "@/components/reusable/Unauthorized";
 import { FaArrowLeft } from "react-icons/fa";
 import { formatDateWithSecondsStr } from "@/components/littleComponents/FormatDate";
 import { useRouter } from 'next/navigation';
+import { hasRole } from "@/components/enum/Role";
 
 const fieldLabels: Record<string, string> = {
   nom: "Soyisim",
@@ -45,7 +46,7 @@ export default function MembresPage() {
     setOpenId(openId === id ? null : id);
   };
 
-  if (!membre || membre?.specialRole !== "Administrator" && membre?.specialRole !== "Moderator") {
+  if (!membre || !hasRole(membre.specialRole, 'addingPayment')) {
     return <Unauthorized />;
   }
 

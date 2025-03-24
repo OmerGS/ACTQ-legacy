@@ -30,10 +30,10 @@ export default function Card() {
       JsBarcode(barcodeRef.current, membre.barcode, {
         format: "CODE39",
         displayValue: true, 
-        lineColor: "#fff",
+        lineColor: "#000",
         width: 3,
         height: 80,
-        background: "transparent",
+        background: "#fff",
       });
     }
   }, [membre]);

@@ -7,6 +7,7 @@ import { Payment } from "@/components/interface/Payment";
 import Unauthorized from "@/components/reusable/Unauthorized";
 import { useRouter } from "next/navigation";
 import { FaArrowLeft, FaTrash } from "react-icons/fa";
+import { hasRole } from "@/components/enum/Role";
 
 const formatDateWithSeconds = (dateString: Date) => {
   const date = new Date(dateString);
@@ -44,7 +45,7 @@ export default function MembresPage() {
   }, [membre]);
     
 
-  if (!membre || membre?.specialRole !== "Administrator" && membre?.specialRole !== "Moderator") {
+  if (!membre || !hasRole(membre.specialRole, 'addingPayment')) {
     return <Unauthorized />;
   }
 
