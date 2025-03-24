@@ -8,6 +8,7 @@ import Unauthorized from "@/components/reusable/Unauthorized";
 import { FaArrowLeft, FaUser, FaClipboardList, FaHandsHelping } from "react-icons/fa";
 import { useRouter } from 'next/navigation';
 import { formatDateWithSeconds, formatDateWithSecondsStr } from "@/components/littleComponents/FormatDate";
+import { hasRole } from "@/components/enum/Role";
 
 const formatDate = (dateString: string) => {
   const date = new Date(dateString);
@@ -132,7 +133,7 @@ export default function MembresPage() {
     }
   };  
 
-  if (!membre || membre?.specialRole !== "Administrator") {
+  if (!membre || !hasRole(membre.specialRole, 'administration')) {
     return <Unauthorized />;
   }
 

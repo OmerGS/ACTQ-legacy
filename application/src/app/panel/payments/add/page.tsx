@@ -9,6 +9,7 @@ import { Membre } from "@/components/interface/Membre";
 import ServerConnection from "@/components/api/ServerConnection";
 import { useRouter } from "next/navigation";
 import { FaArrowLeft } from "react-icons/fa";
+import { hasRole } from "@/components/enum/Role";
 
 export default function PaymentForm() {
   const router = useRouter();
@@ -101,7 +102,7 @@ export default function PaymentForm() {
     }
   };
 
-  if (!membre || membre?.specialRole !== "Administrator" && membre?.specialRole !== "Moderator") {
+  if (!membre || !hasRole(membre.specialRole, 'addingPayment')) {
     return <Unauthorized />;
   }
 

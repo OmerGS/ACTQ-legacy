@@ -8,6 +8,7 @@ import Unauthorized from "@/components/reusable/Unauthorized";
 import { useRouter } from "next/navigation";
 import { FaArrowLeft, FaPen, FaTrash } from "react-icons/fa";
 import { FaXmark } from "react-icons/fa6";
+import { hasRole } from "@/components/enum/Role";
 
 const formatDateWithSeconds = (dateString: Date) => {
   const date = new Date(dateString);
@@ -51,7 +52,7 @@ export default function MembresPage() {
     }
   }, [selectedMonth, selectedYear]);
 
-  if (!membre || membre?.specialRole !== "Administrator") {
+  if (!membre || !hasRole(membre.specialRole, 'administration')) {
     return <Unauthorized />;
   }
 

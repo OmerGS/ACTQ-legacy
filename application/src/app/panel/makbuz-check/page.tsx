@@ -3,6 +3,9 @@
 import React, { useState } from "react";
 import QrScanner from "qr-scanner";
 import AdminServerConnection from "@/components/api/AdminServerConnection";
+import Unauthorized from "@/components/reusable/Unauthorized";
+import { useMembre } from "@/app/hooks/MemberContext";
+import { hasRole } from "@/components/enum/Role";
 
 const styles = {
     pageContainer: {
@@ -185,12 +188,18 @@ const getValue = (value: any) => {
   
   export default function QRCodeScanner() {
     const [result, setResult] = useState<string | null>(null);
+    const { membre } = useMembre();
     const [qrData, setQrData] = useState<any>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [manualInput, setManualInput] = useState<string>("");
     const [inputMode, setInputMode] = useState<'qr' | 'manual'>('qr');
   
+
+    if (!membre || !hasRole(membre.specialRole, 'administration')) {
+      return <Unauthorized />;
+    }
+
     const handleQrCodeRecognized = async (data: string) => {
       setLoading(true);
       setError(null);

@@ -6,6 +6,7 @@ import Unauthorized from "@/components/reusable/Unauthorized";
 import { FaArrowLeft } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import AdminServerConnection from "@/components/api/AdminServerConnection";
+import { hasRole } from "@/components/enum/Role";
 
 export default function MembresPage() {
   const { membre } = useMembre();
@@ -17,7 +18,7 @@ export default function MembresPage() {
   const [cenazeYear, setCenazeYear] = useState<string>("");
   const [cenazePrice, setCenazePrice] = useState<string>("");
 
-  if (!membre || membre?.specialRole !== "Administrator") {
+  if (!membre || !hasRole(membre.specialRole, 'administration')) {
     return <Unauthorized />;
   }
 

@@ -7,6 +7,7 @@ import { FaUsers, FaFolder, FaUserSecret, FaWifi, FaBalanceScale, FaPoll, FaSear
 import React, { useEffect, useState } from "react";
 import Unauthorized from '@/components/reusable/Unauthorized';
 import { FaRankingStar } from "react-icons/fa6";
+import { hasRole } from "@/components/enum/Role";
 
 export default function Misc() {
   const router = useRouter();
@@ -44,7 +45,7 @@ export default function Misc() {
     { label: 'Bağlı Cihazlar', icon: <FaWifi size={38} color="#00C2D1" />, route: '/misc/connected-device', color: '#00C2D1' },
     { label: 'Yasal Bilgiler', icon: <FaBalanceScale size={38} color="#00B894" />, route: '/misc/legal', color: '#00B894' },
 
-    ...(membre.specialRole === "Administrator" || membre.specialRole === "Moderator" ? [
+    ...(hasRole(membre.specialRole, 'panelAccess') ? [
       { label: 'Yönetici Paneli', icon: <FaUserSecret size={38} color="#1E2A47" />, route: '/panel/actq-core', color: '#1E2A47' }
     ] : [])
   ]

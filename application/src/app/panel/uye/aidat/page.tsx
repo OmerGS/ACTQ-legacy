@@ -8,6 +8,7 @@ import { FaArrowLeft, FaFileDownload } from "react-icons/fa";
 import { useRouter } from 'next/navigation';
 import { Membre } from "@/components/interface/Membre";
 import jsPDF from "jspdf";
+import { hasRole } from "@/components/enum/Role";
 
 export default function MembresPage() {
     const [membres, setMembres] = useState<Membre[]>([]);
@@ -54,7 +55,7 @@ export default function MembresPage() {
     };
     
     
-    if (!membre || membre?.specialRole !== "Administrator") {
+    if (!membre || !hasRole(membre.specialRole, 'administration')) {
         return <Unauthorized />;
     }
 
