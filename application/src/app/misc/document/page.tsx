@@ -30,14 +30,6 @@ export default function Documents() {
       type: "PDF",
       borderColor: "#FF6347"
     },
-    { 
-      name: "Tüzük", 
-      path: "/assets/pdf/Tüzük.pdf", 
-      icon: <FaBuildingColumns size={38} style={{ color: "#454ADE" }} />,
-      addedDate: "2025-03-10", 
-      type: "PDF",
-      borderColor: "#454ADE"
-    },
   ];
 
   const downloadPdf = async (pdfUrl: string, name: string) => {
