@@ -168,6 +168,8 @@ export default function MembresPage() {
             <option value="Genç">Genç</option>
             <option value="Normal">Normal</option>
             <option value="Emekli">Emekli</option>
+            <option value="Malulen Emekli">Malulen Emekli</option>
+            <option value="Şehir Dışı">Şehir Dışı</option>
           </select>
         </div>
 
@@ -182,6 +184,7 @@ export default function MembresPage() {
             <option value="Aktif">Aktif</option>
             <option value="Donduruldu">Donduruldu</option>
             <option value="Düştü">Düştü</option>
+            <option value="Üye Değil">Üye Değil</option>
           </select>
         </div>
 
@@ -289,6 +292,8 @@ export default function MembresPage() {
                         <option value="Genç">Genç</option>
                         <option value="Normal">Normal</option>
                         <option value="Emekli">Emekli</option>
+                        <option value="Malulen Emekli">Malulen Emekli</option>
+                        <option value="Şehir Dışı">Şehir Dışı</option>
                       </select>
                     </div>
                   );
@@ -309,6 +314,7 @@ export default function MembresPage() {
                         <option value="Aktif">Aktif</option>
                         <option value="Donduruldu">Donduruldu</option>
                         <option value="Düştü">Düştü</option>
+                        <option value="Üye Değil">Üye Değil</option>
                       </select>
                     </div>
                   );

@@ -102,6 +102,10 @@ export default function MembresPage() {
               ? "26 ve Üstü"
               : priceInfo.category === "Emekli"
               ? "Emekli"
+              : priceInfo.category === "Malulen Emekli"
+              ? "Malulen Emekli"
+              : priceInfo.category === "Şehir Dışı"
+              ? "Şehir Dışı"
               : ""}
           </p>
 

@@ -108,6 +108,8 @@ export default function MembresPage() {
             <option value="Genç">Genç</option>
             <option value="Normal">Normal</option>
             <option value="Emekli">Emekli</option>
+            <option value="Malulen Emekli">Malulen Emekli</option>
+            <option value="Şehir Dışı">Şehir Dışı</option>
           </select>
         </div>
 
