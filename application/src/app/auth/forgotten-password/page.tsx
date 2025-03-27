@@ -8,8 +8,7 @@ const ForgotPassword: React.FC = () => {
   const [email, setEmail] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [validationCode, setValidationCode] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [step, setStep] = useState<1 | 2 | 3>(1);
+  const [step, setStep] = useState<1 | 2>(1);
 
   const handleMethodChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setMethod(event.target.value as 'sms' | 'email');
@@ -21,183 +20,107 @@ const ForgotPassword: React.FC = () => {
     if (method === 'email') {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email)) {
-        alert('L\'adresse e-mail n\'est pas valide');
+        alert("E-posta adresiniz geçerli değil");
         return;
       }
 
       try {
-        const response = await ServerConnection.resetPassword(email);
+        const response = await ServerConnection.sendMailVerificationCode(email);
 
-        if (response.ok) {
-          alert('Un code de validation a été envoyé à votre email');
-          setStep(2); // Passer à l'étape suivante
+        if (response.success) {
+          alert('Geçerlilik kodu e-posta adresinize gönderildi');
+          setStep(2);
         } else {
-          alert('Une erreur est survenue lors de l\'envoi de l\'email');
+          alert("E-posta gönderilirken bir hata oluştu");
         }
       } catch (error) {
-        console.error('Erreur lors de l\'envoi de l\'email:', error);
-        alert('Une erreur est survenue');
+        console.error("E-posta gönderme hatası:", error);
+        alert("Bir hata oluştu");
       }
     } else {
-      console.log('SMS envoyé au numéro:', phoneNumber);
-      setStep(2);
+      try {
+        const response = await ServerConnection.sendVerificationCode(phoneNumber);
+
+        if (response.success) {
+          alert('Geçerlilik kodu telefon numaranıza gönderildi');
+          setStep(2);
+        } else {
+          alert("SMS gönderilirken bir hata oluştu");
+        }
+      } catch (error) {
+        console.error("SMS gönderme hatası:", error);
+        alert("Bir hata oluştu");
+      }
     }
   };
 
   const handleCodeSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    // Valider le code
-    try {
-      const response = await fetch('/api/validate-code', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ code: validationCode }),
-      });
-
-      if (response.ok) {
-        setStep(3);
-      } else {
-        alert('Le code de validation est incorrect');
+    if(method == "email"){
+      try {
+        const response = await ServerConnection.checkVerificationCodeEmail(email, validationCode);
+  
+        if (response) {
+          generateLink();
+        } else {
+          alert('Geçerlilik kodu yanlış');
+        }
+      } catch (error) {
+        console.error('Kod doğrulama hatası:', error);
+        alert('Bir hata oluştu');
       }
-    } catch (error) {
-      console.error('Erreur lors de la validation du code:', error);
-      alert('Une erreur est survenue');
+    } else if (method == "sms") {
+      try {
+        const response = await ServerConnection.checkVerificationCode(phoneNumber, validationCode);
+  
+        if (response) {
+          generateLink();
+        } else {
+          alert('Kod yanlış');
+        }
+      } catch (error) {
+        console.error('Kod doğrulama hatası:', error);
+        alert('Bir hata oluştu');
+      }
     }
   };
 
-  const handlePasswordChange = async (event: React.FormEvent) => {
-    event.preventDefault();
-
-    try {
-      const response = await fetch('/api/change-password', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ newPassword }),
-      });
-
-      if (response.ok) {
-        alert('Votre mot de passe a été changé avec succès');
-      } else {
-        alert('Une erreur est survenue lors du changement du mot de passe');
-      }
-    } catch (error) {
-      console.error('Erreur lors du changement de mot de passe:', error);
-      alert('Une erreur est survenue');
-    }
-  };
-
-  const styles = {
-    container: {
-      width: '100%',
-      maxWidth: '400px',
-      backgroundColor: '#fff',
-      padding: '30px',
-      borderRadius: '8px',
-      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-      textAlign: 'center' as const,
-      margin: '0 auto',
-    },
-    title: {
-      fontSize: '1.5rem',
-      marginBottom: '20px',
-      color: '#333',
-    },
-    methodLabel: {
-      display: 'block',
-      marginBottom: '10px',
-      color: '#555',
-      fontWeight: '600',
-    },
-    methodSelect: {
-      width: '100%',
-      padding: '12px',
-      fontSize: '1rem',
-      borderRadius: '4px',
-      border: '1px solid #ddd',
-      marginBottom: '20px',
-      backgroundColor: '#f8f8f8',
-    },
-    inputLabel: {
-      display: 'block',
-      marginBottom: '8px',
-      fontWeight: '600',
-      color: '#555',
-    },
-    inputField: {
-      width: '100%',
-      padding: '12px',
-      fontSize: '1rem',
-      borderRadius: '4px',
-      border: '1px solid #ddd',
-      marginBottom: '20px',
-      backgroundColor: '#f8f8f8',
-    },
-    submitBtn: {
-      width: '100%',
-      padding: '12px',
-      backgroundColor: '#ff6f61',
-      color: '#fff',
-      border: 'none',
-      borderRadius: '4px',
-      fontSize: '1.1rem',
-      cursor: 'pointer' as const,
-    },
+  const generateLink = () => {
+    alert(method + " ile link gönderildi.");
+    ServerConnection.generateLink(email || phoneNumber, method);
   };
 
   return (
-    <div style={styles.container}>
-      <h2 style={styles.title}>Şifre Sıfırlama</h2>
+    <div style={{ width: '100%', maxWidth: '400px', backgroundColor: '#fff', padding: '30px', borderRadius: '8px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', textAlign: 'center', margin: '0 auto' }}>
+      <h2 style={{ fontSize: '1.5rem', marginBottom: '20px', color: '#333' }}>Şifre Sıfırlama</h2>
       {step === 1 && (
         <form onSubmit={handleSubmit}>
-          <label htmlFor="method" style={styles.methodLabel}>
+          <label htmlFor="method" style={{ display: 'block', marginBottom: '10px', color: '#555', fontWeight: '600' }}>
             Yöntem Seçin:
           </label>
-          <select
-            id="method"
-            value={method}
-            onChange={handleMethodChange}
-            style={styles.methodSelect}
-          >
+          <select id="method" value={method} onChange={handleMethodChange} style={{ width: '100%', padding: '12px', fontSize: '1rem', borderRadius: '4px', border: '1px solid #ddd', marginBottom: '20px', backgroundColor: '#f8f8f8' }}>
             <option value="email">E-posta</option>
             <option value="sms">SMS</option>
           </select>
 
           {method === 'email' ? (
             <div>
-              <label htmlFor="email" style={styles.inputLabel}>
+              <label htmlFor="email" style={{ display: 'block', marginBottom: '8px', fontWeight: '600', color: '#555' }}>
                 E-posta Adresiniz
               </label>
-              <input
-                type="email"
-                id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                style={styles.inputField}
-              />
+              <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} required style={{ width: '100%', padding: '12px', fontSize: '1rem', borderRadius: '4px', border: '1px solid #ddd', marginBottom: '20px', backgroundColor: '#f8f8f8' }} />
             </div>
           ) : (
             <div>
-              <label htmlFor="phoneNumber" style={styles.inputLabel}>
+              <label htmlFor="phoneNumber" style={{ display: 'block', marginBottom: '8px', fontWeight: '600', color: '#555' }}>
                 Telefon Numaranız
               </label>
-              <input
-                type="text"
-                id="phoneNumber"
-                value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
-                required
-                style={styles.inputField}
-              />
+              <input type="text" id="phoneNumber" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} required style={{ width: '100%', padding: '12px', fontSize: '1rem', borderRadius: '4px', border: '1px solid #ddd', marginBottom: '20px', backgroundColor: '#f8f8f8' }} />
             </div>
           )}
 
-          <button type="submit" style={styles.submitBtn}>
+          <button type="submit" style={{ width: '100%', padding: '12px', backgroundColor: '#ff6f61', color: '#fff', border: 'none', borderRadius: '4px', fontSize: '1.1rem', cursor: 'pointer' }}>
             Şifreyi Sıfırla
           </button>
         </form>
@@ -205,38 +128,12 @@ const ForgotPassword: React.FC = () => {
 
       {step === 2 && (
         <form onSubmit={handleCodeSubmit}>
-          <label htmlFor="validationCode" style={styles.inputLabel}>
+          <label htmlFor="validationCode" style={{ display: 'block', marginBottom: '8px', fontWeight: '600', color: '#555' }}>
             Kodunuzu Girin
           </label>
-          <input
-            type="text"
-            id="validationCode"
-            value={validationCode}
-            onChange={(e) => setValidationCode(e.target.value)}
-            required
-            style={styles.inputField}
-          />
-          <button type="submit" style={styles.submitBtn}>
+          <input type="text" id="validationCode" value={validationCode} onChange={(e) => setValidationCode(e.target.value)} required style={{ width: '100%', padding: '12px', fontSize: '1rem', borderRadius: '4px', border: '1px solid #ddd', marginBottom: '20px', backgroundColor: '#f8f8f8' }} />
+          <button type="submit" style={{ width: '100%', padding: '12px', backgroundColor: '#ff6f61', color: '#fff', border: 'none', borderRadius: '4px', fontSize: '1.1rem', cursor: 'pointer' }}>
             Kodu Onayla
-          </button>
-        </form>
-      )}
-
-      {step === 3 && (
-        <form onSubmit={handlePasswordChange}>
-          <label htmlFor="newPassword" style={styles.inputLabel}>
-            Yeni Şifrenizi Girin
-          </label>
-          <input
-            type="password"
-            id="newPassword"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            required
-            style={styles.inputField}
-          />
-          <button type="submit" style={styles.submitBtn}>
-            Şifreyi Değiştir
           </button>
         </form>
       )}

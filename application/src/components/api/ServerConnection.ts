@@ -22,6 +22,8 @@ class ServerConnection {
                   'Content-Type': 'application/json',
                 },
             });
+
+            return response.data;
         } catch (error) {
             console.error("Erreur lors de l'envoi du code de vérification :", error);
             throw error; 
@@ -107,6 +109,8 @@ class ServerConnection {
                   'Content-Type': 'application/json',
                 },
             });
+
+            return response.data;
         } catch (error) {
             console.error("Erreur lors de l'envoi du code de vérification :", error);
             throw error; 
@@ -371,6 +375,27 @@ class ServerConnection {
                 withCredentials: true,
                 headers: 
                 {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            return response.data;
+        } catch (error) {
+            console.error("Erreur lors de la recuperation des totally paid aidat.");
+            throw error;
+        }
+    }
+
+    public static async generateLink(identifier: string, type: string) : Promise<any> {
+        try {            
+            const response = await axios.post(`${BACKEND_API.baseURL}/verificationcode/generateLink`, {
+                identifier: identifier,
+                type: type,
+            },
+            {
+                headers: 
+                {
+                    'x-api-key': API_KEY.API_KEY,
                     'Content-Type': 'application/json',
                 }
             });
