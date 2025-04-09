@@ -71,7 +71,7 @@ export default function Login() {
           Şifrenizi mi unuttunuz?{" "}
           <span
             style={styles.registerLink}
-            onClick={() => router.push("/auth/forgotten-password")} 
+            onClick={() => alert("Bu Özellik Geliştirme Aşamasında, Yakında Kullanıma Sunulacak!")} 
           >
             Şifrenizi sıfırlayın
           </span>

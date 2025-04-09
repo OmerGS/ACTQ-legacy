@@ -6,6 +6,9 @@ import AdminServerConnection from "@/components/api/AdminServerConnection";
 import Unauthorized from "@/components/reusable/Unauthorized";
 import { useMembre } from "@/app/hooks/MemberContext";
 import { hasRole } from "@/components/enum/Role";
+import { FaArrowLeft } from "react-icons/fa";
+import { useRouter } from 'next/navigation';
+
 
 const styles = {
     pageContainer: {
@@ -164,6 +167,27 @@ const styles = {
       backgroundColor: "#ff6f61",
       color: "#fff",
     },
+    backButtonContainer: {
+      width: "100%",
+      display: "flex",
+      justifyContent: "flex-start",
+      padding: "10px",
+    },
+    backButton: {
+      display: "flex",
+      alignItems: "center",
+      gap: "8px",
+      backgroundColor: "#D9534F",
+      color: "white",
+      border: "none",
+      padding: "10px 15px",
+      borderRadius: "8px",
+      cursor: "pointer",
+      fontSize: "16px",
+      fontWeight: "bold",
+      marginBottom: "15px",
+      transition: "background-color 0.2s ease",
+    },
 };
 
 function formatDate(dateString: string): string {
@@ -184,9 +208,10 @@ function formatDate(dateString: string): string {
 
 const getValue = (value: any) => {
     return value != null && value !== '' ? value : 0;
-  };
+};
   
-  export default function QRCodeScanner() {
+export default function QRCodeScanner() {
+  const router = useRouter();
     const [result, setResult] = useState<string | null>(null);
     const { membre } = useMembre();
     const [qrData, setQrData] = useState<any>(null);
@@ -249,6 +274,13 @@ const getValue = (value: any) => {
   
     return (
       <div style={styles.pageContainer}>
+
+        <div style={styles.backButtonContainer}>
+          <button style={styles.backButton} onClick={() => router.back()}>
+            <FaArrowLeft size={18} style={styles.backIcon} /> Geri
+          </button>
+        </div>
+      
         <h2 style={styles.heading}>QR Kod Tarayıcı</h2>
         <p style={styles.description}>
           Bu araç, QR kodlarını tarar ve içindeki bilgileri çözer. Lütfen bir QR kodu yüklemek için bir dosya seçin

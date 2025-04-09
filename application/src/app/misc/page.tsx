@@ -38,10 +38,10 @@ export default function Misc() {
 
   const filteredWidgets = [
     { label: 'Dernegimiz', icon: <FaBuilding size={38} color="#ff4757" />, route: '/misc/about', color: '#ff4757' },
-    //{ label: 'Anket', icon: <FaPoll size={38} color="#3F51B5" />, route: '/soon', color: '#3F51B5' },
+    { label: 'Anket', icon: <FaPoll size={38} color="#3F51B5" />, route: '/soon', color: '#3F51B5' },
     { label: 'Sosyal Medyalar', icon: <FaUsers size={38} color="#4CAF50" />, route: '/misc/social-network', color: '#4CAF50' },
     { label: 'Belgeler', icon: <FaFolder size={38} color="#FFC107" />, route: '/misc/document', color: '#FFC107' },
-    //{ label: 'Yarişma', icon: <FaRankingStar size={38} color="#B317D3" />, route: '/soon', color: '#B317D3' },
+    { label: 'Yarişma', icon: <FaRankingStar size={38} color="#B317D3" />, route: '/soon', color: '#B317D3' },
     { label: 'Bağlı Cihazlar', icon: <FaWifi size={38} color="#00C2D1" />, route: '/misc/connected-device', color: '#00C2D1' },
     { label: 'Yasal Bilgiler', icon: <FaBalanceScale size={38} color="#00B894" />, route: '/misc/legal', color: '#00B894' },
 
