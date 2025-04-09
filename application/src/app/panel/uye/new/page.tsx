@@ -350,4 +350,7 @@ const styles: { [key: string]: React.CSSProperties } = {
   selectFieldFocus: {
     borderColor: "#28a745",
   },
+  backIcon: {
+    marginRight: "8px",
+  },
 };

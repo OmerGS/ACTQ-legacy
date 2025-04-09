@@ -188,6 +188,9 @@ const styles = {
       marginBottom: "15px",
       transition: "background-color 0.2s ease",
     },
+    backIcon: {
+      marginRight: "8px",
+    },
 };
 
 function formatDate(dateString: string): string {

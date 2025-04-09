@@ -214,4 +214,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     transition: "background-color 0.3s ease",
     fontWeight: "600",
   },
+  backIcon: {
+    marginRight: "8px",
+},
 };
