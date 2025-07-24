@@ -1,14 +1,7 @@
-import withPWA from 'next-pwa';
+import type { NextConfig } from "next";
 
-const nextConfig = {
-  experimental: {
-    turbo: {
-      enabled: true,
-    },
-  },
-  compiler: {
-    removeConsole: process.env.NODE_ENV === 'production',
-  },
+const nextConfig: NextConfig = {
+  /* config options here */
 };
 
-module.exports = withPWA(nextConfig);
+export default nextConfig;

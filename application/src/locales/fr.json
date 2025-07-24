@@ -1,0 +1,18 @@
+{
+  "home": {
+    
+    "guest": {
+      "welcome": "Bienvenue",
+      "login": "Se connecter",
+      "signup": "S’inscrire",
+      "forgot": "Mot de passe oublié ?"
+    },
+
+    "user": {
+      "welcome": "Bienvenue, {{name}}",
+      "profile": "Mon profil",
+      "settings": "Paramètres",
+      "logout": "Se déconnecter"
+    }
+  }
+}

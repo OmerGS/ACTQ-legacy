@@ -1,34 +1,33 @@
-import React from "react";
-import ServiceWorker from "@/components/reusable/ServiceWorker";
-import { MembreProvider } from "@/app/hooks/MemberContext";
+import type { Metadata } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
+import "./globals.css";
 
-export const metadata = {
-  title: "ACTQ",
-  description: "Üyeler için bir plateform",
-  icons: {
-    icon: "/icons/icon-192x192.png",
-    apple: "/icons/icon-192x192.png",
-  },
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
+export const metadata: Metadata = {
+  title: "ACTQ - Üye Portalı",
+  description: "Quimper Türk Kültür Derneği üyelerine özel, güvenli ve kullanıcı dostu web uygulaması",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
     <html lang="fr">
-      <head>
-        <meta name="description" content="Üyeler için bir plateform" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="theme-color" content="#000000" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-
-        <link rel="manifest" href="/manifest.json" />
-        <link rel="apple-touch-icon" sizes="192x192" href="/icons/icon-192x192.png" />
-      </head>
-      <body style={{ margin: 0, padding: 0, width: "100%", height: "100%", boxSizing: "border-box" }}>
-        <MembreProvider>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
         {children}
-        <ServiceWorker />
-        </MembreProvider>
       </body>
     </html>
   );
