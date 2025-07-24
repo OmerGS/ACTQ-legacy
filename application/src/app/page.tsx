@@ -8,6 +8,28 @@ import { useMembre } from "@/app/hooks/MemberContext";
 import Spinner from "@/components/reusable/Spinner";
 
 export default function Home() {
+  if (process.env.NEXT_PUBLIC_MAINTENANCE === "true") {
+    return (
+      <main
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+          fontSize: 24,
+          fontWeight: "bold",
+          fontFamily: "Nunito, sans-serif",
+          padding: 20,
+          textAlign: "center",
+          backgroundColor: "#f5f5f5",
+          color: "#333",
+        }}
+      >
+        Développement en cours, installation de l'application web...
+      </main>
+    );
+  }
+
   const router = useRouter();
   const [isDarkMode, setIsDarkMode] = useState(false);
   const { membre, setMembre } = useMembre();
