@@ -4,7 +4,11 @@ import tr from './tr.json';
 
 export type Language = 'fr' | 'en' | 'tr';
 
-const translations: Record<Language, Record<string, string>> = {
+type Translations = {
+  [key: string]: string | Translations;
+};
+
+const translations: Record<Language, Translations> = {
   fr,
   en,
   tr,

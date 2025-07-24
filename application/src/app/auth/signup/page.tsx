@@ -5,7 +5,7 @@ import Signup from "./signup";
 import { Toaster } from "react-hot-toast";
 
 
-export default function AdminPage() {
+export default function SignupPage() {
   return (
     <NotProtectedRoute>
       <Signup />

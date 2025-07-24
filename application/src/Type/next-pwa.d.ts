@@ -1,4 +1,4 @@
 declare module 'next-pwa' {
-    const value: any;
+    const value: unknown;
     export = value;
 }  

@@ -18,7 +18,7 @@ export const getUserIp = () => {
 // --- LEADERBOARD ---
 
 export const getLeaderBoardUser = async (sortBy: string) => {
-  const params: any = {sortBy};
+  const params: { sortBy: string } = { sortBy };
   return await http.get("/user/users", {
     params,
   });
@@ -35,7 +35,7 @@ export const updatePassword = (oldPassword: string, newPassword: string) => {
 }
 
 export const updateUserInfo = (type: UpdateType, step: UpdateStep, payload: AskPayload | ValidatePayload) => {
-  let endpoint = `/user/update/${type}/${step}`;
+  const endpoint = `/user/update/${type}/${step}`;
 
   if (step === 'ask') {
     return http.post(endpoint, {

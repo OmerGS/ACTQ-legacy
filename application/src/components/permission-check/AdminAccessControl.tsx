@@ -22,7 +22,7 @@ export default function AdminAccessControl({ children }: AdminAccessControlProps
         
         if (!isMounted) return;
 
-        let succesfulResponse = (res.status === 200 || res.status === 304);
+        const succesfulResponse = (res.status === 200 || res.status === 304);
         setIsAdmin(succesfulResponse);
       } catch {
         if (!isMounted) return;
@@ -47,7 +47,7 @@ export default function AdminAccessControl({ children }: AdminAccessControlProps
     return (
       <div className="flex min-h-screen flex-col items-center justify-center gap-4">
         <Spinner />
-        <p>Vérification des droits d'accès...</p>
+        <p>Vérification des droits d&apos;accès...</p>
       </div>
     );
   }

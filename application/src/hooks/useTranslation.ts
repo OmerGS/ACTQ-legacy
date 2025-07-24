@@ -31,6 +31,7 @@ export function useTranslation(initialLang: Language = 'tr') {
     return str;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function getValueByPath(obj: any, path: string): string | undefined {
     return path.split('.').reduce((acc, part) => {
       if (acc && typeof acc === 'object') {
