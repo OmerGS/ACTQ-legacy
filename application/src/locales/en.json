@@ -12,5 +12,11 @@
       "settings": "Settings",
       "logout": "Log out"
     }
+  },
+
+  "loading": {
+    "title": "Verification in progress…",
+    "message": "Please wait a moment while we secure your connection.",
+    "chargement": "Loading…"
   }
 }

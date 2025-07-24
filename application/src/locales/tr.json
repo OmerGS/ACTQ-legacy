@@ -12,5 +12,11 @@
       "settings": "Ayarlar",
       "logout": "Çıkış yap"
     }
+  },
+
+  "loading": {
+    "title": "Bağlantınız kontrol ediliyor…",
+    "message": "Bağlantınız güvence altına alınırken lütfen biraz bekleyin.",
+    "chargement": "Yükleniyor…"
   }
 }

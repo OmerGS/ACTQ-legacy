@@ -14,5 +14,11 @@
       "settings": "Paramètres",
       "logout": "Se déconnecter"
     }
+  },
+
+  "loading": {
+    "title": "Vérification en cours…",
+    "message": "Merci de patienter un instant pendant que nous sécurisons votre connexion.",
+    "chargement": "Chargement en cours…"
   }
 }
