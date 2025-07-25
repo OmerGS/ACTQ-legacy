@@ -18,5 +18,53 @@
     "title": "Bağlantınız kontrol ediliyor…",
     "message": "Bağlantınız güvence altına alınırken lütfen biraz bekleyin.",
     "chargement": "Yükleniyor…"
+  },
+
+  "signup": {
+    "title": "Kayıt Ol",
+    "step-signup": {
+      "breadcrumb": {
+        "1": "Telefon",
+        "2": "Doğrulama",
+        "3": "Hesap Bilgileri"
+      },
+      "1": {
+        "country-label": "Ülke",
+        "phone-fr": "Fransa (+33)",
+        "phone-tr": "Türkiye (+90)",
+        "label": "Telefon Numarası",
+        "placeholder-fr": "0612345678",
+        "placeholder-tr": "05551234567",
+        "button": "Doğrulama Kodu Gönder",
+        "sending": "Gönderiliyor...",
+        "success": "Kod gönderildi!",
+        "error-fr": "Geçersiz Fransız numarası (06 veya 07 ile başlamalı)",
+        "error-tr": "Geçersiz Türk numarası (05 ile başlamalı)",
+        "send-error": "Kod gönderilirken hata oluştu"
+      },
+      "2": {
+        "sent": "<strong>{{phone}}</strong> numarasına bir doğrulama kodu gönderildi.",
+        "label": "Gelen Kod",
+        "placeholder": "123456",
+        "button": "Kodu Doğrula",
+        "verifying": "Doğrulanıyor...",
+        "back": "Numarayı değiştir",
+        "error-length": "Kod geçersiz",
+        "error-invalid": "Kod hatalı.",
+        "error-server": "Sunucu hatası.",
+        "success": "Kod doğrulandı!"
+      },
+      "3": {
+        "title": "Hoş geldiniz",
+        "welcome": "Hoş geldiniz",
+        "notYou": "Bu siz değilseniz",
+        "next": "İleri",
+        "alertTitle": "Kimlik hatası",
+        "alertMessage": "Eğer bu siz değilseniz, lütfen hatayı düzeltmek için hemen yönetimle iletişime geçin.",
+        "contact": "İletişime geç",
+        "cancel": "İptal",
+        "signupFinished": "Kayıt işlemi tamamlandı!"
+      }
+    }
   }
 }

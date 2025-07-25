@@ -2,11 +2,12 @@
 
 import { useState, useRef, useEffect, KeyboardEvent } from 'react';
 import { Language } from '@/locales/index';
+import Flag from 'react-world-flags';
 
-const languages: Record<Language, { label: string; flag: string }> = {
-  tr: { label: 'Türkçe', flag: '🇹🇷' },
-  fr: { label: 'Français', flag: '🇫🇷' },
-  en: { label: 'English', flag: '🇬🇧' },
+const languages: Record<Language, { label: string; countryCode: string }> = {
+  tr: { label: 'Türkçe', countryCode: 'TR' },
+  fr: { label: 'Français', countryCode: 'FR' },
+  en: { label: 'English', countryCode: 'GB' },
 };
 
 export default function LanguageSwitcher({
@@ -18,7 +19,6 @@ export default function LanguageSwitcher({
 }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  // Refs vers les éléments <li> pour gérer le focus clavier
   const itemsRefs = useRef<Array<HTMLLIElement | null>>([]);
 
   useEffect(() => {
@@ -31,14 +31,12 @@ export default function LanguageSwitcher({
     return () => document.removeEventListener('mousedown', onClickOutside);
   }, []);
 
-  // Focus automatique sur le premier item quand on ouvre
   useEffect(() => {
     if (open && itemsRefs.current[0]) {
       itemsRefs.current[0].focus();
     }
   }, [open]);
 
-  // Gestion navigation clavier dans le menu
   function onKeyDown(
     e: KeyboardEvent<HTMLLIElement>,
     index: number,
@@ -85,8 +83,8 @@ export default function LanguageSwitcher({
         className="inline-flex items-center rounded-xl border border-gray-300 bg-white px-4 py-2 text-base font-semibold text-gray-900 shadow-sm
           hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1 transition"
       >
-        <span className="mr-3 text-2xl">{languages[language].flag}</span>
-        <span className="hidden sm:inline">{languages[language].label}</span>
+        <Flag code={languages[language].countryCode} style={{ width: 32, height: 20, borderRadius: 3 }} />
+        <span className="hidden sm:inline ml-3">{languages[language].label}</span>
         <svg
           className={`ml-2 h-5 w-5 text-gray-500 transition-transform duration-200 ${
             open ? 'rotate-180' : 'rotate-0'
@@ -108,7 +106,7 @@ export default function LanguageSwitcher({
           role="menu"
           aria-orientation="vertical"
         >
-          {Object.entries(languages).map(([key, { label, flag }], index) => (
+          {Object.entries(languages).map(([key, { label, countryCode }], index) => (
             <li
               key={key}
               ref={(el) => {
@@ -127,7 +125,7 @@ export default function LanguageSwitcher({
               }}
               onKeyDown={(e) => onKeyDown(e, index, key as Language)}
             >
-              <span className="text-2xl" aria-hidden="true">{flag}</span>
+              <Flag code={countryCode} style={{ width: 32, height: 20, borderRadius: 3 }} />
               <span>{label}</span>
             </li>
           ))}

@@ -18,5 +18,53 @@
     "title": "Verification in progress…",
     "message": "Please wait a moment while we secure your connection.",
     "chargement": "Loading…"
+  },
+
+  "signup": {
+    "title": "Sign Up",
+    "step-signup": {
+      "breadcrumb": {
+        "1": "Phone",
+        "2": "Verification",
+        "3": "Account Info"
+      },
+      "1": {
+        "country-label": "Country",
+        "phone-fr": "France (+33)",
+        "phone-tr": "Turkey (+90)",
+        "label": "Phone Number",
+        "placeholder-fr": "0612345678",
+        "placeholder-tr": "05551234567",
+        "button": "Send Verification Code",
+        "sending": "Sending...",
+        "success": "Code sent!",
+        "error-fr": "Invalid French number (must start with 06 or 07)",
+        "error-tr": "Invalid Turkish number (must start with 05)",
+        "send-error": "Error while sending code"
+      },
+      "2": {
+        "sent": "A verification code was sent to <strong>{{phone}}</strong>.",
+        "label": "Received Code",
+        "placeholder": "123456",
+        "button": "Verify Code",
+        "verifying": "Verifying...",
+        "back": "Change number",
+        "error-length": "Invalid code",
+        "error-invalid": "Incorrect code.",
+        "error-server": "Server error.",
+        "success": "Code verified!"
+      },
+      "3": {
+        "title": "Welcome",
+        "welcome": "Welcome",
+        "notYou": "Not you?",
+        "next": "Next",
+        "alertTitle": "Identity Error",
+        "alertMessage": "If this is not you, please contact the administration immediately to correct the mistake.",
+        "contact": "Contact",
+        "cancel": "Cancel",
+        "signupFinished": "Signup complete!"
+      }
+    }
   }
 }

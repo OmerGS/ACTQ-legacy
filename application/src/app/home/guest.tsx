@@ -3,9 +3,11 @@
 import Image from 'next/image';
 import LanguageSwitcher from '@/components/global/LanguageSwitcher';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useRouter } from "next/navigation";
 
 export default function GuestHome() {
   const { language, setLanguage, t, isReady } = useTranslation();
+  const router = useRouter();
 
   if (!isReady) return null;
 
@@ -52,6 +54,7 @@ export default function GuestHome() {
           </button>
 
           <button
+            onClick={() => router.push("/auth/signup")}
             className="w-full py-3 rounded-2xl border-2 border-indigo-500 text-indigo-600 font-semibold hover:bg-indigo-50 focus:outline focus:outline-4 focus:outline-indigo-300 transition duration-300"
             aria-label={t(`${trad_home_guest}.signup`)}
           >

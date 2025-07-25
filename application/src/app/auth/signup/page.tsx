@@ -1,15 +1,15 @@
 "use client";
 
-import NotProtectedRoute from "@/components/permission-check/NotProtectedRoute";
-import Signup from "./signup";
+import AccessControl from "@/components/permission-check/AccessControl";
+import Signup from "./Signup";
 import { Toaster } from "react-hot-toast";
 
 
 export default function SignupPage() {
   return (
-    <NotProtectedRoute>
+    <AccessControl requireAuth={false}>
       <Signup />
       <Toaster position="top-right" reverseOrder={false} />
-    </NotProtectedRoute>
+    </AccessControl>
   );
 }
