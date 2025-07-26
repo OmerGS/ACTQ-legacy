@@ -8,9 +8,11 @@ import { useTranslation } from "@/hooks/useTranslation";
 export function StepWelcome({
   firstName,
   lastName,
+  onNext,
 }: {
   firstName: string;
   lastName: string;
+  onNext: () => void;
 }) {
   const [showAlert, setShowAlert] = useState(false);
   const { t, isReady } = useTranslation();
@@ -37,7 +39,7 @@ export function StepWelcome({
         </Button>
         <Button
           className="flex-1 py-3 text-sm"
-          onClick={() => alert(t("signup.step-signup.3.signupFinished"))}
+          onClick={onNext}
         >
           {t("signup.step-signup.3.next")}
           <Check className="ml-2 w-4 h-4" />

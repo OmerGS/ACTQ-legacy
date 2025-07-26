@@ -5,19 +5,18 @@ import { SignupSteps } from "./Step/SignupStep";
 import { StepPhone } from "./Step/StepPhone";
 import { StepCode } from "./Step/StepCode";
 import { StepWelcome } from "./Step/StepWelcome";
+import SignupInfo from "./signup-info";
 import { useTranslation } from "@/hooks/useTranslation";
+import { useSignupContext } from "./SignupProvider";
 
 export type Step = 1 | 2 | 3;
 
 export default function Signup() {
   const [step, setStep] = useState<Step>(1);
-  const [phone, setPhone] = useState("");
-  const [code, setCode] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showInfo, setShowInfo] = useState(false);
   const { t, isReady } = useTranslation();
-
-  const [firstName] = useState("Omer");
-  const [lastName] = useState("GS");
+  const { phone, setPhone, code, setCode, firstname, lastname } = useSignupContext();
 
   if (!isReady) return null;
 
@@ -49,12 +48,15 @@ export default function Signup() {
           />
         )}
 
-        {step === 3 && (
+        {step === 3 && !showInfo && (
           <StepWelcome
-            firstName={firstName}
-            lastName={lastName}
+            firstName={firstname}
+            lastName={lastname}
+            onNext={() => setShowInfo(true)}
           />
         )}
+
+        {step === 3 && showInfo && <SignupInfo />}
       </div>
     </main>
   );

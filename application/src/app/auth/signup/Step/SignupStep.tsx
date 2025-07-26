@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { Step } from "../Signup";
+import { Step } from "../signup";
 import { useTranslation } from "@/hooks/useTranslation";
 
 export function SignupSteps({ step }: { step: Step }) {

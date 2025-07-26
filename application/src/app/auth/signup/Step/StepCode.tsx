@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
 import { checkCode } from "../signup-logic";
-import { Step } from "../Signup";
+import { Step } from "../signup";
 import { useTranslation } from "@/hooks/useTranslation";
 
 export function StepCode({

@@ -1,15 +1,19 @@
 "use client";
 
 import AccessControl from "@/components/permission-check/AccessControl";
-import Signup from "./Signup";
+import Signup from "./signup";
 import { Toaster } from "react-hot-toast";
-
+import { SignupProvider } from "./SignupProvider";
+import SignupInfo from "./signup-info";
 
 export default function SignupPage() {
   return (
     <AccessControl requireAuth={false}>
-      <Signup />
-      <Toaster position="top-right" reverseOrder={false} />
+      <SignupProvider>
+        <Signup />
+        <SignupInfo />
+        <Toaster position="top-right" reverseOrder={false} />
+      </SignupProvider>
     </AccessControl>
   );
 }
