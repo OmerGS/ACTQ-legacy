@@ -230,3 +230,23 @@ CREATE TABLE PollVote (
   FOREIGN KEY (memberId) REFERENCES Member(id),
   UNIQUE (pollId, memberId, optionId) -- Empêche de voter plusieurs fois pour la même option
 );
+
+CREATE TABLE verification_codes (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  member_id INT NOT NULL,
+  method ENUM('email', 'phone') NOT NULL,
+  target VARCHAR(255) NOT NULL,
+  code_hash VARCHAR(255) NOT NULL,
+  purpose ENUM(
+    'identity_verification', 
+    'signup', 
+    'password_reset', 
+    'email_change', 
+    'phone_change'
+  ) NOT NULL,
+  action_context JSON DEFAULT NULL,
+  expires_at DATETIME NOT NULL,
+  used BOOLEAN NOT NULL DEFAULT FALSE,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (member_id) REFERENCES Member(id) ON DELETE CASCADE
+);

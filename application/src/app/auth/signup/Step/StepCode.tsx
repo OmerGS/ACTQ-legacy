@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import { checkCode } from "../signup-logic";
 import { Step } from "../signup";
 import { useTranslation } from "@/hooks/useTranslation";
+import { useSignupContext } from "../SignupProvider";
 
 export function StepCode({
   phone,
@@ -21,7 +22,8 @@ export function StepCode({
   loading: boolean;
   setLoading: (l: boolean) => void;
 }) {
-  const { t, isReady } = useTranslation();
+  const { t, isReady, language } = useTranslation();
+  const { setFirstname, setLastname } = useSignupContext();
 
   if (!isReady) return null;
 
@@ -33,15 +35,18 @@ export function StepCode({
 
     setLoading(true);
     try {
-      const valid = await checkCode(phone, code);
-      if (valid) {
+      const result = await checkCode(phone, code, language);
+
+      if (result.success) {
+        setFirstname(result.firstName);
+        setLastname(result.lastName);
         toast.success(t("signup.step-signup.2.success"));
         setStep(3);
       } else {
-        toast.error(t("signup.step-signup.2.error-invalid"));
+        toast.error(result.error);
       }
-    } catch {
-      toast.error(t("signup.step-signup.2.error-server"));
+    } catch (err) {
+      toast.error("Erreur inattendue");
     } finally {
       setLoading(false);
     }

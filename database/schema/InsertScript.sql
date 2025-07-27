@@ -2,6 +2,7 @@ use actq;
 
 SELECT * FROM Member;
 SELECT * FROM Role;
+SELECT * FROM verification_codes;
 
 INSERT INTO Role (name, label, description) VALUES
 ('admin', 'Administrator', 'Full access to all application features'),

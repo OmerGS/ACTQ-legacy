@@ -43,7 +43,7 @@ export function StepPhone({
   setLoading: (l: boolean) => void;
 }) {
   const [country, setCountry] = useState<"FR" | "TR">("FR");
-  const { t, isReady } = useTranslation();
+  const { t, isReady, language } = useTranslation();
 
   if (!isReady) return null;
 
@@ -60,11 +60,16 @@ export function StepPhone({
     setLoading(true);
     try {
       const formattedPhone = formatPhoneForSending(phone, country);
-      await askCode(formattedPhone);
+      await askCode(formattedPhone, language);
       toast.success(t("signup.step-signup.1.success"));
+      setPhone(formattedPhone);
       setStep(2);
-    } catch {
-      toast.error(t("signup.step-signup.1.send-error"));
+    } catch (err: unknown){
+      if (err instanceof Error) {
+        toast.error(err.message); 
+      } else {
+        toast.error(String(err));
+      }
     } finally {
       setLoading(false);
     }

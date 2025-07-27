@@ -16,7 +16,7 @@ export default function Signup() {
   const [loading, setLoading] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
   const { t, isReady } = useTranslation();
-  const { phone, setPhone, code, setCode, firstname, lastname } = useSignupContext();
+  const { phone, setPhone, code, setCode } = useSignupContext();
 
   if (!isReady) return null;
 
@@ -50,8 +50,6 @@ export default function Signup() {
 
         {step === 3 && !showInfo && (
           <StepWelcome
-            firstName={firstname}
-            lastName={lastname}
             onNext={() => setShowInfo(true)}
           />
         )}

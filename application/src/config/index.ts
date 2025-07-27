@@ -1,3 +1,3 @@
 export const BACKEND_API = {
-  baseURL: 'https://api.actq.omergs.com/v1',
+  baseURL: 'https://api.actq.omergs.com/api/v1',
 };

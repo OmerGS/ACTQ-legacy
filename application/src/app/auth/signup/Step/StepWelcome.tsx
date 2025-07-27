@@ -4,18 +4,16 @@ import { Check, AlertTriangle } from "lucide-react";
 import { CustomAlert } from "@/components/global/CustomAlert";
 import config from "@/config/appConfig";
 import { useTranslation } from "@/hooks/useTranslation";
+import { useSignupContext } from "../SignupProvider";
 
 export function StepWelcome({
-  firstName,
-  lastName,
   onNext,
 }: {
-  firstName: string;
-  lastName: string;
   onNext: () => void;
 }) {
   const [showAlert, setShowAlert] = useState(false);
   const { t, isReady } = useTranslation();
+  const { firstname, lastname } = useSignupContext();
 
   if (!isReady) return null;
 
@@ -24,7 +22,7 @@ export function StepWelcome({
       <p className="text-center text-xl font-semibold mb-6">
         {t("signup.step-signup.3.welcome")}{" "}
         <span className="text-indigo-600">
-          {firstName} {lastName}
+          {firstname} {lastname}
         </span>{" "}
         !
       </p>
@@ -52,7 +50,7 @@ export function StepWelcome({
           message={t("signup.step-signup.3.alertMessage")}
           onConfirm={() => {
             setShowAlert(false);
-            window.location.href = `mailto:${config.contactEmail}?subject=[${config.associationNameShort} APP] ACCOUNT ISSUE ${firstName} ${lastName}`;
+            window.location.href = `mailto:${config.contactEmail}?subject=[${config.associationNameShort} APP] ACCOUNT ISSUE ${firstname} ${lastname}`;
           }}
           onCancel={() => setShowAlert(false)}
           confirmText={t("signup.step-signup.3.contact")}
