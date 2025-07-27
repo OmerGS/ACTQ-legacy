@@ -4,7 +4,7 @@ export default function SignupInfo() {
   const { phone, firstname, lastname } = useSignupContext();
 
   return (
-    <div>
+    <div className="space-y-2">
       <p>Numéro vérifié : {phone}</p>
       <p>Nom : {lastname}</p>
       <p>Prénom : {firstname}</p>

@@ -1,6 +1,8 @@
 'use client';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { getUserFromSetup } from "@/services/authAPI";
 import { SignupSteps } from "./Step/SignupStep";
 import { StepPhone } from "./Step/StepPhone";
 import { StepCode } from "./Step/StepCode";
@@ -16,7 +18,25 @@ export default function Signup() {
   const [loading, setLoading] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
   const { t, isReady } = useTranslation();
-  const { phone, setPhone, code, setCode } = useSignupContext();
+  const { phone, setPhone, setFirstname, setLastname } = useSignupContext();
+  const [code, setCode] = useState("");
+
+  const { data: setupUser, isSuccess } = useQuery({
+    queryKey: ['setupUser'],
+    queryFn: getUserFromSetup,
+    staleTime: Infinity,
+    retry: false,
+  });
+
+  useEffect(() => {
+    if (isSuccess && setupUser && step !== 3) {
+      setPhone(setupUser.phone);
+      setFirstname(setupUser.firstname);
+      setLastname(setupUser.lastname);
+      setStep(3);
+      setShowInfo(true);
+    }
+  }, [isSuccess, setupUser, step, setPhone, setFirstname, setLastname]);
 
   if (!isReady) return null;
 
@@ -49,9 +69,7 @@ export default function Signup() {
         )}
 
         {step === 3 && !showInfo && (
-          <StepWelcome
-            onNext={() => setShowInfo(true)}
-          />
+          <StepWelcome onNext={() => setShowInfo(true)} />
         )}
 
         {step === 3 && showInfo && <SignupInfo />}

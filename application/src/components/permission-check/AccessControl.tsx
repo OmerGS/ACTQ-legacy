@@ -17,7 +17,7 @@ type AccessControlProps = {
 export default function AccessControl({
   requireAuth,
   requireAdmin = false,
-  redirectTo = "/auth/login",
+  redirectTo = "/home/",
   fallback = (
     <SpinnerWithMessage></SpinnerWithMessage>
   ),
