@@ -1,0 +1,11 @@
+{
+  "title": "Email Verification",
+  "label": "Email address",
+  "placeholder": "name@example.com",
+  "description": "A verification code will be sent to this address.",
+  "button": "Send Code",
+  "sending": "Sending...",
+  "success": "Verification code sent to your email address.",
+  "error-invalid": "Invalid email address. Please correct it.",
+  "error-server": "An error occurred while sending the code."
+}

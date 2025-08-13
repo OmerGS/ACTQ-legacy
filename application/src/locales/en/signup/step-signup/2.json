@@ -1,0 +1,12 @@
+{
+  "sent": "A verification code has been sent to <strong>{{phone}}</strong>.",
+  "label": "Received code",
+  "placeholder": "123456",
+  "button": "Verify code",
+  "verifying": "Verifying...",
+  "back": "Change number",
+  "error-length": "Invalid code",
+  "error-invalid": "Incorrect code.",
+  "error-server": "Server error.",
+  "success": "Code successfully verified!"
+}

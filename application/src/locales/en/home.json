@@ -1,0 +1,14 @@
+{
+  "guest": {
+    "welcome": "Welcome",
+    "login": "Log in",
+    "signup": "Sign up",
+    "forgot": "Forgot password?"
+  },
+  "user": {
+    "welcome": "Welcome, {{name}}",
+    "profile": "My profile",
+    "settings": "Settings",
+    "logout": "Log out"
+  }
+}

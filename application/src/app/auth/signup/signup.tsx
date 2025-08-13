@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getUserFromSetup } from "@/services/authAPI";
 import { SignupSteps } from "./Step/SignupStep";
 import { StepPhone } from "./Step/StepPhone";
-import { StepCode } from "./Step/StepCode";
+import { StepPhoneCode } from "./Step/StepPhoneCode";
 import { StepWelcome } from "./Step/StepWelcome";
 import SignupInfo from "./signup-info";
 import { useTranslation } from "@/hooks/useTranslation";
@@ -42,8 +42,10 @@ export default function Signup() {
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-gradient-to-tr from-purple-700 via-indigo-700 to-blue-600 px-4 py-10">
-      <div className="bg-white rounded-3xl shadow-xl w-full max-w-sm p-6 sm:p-8">
-        <h1 className="text-3xl font-bold text-center mb-8">{t(`signup.title`)}</h1>
+      <div className="bg-white rounded-3xl shadow-lg w-full max-w-4xl p-12 border border-gray-200">
+        <h1 className="text-4xl font-semibold text-gray-900 text-center mb-12 tracking-wide">
+          {t(`signup.index.title`)}
+        </h1>
 
         <SignupSteps step={step} />
 
@@ -58,7 +60,7 @@ export default function Signup() {
         )}
 
         {step === 2 && (
-          <StepCode
+          <StepPhoneCode
             phone={phone}
             code={code}
             setCode={setCode}

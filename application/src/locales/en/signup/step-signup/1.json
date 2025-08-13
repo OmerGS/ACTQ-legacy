@@ -1,0 +1,14 @@
+{
+  "country-label": "Country",
+  "phone-fr": "France (+33)",
+  "phone-tr": "Turkey (+90)",
+  "label": "Phone number",
+  "placeholder-fr": "0612345678",
+  "placeholder-tr": "05551234567",
+  "button": "Send verification code",
+  "sending": "Sending...",
+  "success": "Code sent!",
+  "error-fr": "Invalid French number (must start with 06 or 07)",
+  "error-tr": "Invalid Turkish number (must start with 05)",
+  "send-error": "Error while sending the code"
+}

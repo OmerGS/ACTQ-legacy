@@ -1,0 +1,11 @@
+{
+  "title": "E-posta Doğrulama",
+  "label": "E-posta adresi",
+  "placeholder": "isim@ornek.com",
+  "description": "Bu adrese bir doğrulama kodu gönderilecektir.",
+  "button": "Kodu Gönder",
+  "sending": "Gönderiliyor...",
+  "success": "Doğrulama kodu e-posta adresinize gönderildi.",
+  "error-invalid": "Geçersiz e-posta adresi. Lütfen düzeltin.",
+  "error-server": "Kod gönderilirken bir hata oluştu."
+}

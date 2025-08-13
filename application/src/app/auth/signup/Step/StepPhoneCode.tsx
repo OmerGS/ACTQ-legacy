@@ -2,12 +2,12 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
-import { checkCode } from "../signup-logic";
+import { checkPhoneCode } from "../signup-logic";
 import { Step } from "../signup";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useSignupContext } from "../SignupProvider";
 
-export function StepCode({
+export function StepPhoneCode({
   phone,
   code,
   setCode,
@@ -35,7 +35,7 @@ export function StepCode({
 
     setLoading(true);
     try {
-      const result = await checkCode(phone, code, language);
+      const result = await checkPhoneCode(phone, code, language);
 
       if (result.success) {
         setFirstname(result.firstName);
@@ -52,9 +52,19 @@ export function StepCode({
     }
   };
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    if (/^\d{0,6}$/.test(val)) {
+      setCode(val);
+    }
+  };
+
   return (
     <>
-      <p className="mb-4 text-sm text-center" dangerouslySetInnerHTML={{ __html: t("signup.step-signup.2.sent", { phone }) }} />
+      <p
+        className="mb-4 text-sm text-center"
+        dangerouslySetInnerHTML={{ __html: t("signup.step-signup.2.sent", { phone }) }}
+      />
       <Label htmlFor="code" className="mb-2 text-base font-medium">
         {t("signup.step-signup.2.label")}
       </Label>
@@ -65,20 +75,27 @@ export function StepCode({
         maxLength={6}
         className="mb-2 text-lg py-3 tracking-widest text-center"
         value={code}
-        onChange={(e) => setCode(e.target.value)}
+        onChange={handleChange}
         disabled={loading}
         inputMode="numeric"
       />
-      <Button className="w-full mt-2 py-3 text-base" onClick={handleVerify} disabled={loading}>
-        {loading ? t("signup.step-signup.2.verifying") : t("signup.step-signup.2.button")}
+      <Button
+        className="w-full mt-2 py-3 text-base"
+        onClick={handleVerify}
+        disabled={loading}
+      >
+        {loading
+          ? t("signup.step-signup.2.verifying")
+          : t("signup.step-signup.2.button")}
       </Button>
-      <button
-        className="mt-4 text-sm underline text-indigo-500 hover:text-indigo-600"
+      <Button
+        variant="secondary"
+        className="w-full mt-4"
         onClick={() => setStep(1)}
         disabled={loading}
       >
         {t("signup.step-signup.2.back")}
-      </button>
+      </Button>
     </>
   );
 }

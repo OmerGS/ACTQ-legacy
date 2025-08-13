@@ -1,0 +1,12 @@
+{
+  "sent": "<strong>{{phone}}</strong> numarasına bir doğrulama kodu gönderildi.",
+  "label": "Alınan kod",
+  "placeholder": "123456",
+  "button": "Kodu Doğrula",
+  "verifying": "Doğrulanıyor...",
+  "back": "Numarayı değiştir",
+  "error-length": "Geçersiz kod",
+  "error-invalid": "Kod hatalı.",
+  "error-server": "Sunucu hatası.",
+  "success": "Kod doğrulandı!"
+}

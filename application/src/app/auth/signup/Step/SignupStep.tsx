@@ -8,7 +8,7 @@ export function SignupSteps({ step }: { step: Step }) {
   if (!isReady) return null;
 
   return (
-    <div className="flex items-center justify-between mb-10 relative">
+    <div className="relative flex justify-between items-center mb-10">
       {[1, 2, 3].map((n) => (
         <div key={n} className="flex flex-col items-center w-1/3 text-sm">
           <div
@@ -29,12 +29,28 @@ export function SignupSteps({ step }: { step: Step }) {
           </span>
         </div>
       ))}
-      <div className="absolute top-4 left-[12.5%] right-[12.5%] h-1 bg-gray-200 z-0 rounded-full">
+
+      {/* Ligne grise entre premier et dernier cercle */}
+      <div
+        className="absolute top-4 h-1 bg-gray-200 rounded-full z-0"
+        style={{ left: "16.666%", right: "16.666%" }}
+      />
+
+      {/* Segment 1->2, visible dès étape 2 */}
+      {step >= 2 && (
         <div
-          className="h-1 bg-indigo-600 transition-all duration-300 ease-in-out rounded-full"
-          style={{ width: `${(step - 1) * 50}%` }}
+          className="absolute top-4 h-1 bg-indigo-600 rounded-full z-0 transition-all duration-300 ease-in-out"
+          style={{ left: "16.666%", width: "33.333%" }}
         />
-      </div>
+      )}
+
+      {/* Segment 2->3, visible dès étape 3 */}
+      {step >= 3 && (
+        <div
+          className="absolute top-4 h-1 bg-indigo-600 rounded-full z-0 transition-all duration-300 ease-in-out"
+          style={{ left: "50%", width: "33.333%" }}
+        />
+      )}
     </div>
   );
 }

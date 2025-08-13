@@ -1,0 +1,8 @@
+{
+  "title": "Signup",
+  "session-expired": {
+    "title": "Session Expired",
+    "description": "Your session has expired for security reasons. Please start the process again.",
+    "button": "Restart"
+  }
+}

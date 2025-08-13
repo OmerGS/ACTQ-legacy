@@ -1,0 +1,19 @@
+{
+  "title": "Kod Doğrulama",
+  "sent": "<strong>{{email}}</strong> adresine bir doğrulama kodu gönderildi.",
+  "label": "Alınan kod",
+  "placeholder": "123456",
+  "button": "Kodu Doğrula",
+  "verifying": "Kod doğrulanıyor...",
+  "back": "E-posta adresini değiştir",
+  "error-length": "Geçersiz kod. 6 haneli olmalıdır.",
+  "error-invalid": "Kod hatalı.",
+  "error-server": "Sunucu hatası.",
+  "success": "Kod başarıyla doğrulandı!",
+  "resend-button": "Kodu yeniden gönder",
+  "resend-cooldown": "Kodu yeniden gönder ({{seconds}}sn)",
+  "resend-success": "Kod başarıyla yeniden gönderildi!",
+  "sent-again": "Kod başarıyla yeniden gönderildi!",
+  "resend-in": "Yeni bir kod isteğinde bulunmak için",
+  "seconds": "saniye"
+}

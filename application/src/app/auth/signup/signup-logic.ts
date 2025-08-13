@@ -1,9 +1,17 @@
 import { Language } from "@/locales";
 import { verifyIdentity } from "@/services/authAPI";
-import { requestOTP } from "@/services/otpAPI";
+import { requestOTP, requestMailValidation, validateMailCode } from "@/services/otpAPI";
 
 export async function askCode(phone: string, lang: Language): Promise<void> {
   const response = await requestOTP(phone, lang);
+
+  if (response.status !== 200) {
+    throw new Error(response.data.error || "Unknown error");
+  }
+}
+
+export async function askEmailCode(email: string, lang: Language): Promise<void> {
+  const response = await requestMailValidation(email, lang);
 
   if (response.status !== 200) {
     throw new Error(response.data.error || "Unknown error");
@@ -21,7 +29,7 @@ type VerifyError = {
   error: string;
 };
 
-export async function checkCode(
+export async function checkPhoneCode(
   phone: string,
   code: string,
   lang: Language
@@ -47,5 +55,19 @@ export async function checkCode(
       success: false,
       error: error.response?.data?.error || "Erreur serveur.",
     };
+  }
+}
+
+export async function validateEmailCode(email: string, code: string, lang: Language): Promise<boolean> {
+  try {
+    const response = await validateMailCode(email, code, lang);
+
+    if (response.status === 200) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error: any) {
+    return false;
   }
 }

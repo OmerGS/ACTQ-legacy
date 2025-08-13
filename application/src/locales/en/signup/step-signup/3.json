@@ -1,0 +1,11 @@
+{
+  "title": "Welcome",
+  "welcome": "Welcome",
+  "notYou": "Not you?",
+  "next": "Next",
+  "alertTitle": "Incorrect Identity",
+  "alertMessage": "If this is not you, please contact the administration immediately to correct the error.",
+  "contact": "Contact",
+  "cancel": "Cancel",
+  "signupFinished": "Signup complete!"
+}

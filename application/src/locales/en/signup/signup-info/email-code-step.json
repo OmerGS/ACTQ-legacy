@@ -1,0 +1,19 @@
+{
+  "title": "Code Verification",
+  "sent": "A verification code has been sent to <strong>{{email}}</strong>.",
+  "label": "Received code",
+  "placeholder": "123456",
+  "button": "Verify Code",
+  "verifying": "Verifying code...",
+  "back": "Change email address",
+  "error-length": "Invalid code. It must contain 6 digits.",
+  "error-invalid": "Incorrect code.",
+  "error-server": "Server error.",
+  "success": "Code successfully verified!",
+  "resend-button": "Resend code",
+  "resend-cooldown": "Resend code ({{seconds}}s)",
+  "resend-success": "Code successfully resent!",
+  "sent-again": "Code successfully resent!",
+  "resend-in": "You can request a new code in",
+  "seconds": "seconds"
+}

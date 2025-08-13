@@ -1,0 +1,8 @@
+{
+  "title": "Kayıt",
+  "session-expired": {
+    "title": "Oturum Süresi Doldu",
+    "description": "Güvenlik nedeniyle oturumunuz sona erdi. Lütfen işlemi yeniden başlatın.",
+    "button": "Yeniden Başla"
+  }
+}

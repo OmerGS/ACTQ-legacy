@@ -1,0 +1,11 @@
+{
+  "title": "Validation de l'email",
+  "label": "Adresse email",
+  "placeholder": "nom@exemple.com",
+  "description": "Vous recevrez un code de validation à cette adresse.",
+  "button": "Envoyer le code",
+  "sending": "Envoi en cours...",
+  "success": "Code de validation envoyé à votre adresse email.",
+  "error-invalid": "Adresse email invalide. Veuillez corriger.",
+  "error-server": "Une erreur est survenue lors de l’envoi du code."
+}

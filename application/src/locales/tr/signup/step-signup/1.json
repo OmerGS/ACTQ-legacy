@@ -1,0 +1,14 @@
+{
+  "country-label": "Ülke",
+  "phone-fr": "Fransa (+33)",
+  "phone-tr": "Türkiye (+90)",
+  "label": "Telefon numarası",
+  "placeholder-fr": "0612345678",
+  "placeholder-tr": "05551234567",
+  "button": "Doğrulama kodunu gönder",
+  "sending": "Gönderiliyor...",
+  "success": "Kod gönderildi!",
+  "error-fr": "Geçersiz Fransız numarası (06 veya 07 ile başlamalı)",
+  "error-tr": "Geçersiz Türk numarası (05 ile başlamalı)",
+  "send-error": "Kod gönderilirken bir hata oluştu"
+}

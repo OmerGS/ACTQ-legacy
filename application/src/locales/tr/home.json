@@ -1,0 +1,14 @@
+{
+  "guest": {
+    "welcome": "Hoş geldiniz",
+    "login": "Giriş yap",
+    "signup": "Kayıt ol",
+    "forgot": "Şifremi unuttum?"
+  },
+  "user": {
+    "welcome": "Hoş geldiniz, {{name}}",
+    "profile": "Profilim",
+    "settings": "Ayarlar",
+    "logout": "Çıkış yap"
+  }
+}

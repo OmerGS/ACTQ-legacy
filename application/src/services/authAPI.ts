@@ -7,6 +7,6 @@ export const verifyIdentity = async (phoneNumber: string, otp: string, lang: Lan
 }
 
 export async function getUserFromSetup(): Promise<SignupUser> {
-  const response = await http.post('/setup');
+  const response = await http.post('/setup/check');
   return response.data;
 }

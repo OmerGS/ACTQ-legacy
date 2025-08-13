@@ -1,0 +1,11 @@
+{
+  "title": "Hoş Geldiniz",
+  "welcome": "Hoş Geldiniz",
+  "notYou": "Siz değil misiniz?",
+  "next": "İleri",
+  "alertTitle": "Kimlik Hatası",
+  "alertMessage": "Eğer bu siz değilseniz, lütfen hatayı düzeltmek için hemen yönetimle iletişime geçin.",
+  "contact": "İletişime Geç",
+  "cancel": "İptal",
+  "signupFinished": "Kayıt tamamlandı!"
+}

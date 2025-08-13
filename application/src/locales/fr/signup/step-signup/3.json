@@ -1,0 +1,11 @@
+{
+  "title": "Bienvenue",
+  "welcome": "Bienvenue",
+  "notYou": "Ce n’est pas vous",
+  "next": "Suivant",
+  "alertTitle": "Identité incorrecte",
+  "alertMessage": "Si ce n’est pas vous, contactez immédiatement l’administration pour corriger l’erreur.",
+  "contact": "Contacter",
+  "cancel": "Annuler",
+  "signupFinished": "Inscription terminée !"
+}
